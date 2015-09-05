@@ -1,0 +1,6 @@
+[submodule "moon"]
+	path = moon
+	url = https://github.com/siffiejoe/lua-moon
+[submodule "compat-5.3"]
+	path = compat-5.3
+	url = https://github.com/keplerproject/lua-compat-5.3.git
