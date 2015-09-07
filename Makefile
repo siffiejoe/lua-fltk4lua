@@ -1,4 +1,5 @@
 .PHONY: all clean install
+.SUFFIXES: .cxx
 
 # works for Lua 5.2 on Debian based Linuxes:
 DLL_INSTALL_DIR = /usr/lib/lua/5.2
@@ -15,7 +16,7 @@ LIBFLAG = -shared
 LIB_EXTENSION = so
 
 DLLBASENAME = fltk4lua
-SOURCES =
+SOURCES = src/fltk4lua.cxx
 OBJECTS = ${SOURCES:%.cxx=%.o} moon/moon.o compat-5.3/c-api/compat-5.3.o
 
 all: ${DLLBASENAME}.${LIB_EXTENSION}
@@ -40,4 +41,5 @@ clean:
 moon/moon.o: moon/moon.c moon/moon.h
 compat-5.3/c-api/compat-5.3.o: compat-5.3/c-api/compat-5.3.c \
   compat-5.3/c-api/compat-5.3.h
+src/fltk4lua.o: src/fltk4lua.cxx src/fltk4lua.hxx
 
