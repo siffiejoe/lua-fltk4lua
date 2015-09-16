@@ -104,11 +104,20 @@ MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L );
 
 
 /* metatable names for FLTK objects */
-#define F4L_WIDGET_NAME "fltk4lua.Widget"
-#define F4L_GROUP_NAME  "fltk4lua.Group"
-#define F4L_WINDOW_NAME "fltk4lua.Window"
-#define F4L_BOX_NAME    "fltk4lua.Box"
-#define F4L_BUTTON_NAME "fltk4lua.Button"
+#define F4L_WIDGET_NAME             "fltk4lua.Widget"
+#define F4L_GROUP_NAME              "fltk4lua.Group"
+#define F4L_WINDOW_NAME             "fltk4lua.Window"
+#define F4L_BOX_NAME                "fltk4lua.Box"
+#define F4L_BUTTON_NAME             "fltk4lua.Button"
+#define F4L_CHECK_BUTTON_NAME       "fltk4lua.Check_Button"
+#define F4L_LIGHT_BUTTON_NAME       "fltk4lua.Light_Button"
+#define F4L_RADIO_BUTTON_NAME       "fltk4lua.Radio_Button"
+#define F4L_RADIO_LIGHT_BUTTON_NAME "fltk4lua.Radio_Light_Button"
+#define F4L_RADIO_ROUND_BUTTON_NAME "fltk4lua.Radio_Round_Button"
+#define F4L_REPEAT_BUTTON_NAME      "fltk4lua.Repeat_Button"
+#define F4L_RETURN_BUTTON_NAME      "fltk4lua.Return_Button"
+#define F4L_ROUND_BUTTON_NAME       "fltk4lua.Round_Button"
+#define F4L_TOGGLE_BUTTON_NAME      "fltk4lua.Toggle_Button"
 // ...
 
 
