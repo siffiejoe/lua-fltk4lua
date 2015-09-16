@@ -105,9 +105,9 @@ MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L );
 
 /* metatable names for FLTK objects */
 #define F4L_WIDGET_NAME "fltk4lua.Widget"
-#define F4L_BOX_NAME    "fltk4lua.Box"
 #define F4L_GROUP_NAME  "fltk4lua.Group"
 #define F4L_WINDOW_NAME "fltk4lua.Window"
+#define F4L_BOX_NAME    "fltk4lua.Box"
 #define F4L_BUTTON_NAME "fltk4lua.Button"
 // ...
 

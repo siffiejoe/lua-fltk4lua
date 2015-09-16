@@ -4,6 +4,7 @@
 #include "fltk4lua.hxx"
 #include <FL/Fl_Window.H>
 
+
 /* (Meta-)methods for Fl_Windows: */
 MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
                                   char const* key, size_t n );
