@@ -436,19 +436,8 @@ MOON_LOCAL void f4l_push_font( lua_State* L, Fl_Font f ) {
 #include "moon_flag.h"
 
 MOON_LOCAL Fl_Color f4l_check_color( lua_State* L, int idx ) {
-  int t = lua_type( L, idx );
-  if( t == LUA_TSTRING ) {
-    static char const* const names[] = {
-      COLOR_LIST( GEN_NAME )
-      NULL
-    };
-    static Fl_Color const values[] = {
-      COLOR_LIST( GEN_VALUE )
-      (Fl_Color)0 // dummy value
-    };
-    return values[ luaL_checkoption( L, idx, NULL, names ) ];
-  } else if( t == LUA_TNUMBER )
-    return static_cast< Fl_Color >( moon_checkint( L, idx, 0, UINT_MAX ) );
+  if( lua_type( L, idx ) == LUA_TNUMBER )
+    return static_cast< Fl_Color >( moon_checkint( L, idx, 0, 0xFFFFFF00u ) );
   else
     return moon_flag_get_color( L, idx );
 }
