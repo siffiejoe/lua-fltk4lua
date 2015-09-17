@@ -40,22 +40,7 @@ namespace {
 
   int new_window( lua_State* L ) {
     F4L_TRY {
-      if( lua_gettop( L ) < 4 ) {
-        int w = moon_checkint( L, 1, 0, INT_MAX );
-        int h = moon_checkint( L, 2, 0, INT_MAX );
-        char const* label = luaL_optstring( L, 3, NULL );
-        void** p = moon_newpointer( L, F4L_WINDOW_NAME, f4l_delete< Fl_Window > );
-        lua_newtable( L );
-        if( label != NULL ) {
-          lua_pushvalue( L, 3 );
-          lua_setfield( L, -2, "label" );
-        }
-        lua_setuservalue( L, -2 );
-        Fl_Window* window = new Fl_Window( w, h, label );
-        *p = static_cast< void* >( window );
-        f4l_register_widget( L, window );
-      } else
-        f4l_new_widget< Fl_Window >( L, F4L_WINDOW_NAME );
+      f4l_new_window< Fl_Window >( L, F4L_WINDOW_NAME );
     } F4L_CATCH( L );
     return 1;
   }
@@ -271,19 +256,6 @@ MOON_LOCAL int f4l_window_make_current( lua_State* L ) {
 }
 
 
-MOON_LOCAL int f4l_window_resize( lua_State* L ) {
-  Fl_Window* window = check_window( L, 1 );
-  int x = moon_checkint( L, 2, 0, INT_MAX );
-  int y = moon_checkint( L, 3, 0, INT_MAX );
-  int w = moon_checkint( L, 4, 0, INT_MAX );
-  int h = moon_checkint( L, 5, 0, INT_MAX );
-  F4L_TRY {
-    window->resize( x, y, w, h );
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
 MOON_LOCAL int f4l_window_set_modal( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
   F4L_TRY {
@@ -311,10 +283,6 @@ MOON_LOCAL int f4l_window_set_override( lua_State* L ) {
 }
 
 
-/* the following function exploits implementation details in FLTK
- * (that Fl_Window::show( int, char** ) does not modify the arguments)
- * and in Lua (that strings stored in a table cannot move in memory)!
- */
 MOON_LOCAL int f4l_window_show( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
   F4L_TRY {
@@ -322,26 +290,9 @@ MOON_LOCAL int f4l_window_show( lua_State* L ) {
       window->show();
     } else {
       luaL_checktype( L, 2, LUA_TTABLE );
-      int n = luaL_len( L, 2 );
-      char** argv = (char**)lua_newuserdata( L, sizeof( char* ) * (n+2) );
-      if( lua_rawgeti( L, 2, 0 ) == LUA_TSTRING ) {
-        argv[ 0 ] = const_cast< char* >( lua_tostring( L, -1 ) );
-      } else
-        argv[ 0 ] = const_cast< char* >( "fltk4lua" );
-      lua_pop( L, 1 );
-      argv[ n+1 ] = NULL;
-      int i = 1;
-      for( ; i <= n; ++i ) {
-        if( lua_rawgeti( L, 2, i ) == LUA_TSTRING ) {
-          argv[ i ] = const_cast< char* >( lua_tostring( L, -1 ) );
-          lua_pop( L, 1 );
-        } else {
-          argv[ i ] = NULL;
-          lua_pop( L, 1 );
-          break;
-        }
-      }
-      window->show( i, argv );
+      int argc = 0;
+      char** argv = f4l_push_argv( L, 2, &argc );
+      window->show( argc, argv );
     }
   } F4L_CATCH( L );
   return 0;

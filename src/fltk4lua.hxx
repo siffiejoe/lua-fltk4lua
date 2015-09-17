@@ -102,6 +102,9 @@ MOON_LOCAL void f4l_delete( void* p ) {
 /* the Lua callbacks need a lua_State pointer to run */
 MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L );
 
+/* make argc/argv pair from a Lua arg table */
+MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );
+
 
 /* metatable names for FLTK objects */
 #define F4L_WIDGET_NAME             "fltk4lua.Widget"

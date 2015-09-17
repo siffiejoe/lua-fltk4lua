@@ -20,7 +20,6 @@ MOON_LOCAL int f4l_group_end( lua_State* L );
 MOON_LOCAL int f4l_group_find( lua_State* L );
 MOON_LOCAL int f4l_group_insert( lua_State* L );
 MOON_LOCAL int f4l_group_remove( lua_State* L );
-MOON_LOCAL int f4l_group_resize( lua_State* L );
 
 
 #define F4L_GROUP_METHODS \
@@ -32,8 +31,7 @@ MOON_LOCAL int f4l_group_resize( lua_State* L );
   { "end_group", f4l_group_end }, \
   { "find", f4l_group_find }, \
   { "insert", f4l_group_insert }, \
-  { "remove", f4l_group_remove }, \
-  { "resize", f4l_group_resize }
+  { "remove", f4l_group_remove }
 
 
 #endif /* F4L_GROUP_HXX_ */

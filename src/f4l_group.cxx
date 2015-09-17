@@ -83,6 +83,15 @@ MOON_LOCAL int f4l_group_newindex_( lua_State* L, Fl_Group* g,
                                     char const* key, size_t n ) {
   using namespace std;
   switch( n ) {
+    case 9:
+      if( F4L_MEMCMP( key, "resizable", 9 ) == 0 ) {
+        Fl_Widget* w = check_widget( L, 3 );
+        lua_pushvalue( L, 3 );
+        moon_setuvfield( L, 1, "resizable" );
+        g->resizable( w );
+        return 1;
+      }
+      break;
     case 13:
       if( F4L_MEMCMP( key, "clip_children", 13 ) == 0 ) {
         g->clip_children( lua_toboolean( L, 3 ) );
@@ -260,19 +269,6 @@ MOON_LOCAL int f4l_group_remove( lua_State* L ) {
     lua_rawset( L, -3 );
     lua_pop( L, 1 );
   }
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_group_resize( lua_State* L ) {
-  Fl_Group* group = check_group( L, 1 );
-  int x = moon_checkint( L, 2, 0, INT_MAX );
-  int y = moon_checkint( L, 3, 0, INT_MAX );
-  int w = moon_checkint( L, 4, 0, INT_MAX );
-  int h = moon_checkint( L, 5, 0, INT_MAX );
-  F4L_TRY {
-    group->resize( x, y, w, h );
-  } F4L_CATCH( L );
   return 0;
 }
 
