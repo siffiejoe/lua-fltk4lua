@@ -85,8 +85,11 @@ MOON_LOCAL int f4l_group_newindex_( lua_State* L, Fl_Group* g,
   switch( n ) {
     case 9:
       if( F4L_MEMCMP( key, "resizable", 9 ) == 0 ) {
-        Fl_Widget* w = check_widget( L, 3 );
-        lua_pushvalue( L, 3 );
+        Fl_Widget* w = luaL_opt( L, check_widget, 3, NULL );
+        if( w != NULL )
+          lua_pushvalue( L, 3 );
+        else
+          lua_pushnil( L );
         moon_setuvfield( L, 1, "resizable" );
         g->resizable( w );
         return 1;

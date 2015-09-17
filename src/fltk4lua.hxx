@@ -44,6 +44,30 @@ extern "C" {
    memcmp( _p, _s "", _n ))
 
 
+/* Macro that pcalls a lua_CFunction to maintain the thread pointer
+ * created by `f4l_get_active_thread()`. This thread pointer is not
+ * just important for the callbacks to get a lua_State* to run with,
+ * but also for the finalizers which use it to determine whether they
+ * run inside a callback, so special care is taken that *_sp is valid
+ * even if an error/exception is thrown! */
+#define F4L_CALL_PROTECTED( L, _f, _r ) \
+  do { \
+    lua_State* _l = L; \
+    int _n = lua_gettop( _l ); \
+    luaL_checkstack( _l, 2*_n+2, NULL ); \
+    lua_State** _sp = f4l_get_active_thread( _l ); \
+    lua_pushcfunction( _l, _f ); \
+    for( int _i = 1; _i <= _n; ++_i ) \
+      lua_pushvalue( _l, _i ); \
+    lua_State* _oldL = *_sp; \
+    *_sp = _l; \
+    int _status = lua_pcall( _l, _n, _r, 0 ); \
+    *_sp = _oldL; \
+    if( _status != 0 ) /* reraise Lua error */ \
+      lua_error( _l ); \
+  } while( 0 )
+
+
 /* generic function for casting a pointer to sub-type to a pointer
  * to a super-type */
 template< typename T1, typename T2 >
@@ -121,6 +145,9 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );
 #define F4L_RETURN_BUTTON_NAME      "fltk4lua.Return_Button"
 #define F4L_ROUND_BUTTON_NAME       "fltk4lua.Round_Button"
 #define F4L_TOGGLE_BUTTON_NAME      "fltk4lua.Toggle_Button"
+#define F4L_VALUATOR_NAME           "fltk4lua.Valuator"
+#define F4L_SLIDER_NAME             "fltk4lua.Slider"
+#define F4L_COLOR_CHOOSER_NAME      "fltk4lua.Color_Chooser"
 // ...
 
 

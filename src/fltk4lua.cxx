@@ -11,19 +11,7 @@ namespace {
   }
 
   int f4l_run( lua_State* L ) {
-    lua_State** sp = f4l_get_active_thread( L );
-    lua_pushcfunction( L, f4l_run_ );
-    /* sp is not just important for the callbacks to get a lua_State*
-     * to run with, but also for the finalizers which use it to
-     * determine whether they run inside a callback, so special care
-     * is taken that *sp is valid even if an error/exception is
-     * thrown! */
-    lua_State* oldL = *sp;
-    *sp = L;
-    int status = lua_pcall( L, 0, 1, 0 );
-    *sp = oldL;
-    if( status != 0 ) /* re-raise Lua error */
-      lua_error( L );
+    F4L_CALL_PROTECTED( L, f4l_run_, 1 );
     return 1;
   }
 
@@ -38,19 +26,7 @@ namespace {
   }
 
   int f4l_wait( lua_State* L ) {
-    lua_State** sp = f4l_get_active_thread( L );
-    lua_pushcfunction( L, f4l_wait_ );
-    if( lua_gettop( L ) > 2 )
-      lua_pushvalue( L, 1 );
-    else
-      lua_pushnil( L );
-    /* see comment in f4l_run */
-    lua_State* oldL = *sp;
-    *sp = L;
-    int status = lua_pcall( L, 1, 1, 0 );
-    *sp = oldL;
-    if( status != 0 ) /* re-raise Lua error */
-      lua_error( L );
+    F4L_CALL_PROTECTED( L, f4l_wait_, 1 );
     return 1;
   }
 
@@ -63,15 +39,7 @@ namespace {
   }
 
   int f4l_check( lua_State* L ) {
-    lua_State** sp = f4l_get_active_thread( L );
-    lua_pushcfunction( L, f4l_check_ );
-    /* see comment in f4l_run */
-    lua_State* oldL = *sp;
-    *sp = L;
-    int status = lua_pcall( L, 0, 1, 0 );
-    *sp = oldL;
-    if( status != 0 ) /* re-raise Lua error */
-      lua_error( L );
+    F4L_CALL_PROTECTED( L, f4l_check_, 1 );
     return 1;
   }
 
@@ -164,6 +132,8 @@ MOON_LOCAL void f4l_group_setup( lua_State* L );
 MOON_LOCAL void f4l_window_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
 MOON_LOCAL void f4l_button_setup( lua_State* L );
+MOON_LOCAL void f4l_slider_setup( lua_State* L );
+MOON_LOCAL void f4l_color_chooser_setup( lua_State* L );
 // ...
 
 
@@ -189,6 +159,8 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_window_setup( L );
   f4l_box_setup( L );
   f4l_button_setup( L );
+  f4l_slider_setup( L );
+  f4l_color_chooser_setup( L );
   // ...
   return 1;
 }
