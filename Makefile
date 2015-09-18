@@ -7,7 +7,7 @@ LUA_INCDIR = /usr/include/lua5.2
 FLTK_CONFIG = fltk-config
 
 CXX = g++
-CFLAGS = -Wall -Wextra -fpic -O2
+CFLAGS = -Wall -Wextra -fpic -Os
 MYCFLAGS = ${CFLAGS} -I${LUA_INCDIR} -Imoon -Icompat-5.3/c-api \
            -DMOON_PREFIX=f4lx -DCOMPAT53_PREFIX=f4lx -DNDEBUG \
            `${FLTK_CONFIG} --cxxflags`
@@ -19,7 +19,8 @@ DLLBASENAME = fltk4lua
 SOURCES = src/fltk4lua.cxx src/f4l_widget.cxx src/f4l_group.cxx \
           src/f4l_enums.cxx src/f4l_box.cxx src/f4l_window.cxx \
           src/f4l_button.cxx src/f4l_valuator.cxx src/f4l_slider.cxx \
-	  src/f4l_adjuster.cxx src/f4l_color_chooser.cxx
+          src/f4l_adjuster.cxx src/f4l_dial.cxx src/f4l_roller.cxx \
+          src/f4l_value_output.cxx src/f4l_color_chooser.cxx
 OBJECTS = ${SOURCES:%.cxx=%.o} moon/moon.o compat-5.3/c-api/compat-5.3.o
 
 all: ${DLLBASENAME}.${LIB_EXTENSION}
@@ -67,12 +68,19 @@ src/f4l_button.o: src/f4l_button.cxx src/fltk4lua.hxx moon/moon.h \
  src/f4l_enums.hxx
 src/f4l_valuator.o: src/f4l_valuator.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx
-src/f4l_slider.o: src/f4l_slider.cxx src/fltk4lua.hxx moon/moon.h \
- compat-5.3/c-api/compat-5.3.h src/f4l_slider.hxx src/f4l_valuator.hxx \
- src/f4l_widget.hxx src/f4l_enums.hxx
 src/f4l_adjuster.o: src/f4l_adjuster.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx \
  src/f4l_enums.hxx
+src/f4l_dial.o: src/f4l_dial.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx
+src/f4l_roller.o: src/f4l_roller.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx
+src/f4l_slider.o: src/f4l_slider.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_slider.hxx src/f4l_valuator.hxx \
+ src/f4l_widget.hxx src/f4l_enums.hxx
+src/f4l_value_output.o: src/f4l_value_output.cxx src/fltk4lua.hxx \
+ moon/moon.h compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx \
+ src/f4l_widget.hxx src/f4l_enums.hxx
 src/f4l_color_chooser.o: src/f4l_color_chooser.cxx src/fltk4lua.hxx \
  moon/moon.h compat-5.3/c-api/compat-5.3.h src/f4l_group.hxx \
  src/f4l_widget.hxx

@@ -133,7 +133,10 @@ MOON_LOCAL void f4l_window_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
 MOON_LOCAL void f4l_button_setup( lua_State* L );
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L );
+MOON_LOCAL void f4l_dial_setup( lua_State* L );
+MOON_LOCAL void f4l_roller_setup( lua_State* L );
 MOON_LOCAL void f4l_slider_setup( lua_State* L );
+MOON_LOCAL void f4l_value_output_setup( lua_State* L );
 MOON_LOCAL void f4l_color_chooser_setup( lua_State* L );
 // ...
 
@@ -161,7 +164,10 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_box_setup( L );
   f4l_button_setup( L );
   f4l_adjuster_setup( L );
+  f4l_dial_setup( L );
+  f4l_roller_setup( L );
   f4l_slider_setup( L );
+  f4l_value_output_setup( L );
   f4l_color_chooser_setup( L );
   // ...
   return 1;
