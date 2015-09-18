@@ -118,7 +118,7 @@ MOON_LOCAL void f4l_delete( void* p ) {
   clear_child_widgets( t1 );
   /* This is a hack to select an overload based on whether T is
    * derived from Fl_Widget: */
-  safe_delete< T >( (void*)t1, t1 );
+  safe_delete< T >( static_cast< void* >( t1 ), t1 );
 }
 
 
@@ -145,6 +145,7 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );
 #define F4L_ROUND_BUTTON_NAME       "fltk4lua.Round_Button"
 #define F4L_TOGGLE_BUTTON_NAME      "fltk4lua.Toggle_Button"
 #define F4L_VALUATOR_NAME           "fltk4lua.Valuator"
+#define F4L_ADJUSTER_NAME           "fltk4lua.Adjuster"
 #define F4L_SLIDER_NAME             "fltk4lua.Slider"
 #define F4L_COLOR_CHOOSER_NAME      "fltk4lua.Color_Chooser"
 // ...

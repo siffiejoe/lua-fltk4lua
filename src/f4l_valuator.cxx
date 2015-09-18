@@ -102,7 +102,7 @@ MOON_LOCAL int f4l_valuator_format( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   char buffer[ 128 ];
   F4L_TRY {
-    lua_pushinteger( L, v->format( buffer ) );
+    lua_pushlstring( L, buffer, v->format( buffer ) );
   } F4L_CATCH( L );
   return 1;
 }
