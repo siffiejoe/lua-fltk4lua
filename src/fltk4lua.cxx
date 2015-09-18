@@ -128,6 +128,7 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc ) {
 
 /* setup functions declared in other files */
 MOON_LOCAL void f4l_enums_setup( lua_State* L );
+MOON_LOCAL void f4l_ask_setup( lua_State* L );
 MOON_LOCAL void f4l_group_setup( lua_State* L );
 MOON_LOCAL void f4l_window_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
@@ -159,6 +160,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   *moon_atexit( L, delete_remaining_widgets ) = 1;
   lua_pop( L, 1 ); // remove atexit userdata from stack
   f4l_enums_setup( L );
+  f4l_ask_setup( L );
   f4l_group_setup( L );
   f4l_window_setup( L );
   f4l_box_setup( L );
