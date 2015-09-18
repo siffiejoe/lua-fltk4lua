@@ -30,6 +30,7 @@ namespace {
     return values[ luaL_checkoption( L, idx, NULL, names ) ];
   }
 
+
   int f4l_alert_( lua_State* L ) {
     char const* s = luaL_checkstring( L, 1);
     F4L_TRY {
@@ -43,6 +44,7 @@ namespace {
     return 0;
   }
 
+
   int f4l_beep( lua_State* L ) {
     int b = luaL_opt( L, check_beep, 1, FL_BEEP_DEFAULT );
     F4L_TRY {
@@ -50,6 +52,7 @@ namespace {
     } F4L_CATCH( L );
     return 0;
   }
+
 
   int f4l_choice_( lua_State* L ) {
     char const* s = luaL_checkstring( L, 1 );
@@ -66,6 +69,7 @@ namespace {
     F4L_CALL_PROTECTED( L, f4l_choice_, 1 );
     return 1;
   }
+
 
   int f4l_color_chooser_( lua_State* L ) {
     char const* s = luaL_checkstring( L, 1 );
@@ -85,6 +89,7 @@ namespace {
     return 1;
   }
 
+
   int f4l_dir_chooser_( lua_State* L ) {
     char const* msg = luaL_checkstring( L, 1 );
     char const* fname = luaL_checkstring( L, 2 );
@@ -103,6 +108,7 @@ namespace {
     F4L_CALL_PROTECTED( L, f4l_dir_chooser_, 1 );
     return 1;
   }
+
 
   int f4l_file_chooser_( lua_State* L ) {
     char const* msg = luaL_checkstring( L, 1 );
@@ -124,6 +130,7 @@ namespace {
     return 1;
   }
 
+
   int f4l_input_( lua_State* L ) {
     char const* msg = luaL_checkstring( L, 1 );
     char const* def = luaL_checkstring( L, 2 );
@@ -144,6 +151,7 @@ namespace {
     return 1;
   }
 
+
   int f4l_message_( lua_State* L ) {
     char const* msg = luaL_checkstring( L, 1 );
     F4L_TRY {
@@ -156,6 +164,7 @@ namespace {
     F4L_CALL_PROTECTED( L, f4l_message_, 0 );
     return 0;
   }
+
 
   int f4l_password_( lua_State* L ) {
     char const* msg = luaL_checkstring( L, 1 );

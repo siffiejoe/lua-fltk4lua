@@ -51,8 +51,8 @@ clean:
 
 
 # dependencies
-src/fltk4lua.o: src/fltk4lua.cxx src/fltk4lua.hxx \
- moon/moon.h compat-5.3/c-api/compat-5.3.h
+src/fltk4lua.o: src/fltk4lua.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_enums.hxx
 src/f4l_widget.o: src/f4l_widget.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_widget.hxx src/f4l_enums.hxx
 src/f4l_group.o: src/f4l_group.cxx src/fltk4lua.hxx moon/moon.h \

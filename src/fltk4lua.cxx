@@ -1,4 +1,5 @@
 #include "fltk4lua.hxx"
+#include "f4l_enums.hxx"
 
 
 namespace {
@@ -60,6 +61,70 @@ namespace {
       Fl::get_system_colors();
     } F4L_CATCH( L );
     return 0;
+  }
+
+
+  int f4l_inactive( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    F4L_TRY {
+      f4l_push_color( L, fl_inactive( c ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_contrast( lua_State* L ) {
+    Fl_Color fg = f4l_check_color( L, 1 );
+    Fl_Color bg = f4l_check_color( L, 2 );
+    F4L_TRY {
+      f4l_push_color( L, fl_contrast( fg, bg ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_color_average( lua_State* L ) {
+    Fl_Color c1 = f4l_check_color( L, 1 );
+    Fl_Color c2 = f4l_check_color( L, 2 );
+    float weight = static_cast< float >( luaL_checknumber( L, 3 ) );
+    F4L_TRY {
+      f4l_push_color( L, fl_color_average( c1, c2, weight ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_lighter( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    F4L_TRY {
+      f4l_push_color( L, fl_lighter( c ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_darker( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    F4L_TRY {
+      f4l_push_color( L, fl_darker( c ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_rgb_color( lua_State* L ) {
+    F4L_TRY {
+      if( lua_gettop( L ) > 1 ) {
+        uchar r = moon_checkint( L, 1, 0, 255 );
+        uchar g = moon_checkint( L, 2, 0, 255 );
+        uchar b = moon_checkint( L, 3, 0, 255 );
+        f4l_push_color( L, fl_rgb_color( r, g, b ) );
+      } else {
+        uchar g = moon_checkint( L, 1, 0, 255 );
+        f4l_push_color( L, fl_rgb_color( g ) );
+      }
+    } F4L_CATCH( L );
+    return 1;
   }
 
 
@@ -149,6 +214,12 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
     { "check", f4l_check },
     { "args", f4l_args },
     { "get_system_colors", f4l_get_system_colors },
+    { "inactive", f4l_inactive },
+    { "contrast", f4l_contrast },
+    { "color_average", f4l_color_average },
+    { "lighter", f4l_lighter },
+    { "darker", f4l_darker },
+    { "rgb_color", f4l_rgb_color },
     { NULL, NULL }
   };
   luaL_newlib( L, functions );
