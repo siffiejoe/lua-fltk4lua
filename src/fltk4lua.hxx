@@ -92,13 +92,15 @@ namespace {
   inline void clear_child_widgets( ... ) {} // for non-Fl_Groups
 
   template< typename T >
-  inline void safe_delete( T* p ) { delete p; }
+  inline void safe_delete( void* p, ... ) {
+    delete static_cast< T* >( p );
+  }
   /* Widgets must not be deleted during a callback, so the
    * Fl::delete_widget() function is used instead in case a
    * Fl::run()/Fl::wait()/Fl::check() is active (checked via a
    * non-NULL value in f4l_get_active_thread()). */
-  template<>
-  inline void safe_delete( Fl_Widget* w ) {
+  template< typename T >
+  inline void safe_delete( void*, Fl_Widget* w ) {
     lua_State** ud = static_cast< lua_State** >( w->user_data() );
     if( ud != NULL && *ud != NULL )
       Fl::delete_widget( w );
@@ -109,17 +111,14 @@ namespace {
 } // anonymous namespace for helper functions
 
 
-/* Generic function for calling delete on an FLTK Widget pointer.
- * Since destructors are virtual anyway, you can save instantiations
- * by using f4l_deleta< Fl_Widget > for all objects derived from
- * Fl_Widget. Widgets derived from Fl_Group are an exception,
- * because they need special handling for the children -- use
- * f4l_delete< Fl_Group > for those instead! */
+/* Generic function for calling delete on an FLTK Widget pointer. */
 template< typename T >
 MOON_LOCAL void f4l_delete( void* p ) {
   T* t1 = static_cast< T* >( p );
   clear_child_widgets( t1 );
-  safe_delete( t1 );
+  /* This is a hack to select an overload based on whether T is
+   * derived from Fl_Widget: */
+  safe_delete< T >( (void*)t1, t1 );
 }
 
 
