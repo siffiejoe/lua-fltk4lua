@@ -3,6 +3,13 @@
 
 #include "fltk4lua.hxx"
 #include <FL/Fl_Slider.H>
+#include <FL/Fl_Fill_Slider.H>
+#include <FL/Fl_Hor_Fill_Slider.H>
+#include <FL/Fl_Hor_Nice_Slider.H>
+#include <FL/Fl_Hor_Slider.H>
+#include <FL/Fl_Nice_Slider.H>
+#include <FL/Fl_Value_Slider.H>
+#include <FL/Fl_Hor_Value_Slider.H>
 
 
 /* (Meta-)methods for Fl_Sliders: */
