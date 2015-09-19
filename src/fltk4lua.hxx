@@ -146,6 +146,8 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );
 #define F4L_TOGGLE_BUTTON_NAME      "fltk4lua.Toggle_Button"
 #define F4L_VALUATOR_NAME           "fltk4lua.Valuator"
 #define F4L_ADJUSTER_NAME           "fltk4lua.Adjuster"
+#define F4L_COUNTER_NAME            "fltk4lua.Counter"
+#define F4L_SIMPLE_COUNTER_NAME     "fltk4lua.Simple_Counter"
 #define F4L_DIAL_NAME               "fltk4lua.Dial"
 #define F4L_ROLLER_NAME             "fltk4lua.Roller"
 #define F4L_SLIDER_NAME             "fltk4lua.Slider"
