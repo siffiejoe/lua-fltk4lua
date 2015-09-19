@@ -59,8 +59,9 @@ namespace {
     char const* b0 = luaL_optstring( L, 2, NULL );
     char const* b1 = luaL_optstring( L, 3, NULL );
     char const* b2 = luaL_optstring( L, 4, NULL );
+    lua_settop( L, 4 );
     F4L_TRY {
-      lua_pushinteger( L, fl_choice( "%s", b0, b1, b2, s ) );
+      lua_pushvalue( L, 2+fl_choice( "%s", b0, b1, b2, s ) );
     } F4L_CATCH( L );
     return 1;
   }
