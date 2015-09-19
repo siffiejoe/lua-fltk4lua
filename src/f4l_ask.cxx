@@ -133,7 +133,7 @@ namespace {
 
   int f4l_input_( lua_State* L ) {
     char const* msg = luaL_checkstring( L, 1 );
-    char const* def = luaL_checkstring( L, 2 );
+    char const* def = luaL_optstring( L, 2, NULL );
     F4L_TRY {
       char const* r = fl_input( "%s", def, msg );
       if( r == NULL )
@@ -168,7 +168,7 @@ namespace {
 
   int f4l_password_( lua_State* L ) {
     char const* msg = luaL_checkstring( L, 1 );
-    char const* def = luaL_checkstring( L, 2 );
+    char const* def = luaL_optstring( L, 2, NULL );
     F4L_TRY {
       char const* r = fl_password( "%s", def, msg );
       if( r == NULL )
