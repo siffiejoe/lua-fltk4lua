@@ -207,6 +207,7 @@ MOON_LOCAL void f4l_slider_setup( lua_State* L );
 MOON_LOCAL void f4l_value_input_setup( lua_State* L );
 MOON_LOCAL void f4l_value_output_setup( lua_State* L );
 MOON_LOCAL void f4l_color_chooser_setup( lua_State* L );
+MOON_LOCAL void f4l_progress_setup( lua_State* L );
 // ...
 
 
@@ -248,6 +249,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_value_input_setup( L );
   f4l_value_output_setup( L );
   f4l_color_chooser_setup( L );
+  f4l_progress_setup( L );
   // ...
   return 1;
 }

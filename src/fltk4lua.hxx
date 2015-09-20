@@ -154,6 +154,7 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );
 #define F4L_VALUE_SLIDER_NAME       "fltk4lua.Value_Slider"
 #define F4L_VALUE_INPUT_NAME        "fltk4lua.Value_Input"
 #define F4L_VALUE_OUTPUT_NAME       "fltk4lua.Value_Output"
+#define F4L_PROGRESS_NAME           "fltk4lua.Progress"
 #define F4L_COLOR_CHOOSER_NAME      "fltk4lua.Color_Chooser"
 // ...
 
