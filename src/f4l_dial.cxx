@@ -2,6 +2,8 @@
 #include "f4l_valuator.hxx"
 #include "f4l_widget.hxx"
 #include <FL/Fl_Dial.H>
+#include <FL/Fl_Fill_Dial.H>
+#include <FL/Fl_Line_Dial.H>
 #include <cstring>
 #include <climits>
 
@@ -76,10 +78,24 @@ namespace {
     return 1;
   }
 
+  int new_fill_dial( lua_State* L ) {
+    F4L_TRY {
+      f4l_new_widget< Fl_Fill_Dial>( L, F4L_FILL_DIAL_NAME );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+  int new_line_dial( lua_State* L ) {
+    F4L_TRY {
+      f4l_new_widget< Fl_Line_Dial>( L, F4L_LINE_DIAL_NAME );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
   int dial_angles( lua_State* L ) {
     Fl_Dial* d = check_dial( L, 1 );
     short a = moon_checkint( L, 2, SHRT_MIN, SHRT_MAX );
-    short b = moon_checkint( L, 2, SHRT_MIN, SHRT_MAX );
+    short b = moon_checkint( L, 3, SHRT_MIN, SHRT_MAX );
     F4L_TRY {
       d->angles( a, b );
     } F4L_CATCH( L );
@@ -92,6 +108,8 @@ namespace {
 MOON_LOCAL void f4l_dial_setup( lua_State* L ) {
   luaL_Reg const functions[] = {
     { "Dial", new_dial },
+    { "Fill_Dial", new_fill_dial },
+    { "Line_Dial", new_line_dial },
     { NULL, NULL }
   };
   luaL_Reg const methods[] = {
@@ -102,11 +120,29 @@ MOON_LOCAL void f4l_dial_setup( lua_State* L ) {
     { "__newindex", dial_newindex },
     { NULL, NULL }
   };
+
   moon_defobject( L, F4L_DIAL_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_DIAL_NAME, F4L_VALUATOR_NAME,
                 f4l_cast< Fl_Dial, Fl_Valuator > );
   moon_defcast( L, F4L_DIAL_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Dial, Fl_Widget > );
+
+  moon_defobject( L, F4L_FILL_DIAL_NAME, 0, methods, 0 );
+  moon_defcast( L, F4L_FILL_DIAL_NAME, F4L_DIAL_NAME,
+                f4l_cast< Fl_Fill_Dial, Fl_Dial > );
+  moon_defcast( L, F4L_FILL_DIAL_NAME, F4L_VALUATOR_NAME,
+                f4l_cast< Fl_Fill_Dial, Fl_Valuator > );
+  moon_defcast( L, F4L_FILL_DIAL_NAME, F4L_WIDGET_NAME,
+                f4l_cast< Fl_Fill_Dial, Fl_Widget > );
+
+  moon_defobject( L, F4L_LINE_DIAL_NAME, 0, methods, 0 );
+  moon_defcast( L, F4L_LINE_DIAL_NAME, F4L_DIAL_NAME,
+                f4l_cast< Fl_Line_Dial, Fl_Dial > );
+  moon_defcast( L, F4L_LINE_DIAL_NAME, F4L_VALUATOR_NAME,
+                f4l_cast< Fl_Line_Dial, Fl_Valuator > );
+  moon_defcast( L, F4L_LINE_DIAL_NAME, F4L_WIDGET_NAME,
+                f4l_cast< Fl_Line_Dial, Fl_Widget > );
+
   luaL_setfuncs( L, functions, 0 );
 }
 

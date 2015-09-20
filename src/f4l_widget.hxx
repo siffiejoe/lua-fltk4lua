@@ -51,7 +51,7 @@ MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
  * object: */
 template< typename T >
 MOON_LOCAL void f4l_new_member( lua_State* L, char const* tname, T* w,
-                                int pindex, void (*checkfn)( void* ) = 0,
+                                int pindex, int (*checkfn)( void* ) = 0,
                                 void* ptr = NULL ) {
   void** p = moon_newfield( L, tname, pindex, checkfn, ptr );
   if( pindex == 0 ) {
