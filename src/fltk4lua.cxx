@@ -198,6 +198,7 @@ MOON_LOCAL void f4l_group_setup( lua_State* L );
 MOON_LOCAL void f4l_window_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
 MOON_LOCAL void f4l_button_setup( lua_State* L );
+MOON_LOCAL void f4l_clock_setup( lua_State* L );
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L );
 MOON_LOCAL void f4l_counter_setup( lua_State* L );
 MOON_LOCAL void f4l_dial_setup( lua_State* L );
@@ -237,6 +238,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_window_setup( L );
   f4l_box_setup( L );
   f4l_button_setup( L );
+  f4l_clock_setup( L );
   f4l_adjuster_setup( L );
   f4l_counter_setup( L );
   f4l_dial_setup( L );
