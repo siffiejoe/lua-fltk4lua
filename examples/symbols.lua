@@ -93,13 +93,15 @@ bt( "@redo" )
 
 local x = math.floor( window.w * 0.05 + 0.5 )
 local w = math.floor( window.w * 0.42 + 0.5 )
-orientation = fl.Hor_Value_Slider( x, window.h-40, w, 16, "Orientation" )
+orientation = fl.Value_Slider( x, window.h-40, w, 16, "Orientation" )
+orientation.type = "FL_HORIZONTAL"
 orientation:range( 0.0, 9.0 )
 orientation.value = 0.0
 orientation.step = 1
 orientation.callback = slider_cb
 x = math.floor( window.w * 0.53 + 0.5 )
-size = fl.Hor_Value_Slider( x, window.h-40, w, 16, "Size" )
+size = fl.Value_Slider( x, window.h-40, w, 16, "Size" )
+size.type = "FL_HORIZONTAL"
 size:range( -3.0, 9.0 )
 size.value = 0.0
 size.step = 1
