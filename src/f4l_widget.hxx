@@ -9,8 +9,12 @@
 /* Inside a FLTK callback the Fl_Widget pointer must be mapped to
  * a real userdata. This is done using a weak table in the registry.
  */
-MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w );
+MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w,
+                                     int setud = 1);
 MOON_LOCAL void f4l_push_widget( lua_State* L, Fl_Widget* w );
+
+/* Detect whether we created a given widget */
+MOON_LOCAL int f4l_our_widget( lua_State* L, Fl_Widget* w );
 
 
 /* Most widgets take the same arguments for their constructors, so
@@ -41,6 +45,21 @@ MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
    * for the callbacks, and put a reference to this widget into the
    * (Lua) uservalue table of the parent group widget (if any) */
   f4l_register_widget( L, widget );
+}
+
+/* Sometimes we want access to widgets that are members of another
+ * object: */
+template< typename T >
+MOON_LOCAL void f4l_new_member( lua_State* L, char const* tname, T* w,
+                                int pindex, void (*checkfn)( void* ) = 0,
+                                void* ptr = NULL ) {
+  void** p = moon_newfield( L, tname, pindex, checkfn, ptr );
+  if( pindex == 0 ) {
+    lua_newtable( L );
+    lua_setuservalue( L, -2 );
+  }
+  *p = static_cast< void* >( w );
+  f4l_register_widget( L, w, 0 );
 }
 
 

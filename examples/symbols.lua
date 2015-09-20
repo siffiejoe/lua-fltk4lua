@@ -9,14 +9,13 @@ local ROWS = 6
 local COLS = 6
 
 local window, orientation, size
-local udatas = {}
 
 local function slider_cb()
   local val = orientation.value
   local sze = size.value
   for i = window.children-1, 0, -1 do
     local wc = window:child( i )
-    local l = udatas[ wc ]
+    local l = wc.user_data
     if l and l:match( "^@" ) then
       l = l:sub( 2 )
       if val ~= 0 and sze ~= 0 then
@@ -47,11 +46,11 @@ local function bt( name )
   b1.box = "FL_NO_BOX"
   b1.align = fl.ALIGN_BOTTOM
   b1.labelsize = 11
-  udatas[ b1 ] = name
+  b1.user_data = name
   local b2 = fl.Box( x, y, W-20, H-20, name )
   b2.box = "FL_UP_BOX"
   b2.labelcolor = fl.DARK3
-  udatas[ b2 ] = name
+  b2.user_data = name
 end
 
 window = fl.Window( COLS*W, ROWS*H+60 )

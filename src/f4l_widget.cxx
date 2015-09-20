@@ -20,7 +20,9 @@ namespace {
       f4l_push_widget( *th, w );
       if( moon_getuvfield( *th, -1, "callback" ) == LUA_TFUNCTION ) {
         lua_insert( *th, -2 );
-        lua_call( *th, 1, 0 );
+        if( moon_getuvfield( *th, -1, "user_data" ) == LUA_TNIL )
+          lua_pushnil( *th );
+        lua_call( *th, 2, 0 );
       }
       lua_settop( *th, top );
     }
@@ -29,7 +31,8 @@ namespace {
 } // anonymous namespace
 
 
-MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w ) {
+MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w,
+                                     int setud ) {
   luaL_checkstack( L, 3, NULL );
   moon_getcache( L, LUA_REGISTRYINDEX );
   lua_pushlightuserdata( L, static_cast< void* >( w ) );
@@ -54,8 +57,10 @@ MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w ) {
   lua_pop( L, 1 ); // pop cache *or* parent *or* uservalue
   /* all widgets created directly by fltk4lua have the active thread
    * pointer stored as (FLTK) user_data for use in callbacks */
-  w->user_data( static_cast< void* >( f4l_get_active_thread( L ) ) );
-  lua_pop( L, 1 ); // pop active thread pointer
+  if( setud ) {
+    w->user_data( static_cast< void* >( f4l_get_active_thread( L ) ) );
+    lua_pop( L, 1 ); // pop active thread pointer
+  }
 }
 
 
@@ -69,6 +74,15 @@ MOON_LOCAL void f4l_push_widget( lua_State* L, Fl_Widget* w ) {
     lua_pop( L, 1 );
     luaL_error( L, "unknown Fl_Widget pointer" );
   }
+}
+
+
+MOON_LOCAL int f4l_our_widget( lua_State* L, Fl_Widget* w ) {
+  void* p1 = static_cast< void* >( f4l_get_active_thread( L ) );
+  void* ud = w->user_data();
+  int v = p1 == ud;
+  lua_pop( L, 1 );
+  return v;
 }
 
 
@@ -165,6 +179,10 @@ MOON_LOCAL int f4l_widget_index_( lua_State* L, Fl_Widget* w,
       } else if( F4L_MEMCMP( key, "labeltype", 9 ) == 0 ) {
         f4l_push_labeltype( L, w->labeltype() );
         return 1;
+      } else if( F4L_MEMCMP( key, "user_data", 9 ) == 0 ) {
+        if( moon_getuvfield( L, 1, "user_data" ) == LUA_TNIL )
+          lua_pushnil( L );
+        return 1;
       } else if( F4L_MEMCMP( key, "visible_r", 9 ) == 0 ) {
         lua_pushboolean( L, w->visible_r() );
         return 1;
@@ -240,6 +258,8 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
       break;
     case 8:
       if( F4L_MEMCMP( key, "callback", 8 ) == 0 ) {
+        luaL_argcheck( L, f4l_our_widget( L, w ), 1,
+                       "internal FLTK widget" );
         luaL_checktype( L, 3, LUA_TFUNCTION );
         lua_settop( L, 3 );
         moon_setuvfield( L, 1, "callback" );
@@ -256,6 +276,10 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
         return 1;
       } else if( F4L_MEMCMP( key, "labeltype", 9 ) == 0 ) {
         w->labeltype( f4l_check_labeltype( L, 3 ) );
+        return 1;
+      } else if( F4L_MEMCMP( key, "user_data", 9 ) == 0 ) {
+        lua_settop( L, 3 );
+        moon_setuvfield( L, 1, "user_data" );
         return 1;
       }
       break;
