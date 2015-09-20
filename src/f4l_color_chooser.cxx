@@ -126,10 +126,6 @@ namespace {
 
 
 MOON_LOCAL void f4l_color_chooser_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Color_Chooser", new_color_chooser },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_GROUP_METHODS,
@@ -144,6 +140,6 @@ MOON_LOCAL void f4l_color_chooser_setup( lua_State* L ) {
                 f4l_cast< Fl_Color_Chooser, Fl_Group > );
   moon_defcast( L, F4L_COLOR_CHOOSER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Color_Chooser, Fl_Widget > );
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Color_Chooser", new_color_chooser );
 }
 

@@ -41,10 +41,6 @@ namespace {
 
 
 MOON_LOCAL void f4l_box_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Box", new_box },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     { "__index", box_index },
@@ -54,6 +50,6 @@ MOON_LOCAL void f4l_box_setup( lua_State* L ) {
   moon_defobject( L, F4L_BOX_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_BOX_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Box, Fl_Widget > );
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Box", new_box );
 }
 

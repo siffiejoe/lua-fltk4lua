@@ -111,10 +111,6 @@ namespace {
 
 
 MOON_LOCAL void f4l_dial_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Dial", new_dial },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_VALUATOR_METHODS,
@@ -123,13 +119,11 @@ MOON_LOCAL void f4l_dial_setup( lua_State* L ) {
     { "__newindex", dial_newindex },
     { NULL, NULL }
   };
-
   moon_defobject( L, F4L_DIAL_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_DIAL_NAME, F4L_VALUATOR_NAME,
                 f4l_cast< Fl_Dial, Fl_Valuator > );
   moon_defcast( L, F4L_DIAL_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Dial, Fl_Widget > );
-
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Dial", new_dial );
 }
 

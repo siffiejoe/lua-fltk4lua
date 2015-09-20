@@ -195,15 +195,6 @@ MOON_LOCAL int f4l_button_setonly( lua_State* L ) {
 
 
 MOON_LOCAL void f4l_button_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Button", new_button },
-    { "Check_Button", new_check_button },
-    { "Light_Button", new_light_button },
-    { "Repeat_Button", new_repeat_button },
-    { "Return_Button", new_return_button },
-    { "Round_Button", new_round_button },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_BUTTON_METHODS,
@@ -254,6 +245,11 @@ MOON_LOCAL void f4l_button_setup( lua_State* L ) {
   moon_defcast( L, F4L_ROUND_BUTTON_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Round_Button, Fl_Widget > );
 
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Button", new_button );
+  f4l_new_class( L, "Check_Button", new_check_button );
+  f4l_new_class( L, "Light_Button", new_light_button );
+  f4l_new_class( L, "Repeat_Button", new_repeat_button );
+  f4l_new_class( L, "Return_Button", new_return_button );
+  f4l_new_class( L, "Round_Button", new_round_button );
 }
 

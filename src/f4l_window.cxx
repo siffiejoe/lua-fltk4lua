@@ -316,10 +316,6 @@ MOON_LOCAL int f4l_window_size_range( lua_State* L ) {
 
 
 MOON_LOCAL void f4l_window_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Window", new_window },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_GROUP_METHODS,
@@ -333,6 +329,6 @@ MOON_LOCAL void f4l_window_setup( lua_State* L ) {
                 f4l_cast< Fl_Window, Fl_Group > );
   moon_defcast( L, F4L_WINDOW_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Window, Fl_Widget > );
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Window", new_window );
 }
 

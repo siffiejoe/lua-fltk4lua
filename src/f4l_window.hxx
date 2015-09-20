@@ -8,14 +8,14 @@
 /* Windows have an additional constructor signature */
 template< typename T >
 MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
-  if( lua_gettop( L ) < 4 ) {
-    int w = moon_checkint( L, 1, 0, INT_MAX );
-    int h = moon_checkint( L, 2, 0, INT_MAX );
-    char const* label = luaL_optstring( L, 3, NULL );
+  if( lua_gettop( L ) < 5 ) {
+    int w = moon_checkint( L, 2, 0, INT_MAX );
+    int h = moon_checkint( L, 3, 0, INT_MAX );
+    char const* label = luaL_optstring( L, 4, NULL );
     void** p = moon_newpointer( L, tname, f4l_delete< T > );
     lua_newtable( L );
     if( label != NULL ) {
-      lua_pushvalue( L, 3 );
+      lua_pushvalue( L, 4 );
       lua_setfield( L, -2, "label" );
     }
     lua_setuservalue( L, -2 );

@@ -72,10 +72,6 @@ namespace {
 
 
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Adjuster", new_adjuster },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_VALUATOR_METHODS,
@@ -88,6 +84,6 @@ MOON_LOCAL void f4l_adjuster_setup( lua_State* L ) {
                 f4l_cast< Fl_Adjuster, Fl_Valuator > );
   moon_defcast( L, F4L_ADJUSTER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Adjuster, Fl_Widget > );
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Adjuster", new_adjuster );
 }
 

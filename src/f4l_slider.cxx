@@ -307,12 +307,6 @@ MOON_LOCAL int f4l_slider_scrollvalue( lua_State* L ) {
 
 
 MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Slider", new_slider },
-    { "Scrollbar", new_scrollbar },
-    { "Value_Slider", new_value_slider },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_VALUATOR_METHODS,
@@ -360,6 +354,8 @@ MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
   moon_defcast( L, F4L_VALUE_SLIDER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Value_Slider, Fl_Widget > );
 
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Slider", new_slider );
+  f4l_new_class( L, "Scrollbar", new_scrollbar );
+  f4l_new_class( L, "Value_Slider", new_value_slider );
 }
 

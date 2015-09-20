@@ -22,17 +22,17 @@ MOON_LOCAL int f4l_our_widget( lua_State* L, Fl_Widget* w );
  * a helper function: */
 template< typename T >
 MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
-  int x = moon_checkint( L, 1, 0, INT_MAX );
-  int y = moon_checkint( L, 2, 0, INT_MAX );
-  int w = moon_checkint( L, 3, 0, INT_MAX );
-  int h = moon_checkint( L, 4, 0, INT_MAX );
-  char const* label = luaL_optstring( L, 5, NULL );
+  int x = moon_checkint( L, 2, 0, INT_MAX );
+  int y = moon_checkint( L, 3, 0, INT_MAX );
+  int w = moon_checkint( L, 4, 0, INT_MAX );
+  int h = moon_checkint( L, 5, 0, INT_MAX );
+  char const* label = luaL_optstring( L, 6, NULL );
   void** p = moon_newpointer( L, tname, f4l_delete< T > );
   /* widgets need a uservalue table to store the callback function
    * and for keeping references to child widgets */
   lua_newtable( L );
   if( label != NULL ) {
-    lua_pushvalue( L, 5 );
+    lua_pushvalue( L, 6 );
     lua_setfield( L, -2, "label" );
   }
   lua_setuservalue( L, -2 );

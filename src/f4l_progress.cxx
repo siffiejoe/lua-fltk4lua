@@ -87,10 +87,6 @@ namespace {
 
 
 MOON_LOCAL void f4l_progress_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Progress", new_progress },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     { "__index", progress_index },
@@ -100,6 +96,6 @@ MOON_LOCAL void f4l_progress_setup( lua_State* L ) {
   moon_defobject( L, F4L_PROGRESS_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_PROGRESS_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Progress, Fl_Widget > );
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Progress", new_progress );
 }
 

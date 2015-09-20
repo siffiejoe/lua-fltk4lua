@@ -213,10 +213,6 @@ namespace {
 
 
 MOON_LOCAL void f4l_chart_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Chart", new_chart },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     { "add", chart_add },
@@ -232,6 +228,6 @@ MOON_LOCAL void f4l_chart_setup( lua_State* L ) {
   moon_defobject( L, F4L_CHART_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_CHART_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Chart, Fl_Widget > );
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class( L, "Chart", new_chart );
 }
 
