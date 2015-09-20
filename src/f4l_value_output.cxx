@@ -105,10 +105,6 @@ namespace {
 
 
 MOON_LOCAL void f4l_value_output_setup( lua_State* L ) {
-  luaL_Reg const functions[] = {
-    { "Value_Output", new_value_output },
-    { NULL, NULL }
-  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_VALUATOR_METHODS,
@@ -121,6 +117,6 @@ MOON_LOCAL void f4l_value_output_setup( lua_State* L ) {
                 f4l_cast< Fl_Value_Output, Fl_Valuator > );
   moon_defcast( L, F4L_VALUE_OUTPUT_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Value_Output, Fl_Widget > );
-  luaL_setfuncs( L, functions, 0 );
+  f4l_new_class_table( L, "Value_Output", new_value_output );
 }
 

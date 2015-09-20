@@ -287,6 +287,6 @@ MOON_LOCAL void f4l_group_setup( lua_State* L ) {
   moon_defobject( L, F4L_GROUP_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_GROUP_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Group, Fl_Widget > );
-  f4l_new_class( L, "Group", new_group );
+  f4l_new_class_table( L, "Group", new_group );
 }
 

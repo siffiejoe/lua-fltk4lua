@@ -228,6 +228,6 @@ MOON_LOCAL void f4l_chart_setup( lua_State* L ) {
   moon_defobject( L, F4L_CHART_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_CHART_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Chart, Fl_Widget > );
-  f4l_new_class( L, "Chart", new_chart );
+  f4l_new_class_table( L, "Chart", new_chart );
 }
 

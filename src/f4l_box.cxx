@@ -50,6 +50,6 @@ MOON_LOCAL void f4l_box_setup( lua_State* L ) {
   moon_defobject( L, F4L_BOX_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_BOX_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Box, Fl_Widget > );
-  f4l_new_class( L, "Box", new_box );
+  f4l_new_class_table( L, "Box", new_box );
 }
 

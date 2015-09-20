@@ -162,9 +162,9 @@ MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L ) {
 }
 
 
-MOON_LOCAL void f4l_new_class( lua_State* L, char const* name,
-                               lua_CFunction constructor,
-                               luaL_Reg const* smethods ) {
+MOON_LOCAL void f4l_new_class_table( lua_State* L, char const* name,
+                                     lua_CFunction constructor,
+                                     luaL_Reg const* smethods ) {
   luaL_checkstack( L, 3, NULL );
   lua_newtable( L );
   if( smethods != 0 )

@@ -146,7 +146,7 @@ MOON_LOCAL void f4l_clock_setup( lua_State* L ) {
   moon_defcast( L, F4L_CLOCK_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Clock, Fl_Widget > );
 
-  f4l_new_class( L, "Clock_Output", new_clock_output );
-  f4l_new_class( L, "Clock", new_clock );
+  f4l_new_class_table( L, "Clock_Output", new_clock_output );
+  f4l_new_class_table( L, "Clock", new_clock );
 }
 

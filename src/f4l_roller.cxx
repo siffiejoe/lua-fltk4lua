@@ -56,6 +56,6 @@ MOON_LOCAL void f4l_roller_setup( lua_State* L ) {
                 f4l_cast< Fl_Roller, Fl_Valuator > );
   moon_defcast( L, F4L_ROLLER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Roller, Fl_Widget > );
-  f4l_new_class( L, "Roller", new_roller );
+  f4l_new_class_table( L, "Roller", new_roller );
 }
 

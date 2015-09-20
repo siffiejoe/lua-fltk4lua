@@ -136,6 +136,6 @@ MOON_LOCAL void f4l_counter_setup( lua_State* L ) {
                 f4l_cast< Fl_Counter, Fl_Valuator > );
   moon_defcast( L, F4L_COUNTER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Counter, Fl_Widget > );
-  f4l_new_class( L, "Counter", new_counter );
+  f4l_new_class_table( L, "Counter", new_counter );
 }
 

@@ -245,11 +245,11 @@ MOON_LOCAL void f4l_button_setup( lua_State* L ) {
   moon_defcast( L, F4L_ROUND_BUTTON_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Round_Button, Fl_Widget > );
 
-  f4l_new_class( L, "Button", new_button );
-  f4l_new_class( L, "Check_Button", new_check_button );
-  f4l_new_class( L, "Light_Button", new_light_button );
-  f4l_new_class( L, "Repeat_Button", new_repeat_button );
-  f4l_new_class( L, "Return_Button", new_return_button );
-  f4l_new_class( L, "Round_Button", new_round_button );
+  f4l_new_class_table( L, "Button", new_button );
+  f4l_new_class_table( L, "Check_Button", new_check_button );
+  f4l_new_class_table( L, "Light_Button", new_light_button );
+  f4l_new_class_table( L, "Repeat_Button", new_repeat_button );
+  f4l_new_class_table( L, "Return_Button", new_return_button );
+  f4l_new_class_table( L, "Round_Button", new_round_button );
 }
 

@@ -139,6 +139,6 @@ MOON_LOCAL void f4l_value_input_setup( lua_State* L ) {
                 f4l_cast< Fl_Value_Input, Fl_Valuator > );
   moon_defcast( L, F4L_VALUE_INPUT_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Value_Input, Fl_Widget > );
-  f4l_new_class( L, "Value_Input", new_value_input );
+  f4l_new_class_table( L, "Value_Input", new_value_input );
 }
 

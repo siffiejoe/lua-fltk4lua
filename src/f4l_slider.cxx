@@ -354,8 +354,8 @@ MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
   moon_defcast( L, F4L_VALUE_SLIDER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Value_Slider, Fl_Widget > );
 
-  f4l_new_class( L, "Slider", new_slider );
-  f4l_new_class( L, "Scrollbar", new_scrollbar );
-  f4l_new_class( L, "Value_Slider", new_value_slider );
+  f4l_new_class_table( L, "Slider", new_slider );
+  f4l_new_class_table( L, "Scrollbar", new_scrollbar );
+  f4l_new_class_table( L, "Value_Slider", new_value_slider );
 }
 

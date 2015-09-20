@@ -84,6 +84,6 @@ MOON_LOCAL void f4l_adjuster_setup( lua_State* L ) {
                 f4l_cast< Fl_Adjuster, Fl_Valuator > );
   moon_defcast( L, F4L_ADJUSTER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Adjuster, Fl_Widget > );
-  f4l_new_class( L, "Adjuster", new_adjuster );
+  f4l_new_class_table( L, "Adjuster", new_adjuster );
 }
 
