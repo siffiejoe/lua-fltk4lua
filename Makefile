@@ -69,7 +69,7 @@ src/f4l_button.o: src/f4l_button.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_button.hxx src/f4l_widget.hxx \
  src/f4l_enums.hxx
 src/f4l_clock.o: src/f4l_clock.cxx src/fltk4lua.hxx moon/moon.h \
- compat-5.3/c-api/compat-5.3.h src/f4l_widget.hxx
+ compat-5.3/c-api/compat-5.3.h src/f4l_widget.hxx src/f4l_enums.hxx
 src/f4l_valuator.o: src/f4l_valuator.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx
 src/f4l_adjuster.o: src/f4l_adjuster.cxx src/fltk4lua.hxx moon/moon.h \
@@ -79,7 +79,8 @@ src/f4l_counter.o: src/f4l_counter.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx \
  src/f4l_enums.hxx
 src/f4l_dial.o: src/f4l_dial.cxx src/fltk4lua.hxx moon/moon.h \
- compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx
+ compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx \
+ src/f4l_enums.hxx
 src/f4l_roller.o: src/f4l_roller.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_valuator.hxx src/f4l_widget.hxx
 src/f4l_slider.o: src/f4l_slider.cxx src/fltk4lua.hxx moon/moon.h \

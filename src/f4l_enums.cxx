@@ -2,12 +2,6 @@
 #include "f4l_enums.hxx"
 #include <climits>
 
-/* common macros for creating code from an enum list */
-#define GEN_NAME( _a, _b ) "FL_" _a,
-#define GEN_VALUE( _a, _b ) _b,
-#define GEN_CASE( _a, _b ) \
-  case _b: lua_pushliteral( L, "FL_" _a ); break;
-
 
 #define DAMAGE_LIST( _ ) \
   _( "DAMAGE_CHILD", FL_DAMAGE_CHILD ) \
@@ -64,12 +58,12 @@ MOON_LOCAL void f4l_push_damage( lua_State* L, Fl_Damage d ) {
 
 MOON_LOCAL Fl_Event f4l_check_event( lua_State* L, int idx ) {
   static char const* const names[] = {
-    EVENT_LIST( GEN_NAME )
+    EVENT_LIST( F4L_GEN_NAME )
     "FL_KEYBOARD", // alias for "FL_KEYDOWN"
     NULL
   };
   static Fl_Event const values[] = {
-    EVENT_LIST( GEN_VALUE )
+    EVENT_LIST( F4L_GEN_VALUE )
     FL_KEYBOARD, // alias for FL_KEYDOWN
     (Fl_Event)0 // dummy value
   };
@@ -78,7 +72,7 @@ MOON_LOCAL Fl_Event f4l_check_event( lua_State* L, int idx ) {
 
 MOON_LOCAL void f4l_push_event( lua_State* L, Fl_Event e ) {
   switch( e ) {
-    EVENT_LIST( GEN_CASE )
+    EVENT_LIST( F4L_GEN_CASE )
     default:
       luaL_error( L, "unknown Fl_Event" );
   }
@@ -105,11 +99,11 @@ MOON_LOCAL Fl_Labeltype f4l_check_labeltype( lua_State* L, int idx ) {
     setup = 0;
   }
   static char const* const names[] = {
-    LABELTYPE_LIST( GEN_NAME )
+    LABELTYPE_LIST( F4L_GEN_NAME )
     NULL
   };
   static Fl_Labeltype const values[] = {
-    LABELTYPE_LIST( GEN_VALUE )
+    LABELTYPE_LIST( F4L_GEN_VALUE )
     (Fl_Labeltype)0 // dummy value
   };
   return values[ luaL_checkoption( L, idx, NULL, names ) ];
@@ -117,7 +111,7 @@ MOON_LOCAL Fl_Labeltype f4l_check_labeltype( lua_State* L, int idx ) {
 
 MOON_LOCAL void f4l_push_labeltype( lua_State* L, Fl_Labeltype t ) {
   switch( t ) {
-    LABELTYPE_LIST( GEN_CASE )
+    LABELTYPE_LIST( F4L_GEN_CASE )
     default:
       luaL_error( L, "unknown Fl_Labeltype" );
   }
@@ -205,11 +199,11 @@ MOON_LOCAL void f4l_push_when( lua_State* L, Fl_When w ) {
 
 MOON_LOCAL Fl_Cursor f4l_check_cursor( lua_State* L, int idx ) {
   static char const* const names[] = {
-    CURSOR_LIST( GEN_NAME )
+    CURSOR_LIST( F4L_GEN_NAME )
     NULL
   };
   static Fl_Cursor const values[] = {
-    CURSOR_LIST( GEN_VALUE )
+    CURSOR_LIST( F4L_GEN_VALUE )
     (Fl_Cursor)0 // dummy value
   };
   return values[ luaL_checkoption( L, idx, NULL, names ) ];
@@ -217,7 +211,7 @@ MOON_LOCAL Fl_Cursor f4l_check_cursor( lua_State* L, int idx ) {
 
 MOON_LOCAL void f4l_push_cursor( lua_State* L, Fl_Cursor c ) {
   switch( c ) {
-    CURSOR_LIST( GEN_CASE )
+    CURSOR_LIST( F4L_GEN_CASE )
     default:
       luaL_error( L, "unknown Fl_Cursor" );
   }
@@ -290,11 +284,11 @@ MOON_LOCAL Fl_Boxtype f4l_check_boxtype( lua_State* L, int idx ) {
     setup = 0;
   }
   static char const* const names[] = {
-    BOXTYPE_LIST( GEN_NAME )
+    BOXTYPE_LIST( F4L_GEN_NAME )
     NULL
   };
   static Fl_Boxtype const values[] = {
-    BOXTYPE_LIST( GEN_VALUE )
+    BOXTYPE_LIST( F4L_GEN_VALUE )
     (Fl_Boxtype)0 // dummy value
   };
   return values[ luaL_checkoption( L, idx, NULL, names ) ];
@@ -302,7 +296,7 @@ MOON_LOCAL Fl_Boxtype f4l_check_boxtype( lua_State* L, int idx ) {
 
 MOON_LOCAL void f4l_push_boxtype( lua_State* L, Fl_Boxtype b ) {
   switch( b ) {
-    BOXTYPE_LIST( GEN_CASE )
+    BOXTYPE_LIST( F4L_GEN_CASE )
     default:
       luaL_error( L, "unknown Fl_Boxtype" );
   }
@@ -345,11 +339,11 @@ MOON_LOCAL void f4l_push_boxtype( lua_State* L, Fl_Boxtype b ) {
 MOON_LOCAL Fl_Align f4l_check_align( lua_State* L, int idx ) {
   if( lua_type( L, idx ) == LUA_TSTRING ) {
     static char const* const names[] = {
-      ALIGN_LIST( GEN_NAME )
+      ALIGN_LIST( F4L_GEN_NAME )
       NULL
     };
     static Fl_Align const values[] = {
-      ALIGN_LIST( GEN_VALUE )
+      ALIGN_LIST( F4L_GEN_VALUE )
       (Fl_Align)0 // dummy value
     };
     return values[ luaL_checkoption( L, idx, NULL, names ) ];
@@ -382,11 +376,11 @@ MOON_LOCAL void f4l_push_align( lua_State* L, Fl_Align a ) {
 
 MOON_LOCAL Fl_Font f4l_check_font( lua_State* L, int idx ) {
   static char const* const names[] = {
-    FONT_LIST( GEN_NAME )
+    FONT_LIST( F4L_GEN_NAME )
     NULL
   };
   static Fl_Font const values[] = {
-    FONT_LIST( GEN_VALUE )
+    FONT_LIST( F4L_GEN_VALUE )
     (Fl_Font)0 // dummy value
   };
   return values[ luaL_checkoption( L, idx, NULL, names ) ];
@@ -394,7 +388,7 @@ MOON_LOCAL Fl_Font f4l_check_font( lua_State* L, int idx ) {
 
 MOON_LOCAL void f4l_push_font( lua_State* L, Fl_Font f ) {
   switch( f ) {
-    FONT_LIST( GEN_CASE )
+    FONT_LIST( F4L_GEN_CASE )
     default:
       luaL_error( L, "unknown Fl_Font" );
   }

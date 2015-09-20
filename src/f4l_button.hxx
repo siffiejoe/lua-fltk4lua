@@ -5,13 +5,9 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Light_Button.H>
-#include <FL/Fl_Radio_Button.H>
-#include <FL/Fl_Radio_Light_Button.H>
-#include <FL/Fl_Radio_Round_Button.H>
 #include <FL/Fl_Repeat_Button.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Round_Button.H>
-#include <FL/Fl_Toggle_Button.H>
 
 
 /* (Meta-)methods for Fl_Buttons: */

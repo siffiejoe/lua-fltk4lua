@@ -4,6 +4,38 @@
 #include "fltk4lua.hxx"
 #include <FL/Enumerations.H>
 
+/* common macros for creating code from an enum definition list */
+#define F4L_GEN_NAME( _a, _b )  "FL_" _a,
+#define F4L_GEN_RNAME( _a, _b ) _a,
+#define F4L_GEN_VALUE( _a, _b ) _b,
+#define F4L_GEN_CASE( _a, _b )  \
+  case _b: lua_pushliteral( L, "FL_" _a ); break;
+#define F4L_GEN_RCASE( _a, _b ) \
+  case _b: lua_pushliteral( L, _a ); break;
+
+/* The Fl_Widget::type() range is categorized according to the
+ * Widget that uses the values. */
+#define F4L_GEN_TYPE_ENUM( _list, _suffix ) \
+  MOON_LOCAL int f4l_check_type_ ## _suffix( lua_State* L, int idx ) { \
+    static char const* const names[] = { \
+      _list( F4L_GEN_RNAME ) \
+      NULL \
+    }; \
+    static int const values[] = { \
+      _list( F4L_GEN_VALUE ) \
+      0 \
+    }; \
+    return values[ luaL_checkoption( L, idx, NULL, names ) ]; \
+  } \
+  MOON_LOCAL void f4l_push_type_ ## _suffix( lua_State* L, int v ) { \
+    switch( v ) { \
+      _list( F4L_GEN_RCASE ) \
+      default: \
+        luaL_error( L, "unknown " #_suffix " type" ); \
+    } \
+  }
+
+
 MOON_LOCAL Fl_Damage f4l_check_damage( lua_State* L, int idx );
 MOON_LOCAL void f4l_push_damage( lua_State* L, Fl_Damage d );
 

@@ -8,6 +8,17 @@
 
 namespace {
 
+#define TYPE_LIST( _ ) \
+  _( "FL_VERTICAL", FL_VERTICAL ) \
+  _( "FL_HORIZONTAL", FL_HORIZONTAL ) \
+  _( "FL_VERT_FILL_SLIDER", FL_VERT_FILL_SLIDER ) \
+  _( "FL_HOR_FILL_SLIDER", FL_HOR_FILL_SLIDER ) \
+  _( "FL_VERT_NICE_SLIDER", FL_VERT_NICE_SLIDER ) \
+  _( "FL_HOR_NICE_SLIDER", FL_HOR_NICE_SLIDER )
+
+  F4L_GEN_TYPE_ENUM( TYPE_LIST, slider )
+
+
   inline Fl_Slider* check_slider( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_SLIDER_NAME );
     return static_cast< Fl_Slider* >( p );
@@ -203,41 +214,6 @@ namespace {
     return 1;
   }
 
-  int new_fill_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Fill_Slider >( L, F4L_FILL_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_hor_fill_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Hor_Fill_Slider >( L, F4L_HOR_FILL_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_hor_nice_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Hor_Nice_Slider >( L, F4L_HOR_NICE_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_hor_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Hor_Slider >( L, F4L_HOR_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_nice_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Nice_Slider >( L, F4L_NICE_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
   int new_scrollbar( lua_State* L ) {
     F4L_TRY {
       f4l_new_widget< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME );
@@ -252,19 +228,18 @@ namespace {
     return 1;
   }
 
-  int new_hor_value_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Hor_Value_Slider >( L, F4L_HOR_VALUE_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
 
 
 MOON_LOCAL int f4l_slider_index_( lua_State* L, Fl_Slider* s,
                                   char const* key, size_t n ) {
   switch( n ) {
+    case 4:
+      if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+        f4l_push_type_slider( L, s->type() );
+        return 1;
+      }
+      break;
     case 6:
       if( F4L_MEMCMP( key, "slider", 6 ) == 0 ) {
         f4l_push_boxtype( L, s->slider() );
@@ -284,6 +259,12 @@ MOON_LOCAL int f4l_slider_index_( lua_State* L, Fl_Slider* s,
 MOON_LOCAL int f4l_slider_newindex_( lua_State* L, Fl_Slider* s,
                                      char const* key, size_t n ) {
   switch( n ) {
+    case 4:
+      if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+        s->type( f4l_check_type_slider( L, 3 ) );
+        return 1;
+      }
+      break;
     case 6:
       if( F4L_MEMCMP( key, "slider", 6 ) == 0 ) {
         s->slider( f4l_check_boxtype( L, 3 ) );
@@ -328,14 +309,8 @@ MOON_LOCAL int f4l_slider_scrollvalue( lua_State* L ) {
 MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
   luaL_Reg const functions[] = {
     { "Slider", new_slider },
-    { "Fill_Slider", new_fill_slider },
-    { "Hor_Fill_Slider", new_hor_fill_slider },
-    { "Hor_Nice_Slider", new_hor_nice_slider },
-    { "Hor_Slider", new_hor_slider },
-    { "Nice_Slider", new_nice_slider },
     { "Scrollbar", new_scrollbar },
     { "Value_Slider", new_value_slider },
-    { "Hor_Value_Slider", new_hor_value_slider },
     { NULL, NULL }
   };
   luaL_Reg const methods[] = {
@@ -362,51 +337,12 @@ MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
     { "__index", value_slider_index },
     { "__newindex", value_slider_newindex },
   };
+
   moon_defobject( L, F4L_SLIDER_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_SLIDER_NAME, F4L_VALUATOR_NAME,
                 f4l_cast< Fl_Slider, Fl_Valuator > );
   moon_defcast( L, F4L_SLIDER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Slider, Fl_Widget > );
-
-  moon_defobject( L, F4L_FILL_SLIDER_NAME, 0, methods, 0 );
-  moon_defcast( L, F4L_FILL_SLIDER_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Fill_Slider, Fl_Slider > );
-  moon_defcast( L, F4L_FILL_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Fill_Slider, Fl_Valuator > );
-  moon_defcast( L, F4L_FILL_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Fill_Slider, Fl_Widget > );
-
-  moon_defobject( L, F4L_HOR_FILL_SLIDER_NAME, 0, methods, 0 );
-  moon_defcast( L, F4L_HOR_FILL_SLIDER_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Hor_Fill_Slider, Fl_Slider > );
-  moon_defcast( L, F4L_HOR_FILL_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Hor_Fill_Slider, Fl_Valuator > );
-  moon_defcast( L, F4L_HOR_FILL_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Hor_Fill_Slider, Fl_Widget > );
-
-  moon_defobject( L, F4L_HOR_NICE_SLIDER_NAME, 0, methods, 0 );
-  moon_defcast( L, F4L_HOR_NICE_SLIDER_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Hor_Nice_Slider, Fl_Slider > );
-  moon_defcast( L, F4L_HOR_NICE_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Hor_Nice_Slider, Fl_Valuator > );
-  moon_defcast( L, F4L_HOR_NICE_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Hor_Nice_Slider, Fl_Widget > );
-
-  moon_defobject( L, F4L_HOR_SLIDER_NAME, 0, methods, 0 );
-  moon_defcast( L, F4L_HOR_SLIDER_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Hor_Slider, Fl_Slider > );
-  moon_defcast( L, F4L_HOR_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Hor_Slider, Fl_Valuator > );
-  moon_defcast( L, F4L_HOR_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Hor_Slider, Fl_Widget > );
-
-  moon_defobject( L, F4L_NICE_SLIDER_NAME, 0, methods, 0 );
-  moon_defcast( L, F4L_NICE_SLIDER_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Nice_Slider, Fl_Slider > );
-  moon_defcast( L, F4L_NICE_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Nice_Slider, Fl_Valuator > );
-  moon_defcast( L, F4L_NICE_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Nice_Slider, Fl_Widget > );
 
   moon_defobject( L, F4L_SCROLLBAR_NAME, 0, sb_methods, 0 );
   moon_defcast( L, F4L_SCROLLBAR_NAME, F4L_SLIDER_NAME,
@@ -423,16 +359,6 @@ MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
                 f4l_cast< Fl_Value_Slider, Fl_Valuator > );
   moon_defcast( L, F4L_VALUE_SLIDER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Value_Slider, Fl_Widget > );
-
-  moon_defobject( L, F4L_HOR_VALUE_SLIDER_NAME, 0, vs_methods, 0 );
-  moon_defcast( L, F4L_HOR_VALUE_SLIDER_NAME, F4L_VALUE_SLIDER_NAME,
-                f4l_cast< Fl_Hor_Value_Slider, Fl_Value_Slider > );
-  moon_defcast( L, F4L_HOR_VALUE_SLIDER_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Hor_Value_Slider, Fl_Slider > );
-  moon_defcast( L, F4L_HOR_VALUE_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Hor_Value_Slider, Fl_Valuator > );
-  moon_defcast( L, F4L_HOR_VALUE_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Hor_Value_Slider, Fl_Widget > );
 
   luaL_setfuncs( L, functions, 0 );
 }

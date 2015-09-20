@@ -3,11 +3,17 @@
 #include "f4l_widget.hxx"
 #include "f4l_enums.hxx"
 #include <FL/Fl_Counter.H>
-#include <FL/Fl_Simple_Counter.H>
 #include <cstring>
 #include <climits>
 
 namespace {
+
+#define TYPE_LIST( _ ) \
+  _( "FL_NORMAL_COUNTER", FL_NORMAL_COUNTER ) \
+  _( "FL_SIMPLE_COUNTER", FL_SIMPLE_COUNTER )
+
+  F4L_GEN_TYPE_ENUM( TYPE_LIST, counter )
+
 
   inline Fl_Counter* check_counter( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_COUNTER_NAME );
@@ -20,6 +26,9 @@ namespace {
       case 4:
         if( F4L_MEMCMP( key, "step", 4 ) == 0 ) {
           lua_pushnumber( L, c->step() );
+          return 1;
+        } else if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+          f4l_push_type_counter( L, c->type() );
           return 1;
         }
         break;
@@ -48,6 +57,9 @@ namespace {
       case 4:
         if( F4L_MEMCMP( key, "step", 4 ) == 0 ) {
           c->step( luaL_checknumber( L, 3 ) );
+          return 1;
+        } else if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+          c->type( f4l_check_type_counter( L, 3 ) );
           return 1;
         }
         break;
@@ -108,20 +120,12 @@ namespace {
     return 1;
   }
 
-  int new_simple_counter( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Simple_Counter >( L, F4L_SIMPLE_COUNTER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
 
 
 MOON_LOCAL void f4l_counter_setup( lua_State* L ) {
   luaL_Reg const functions[] = {
     { "Counter", new_counter },
-    { "Simple_Counter", new_simple_counter },
     { NULL, NULL }
   };
   luaL_Reg const methods[] = {
@@ -136,14 +140,6 @@ MOON_LOCAL void f4l_counter_setup( lua_State* L ) {
                 f4l_cast< Fl_Counter, Fl_Valuator > );
   moon_defcast( L, F4L_COUNTER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Counter, Fl_Widget > );
-
-  moon_defobject( L, F4L_SIMPLE_COUNTER_NAME, 0, methods, 0 );
-  moon_defcast( L, F4L_SIMPLE_COUNTER_NAME, F4L_COUNTER_NAME,
-                f4l_cast< Fl_Simple_Counter, Fl_Counter > );
-  moon_defcast( L, F4L_SIMPLE_COUNTER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Simple_Counter, Fl_Valuator > );
-  moon_defcast( L, F4L_SIMPLE_COUNTER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Simple_Counter, Fl_Widget > );
   luaL_setfuncs( L, functions, 0 );
 }
 
