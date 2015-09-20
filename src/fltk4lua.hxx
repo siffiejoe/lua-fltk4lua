@@ -128,6 +128,11 @@ MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L );
 /* make argc/argv pair from a Lua arg table */
 MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );
 
+/* adds a class table to the table at the stack top */
+MOON_LOCAL void f4l_new_class( lua_State* L, char const* name,
+                               lua_CFunction constructor,
+                               luaL_Reg const* smethods = NULL );
+
 
 /* metatable names for FLTK objects */
 #define F4L_WIDGET_NAME             "fltk4lua.Widget"
@@ -142,7 +147,7 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );
 #define F4L_ROUND_BUTTON_NAME       "fltk4lua.Round_Button"
 #define F4L_CLOCK_OUTPUT_NAME       "fltk4lua.Clock_Output"
 #define F4L_CLOCK_NAME              "fltk4lua.Clock"
-#define F4L_INPUTX_NAME             "fltk4lua.Input_"
+#define F4L_CHART_NAME              "fltk4lua.Chart"
 #define F4L_INPUT_NAME              "fltk4lua.Input"
 #define F4L_VALUATOR_NAME           "fltk4lua.Valuator"
 #define F4L_ADJUSTER_NAME           "fltk4lua.Adjuster"

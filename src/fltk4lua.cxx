@@ -162,6 +162,21 @@ MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L ) {
 }
 
 
+MOON_LOCAL void f4l_new_class( lua_State* L, char const* name,
+                               lua_CFunction constructor,
+                               luaL_Reg const* smethods ) {
+  luaL_checkstack( L, 3, NULL );
+  lua_newtable( L );
+  if( smethods != 0 )
+    luaL_setfuncs( L, smethods, 0 );
+  lua_createtable( L, 0, 1 );
+  lua_pushcfunction( L, constructor );
+  lua_setfield( L, -2, "__call" );
+  lua_setmetatable( L, -2 );
+  lua_setfield( L, -2, name );
+}
+
+
 /* the following function exploits implementation details in FLTK
  * (that Fl_Window::show( int, char** ) does not modify the arguments)
  * and in Lua (that strings stored in a table cannot move in memory)!
@@ -198,6 +213,7 @@ MOON_LOCAL void f4l_group_setup( lua_State* L );
 MOON_LOCAL void f4l_window_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
 MOON_LOCAL void f4l_button_setup( lua_State* L );
+MOON_LOCAL void f4l_chart_setup( lua_State* L );
 MOON_LOCAL void f4l_clock_setup( lua_State* L );
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L );
 MOON_LOCAL void f4l_counter_setup( lua_State* L );
@@ -240,6 +256,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_window_setup( L );
   f4l_box_setup( L );
   f4l_button_setup( L );
+  f4l_chart_setup( L );
   f4l_clock_setup( L );
   f4l_adjuster_setup( L );
   f4l_counter_setup( L );
