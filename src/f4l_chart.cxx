@@ -137,7 +137,7 @@ namespace {
     Fl_Chart* c = check_chart( L, 1 );
     double v = luaL_checknumber( L, 2 );
     char const* l = luaL_optstring( L, 3, NULL );
-    Fl_Color co = luaL_opt( L, f4l_check_color, 4, FL_BLACK );
+    Fl_Color co = luaL_opt( L, f4l_check_color, 4, FL_FOREGROUND_COLOR );
     F4L_TRY {
       c->add( v, l, co );
     } F4L_CATCH( L );
@@ -179,7 +179,7 @@ namespace {
       int ind = moon_checkint( L, 2, 1, c->size()+1 );
       double v = luaL_checknumber( L, 3 );
       char const* l = luaL_optstring( L, 4, NULL );
-      Fl_Color co = luaL_opt( L, f4l_check_color, 5, FL_BLACK );
+      Fl_Color co = luaL_opt( L, f4l_check_color, 5, FL_FOREGROUND_COLOR );
       c->insert( ind, v, l, co );
     } F4L_CATCH( L );
     return 0;
@@ -192,7 +192,7 @@ namespace {
       int ind = moon_checkint( L, 2, 1, c->size() );
       double v = luaL_checknumber( L, 3 );
       char const* l = luaL_optstring( L, 4, NULL );
-      Fl_Color co = luaL_opt( L, f4l_check_color, 5, FL_BLACK );
+      Fl_Color co = luaL_opt( L, f4l_check_color, 5, FL_FOREGROUND_COLOR );
       c->replace( ind, v, l, co );
     } F4L_CATCH( L );
     return 0;
