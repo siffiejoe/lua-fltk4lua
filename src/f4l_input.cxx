@@ -244,6 +244,7 @@ MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* i,
         size_t l = 0;
         char const* s = luaL_checklstring( L, 3, &l );
         i->value( s, static_cast< int >( l ) );
+        return 1;
       }
       break;
     case 7:
