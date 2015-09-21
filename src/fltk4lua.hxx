@@ -153,6 +153,7 @@ MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx );
 #define F4L_COLOR_CHOOSER_NAME      "fltk4lua.Color_Chooser"
 #define F4L_PACK_NAME               "fltk4lua.Pack"
 #define F4L_SCROLL_NAME             "fltk4lua.Scroll"
+#define F4L_TABS_NAME               "fltk4lua.Tabs"
 #define F4L_TILE_NAME               "fltk4lua.Tile"
 #define F4L_WINDOW_NAME             "fltk4lua.Window"
 #define F4L_WIZARD_NAME             "fltk4lua.Wizard"
