@@ -120,7 +120,17 @@ namespace {
 
   int new_scroll( lua_State* L ) {
     F4L_TRY {
-      f4l_new_widget< Fl_Scroll >( L, F4L_SCROLL_NAME );
+      Fl_Scroll* s = f4l_new_widget< Fl_Scroll >( L, F4L_SCROLL_NAME );
+      /* The __index handler would create those objects on demand,
+       * but the scrollbars are stored in the group's children, so an
+       * error could be thrown if they are encountered there before
+       * having a corresponding userdata registered! */
+      f4l_new_member< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
+                                      &s->hscrollbar, -1 );
+      moon_setuvfield( L, -2, "hscrollbar" );
+      f4l_new_member< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
+                                      &s->scrollbar, -1 );
+      moon_setuvfield( L, -2, "scrollbar" );
     } F4L_CATCH( L );
     return 1;
   }

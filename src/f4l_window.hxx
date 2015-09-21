@@ -7,7 +7,7 @@
 
 /* Windows have an additional constructor signature */
 template< typename T >
-MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
+MOON_LOCAL T* f4l_new_window( lua_State* L, char const* tname ) {
   int top = lua_gettop( L );
   int has_properties = 0;
   int has_x_y = 1;
@@ -41,8 +41,9 @@ MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
     f4l_register_widget( L, window );
     if( has_properties )
       f4l_add_properties( L, 5, 4 );
+    return window;
   } else /* use the normal 4/5 argument Fl_Widget constructor */
-    f4l_new_widget< T >( L, tname );
+    return f4l_new_widget< T >( L, tname );
 }
 
 

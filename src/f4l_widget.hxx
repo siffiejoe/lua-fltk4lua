@@ -21,7 +21,7 @@ MOON_LOCAL int f4l_our_widget( lua_State* L, Fl_Widget* w );
  * it makes sense to refactor creation of the widget userdata into
  * a helper function: */
 template< typename T >
-MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
+MOON_LOCAL T* f4l_new_widget( lua_State* L, char const* tname ) {
   int has_properties = 0;
   if( lua_gettop( L ) == 2 && lua_istable( L, 2 ) ) {
     has_properties = 1;
@@ -58,6 +58,7 @@ MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
    * might be more properties to set on the userdata */
   if( has_properties )
     f4l_add_properties( L, 7, 6 );
+  return widget;
 }
 
 /* Sometimes we want access to widgets that are members of another
