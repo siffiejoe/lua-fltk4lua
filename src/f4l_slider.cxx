@@ -61,6 +61,7 @@ namespace {
 
   int scrollbar_index_( lua_State* L, Fl_Scrollbar* s,
                         char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 5:
         if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
@@ -80,6 +81,7 @@ namespace {
 
   int scrollbar_newindex_( lua_State* L, Fl_Scrollbar* s,
                            char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 5:
         if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
@@ -138,6 +140,7 @@ namespace {
 
   int value_slider_index_( lua_State* L, Fl_Value_Slider* vs,
                            char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 8:
         if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
@@ -160,6 +163,7 @@ namespace {
 
   int value_slider_newindex_( lua_State* L, Fl_Value_Slider* vs,
                               char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 8:
         if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
@@ -233,6 +237,7 @@ namespace {
 
 MOON_LOCAL int f4l_slider_index_( lua_State* L, Fl_Slider* s,
                                   char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 4:
       if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
@@ -258,6 +263,7 @@ MOON_LOCAL int f4l_slider_index_( lua_State* L, Fl_Slider* s,
 
 MOON_LOCAL int f4l_slider_newindex_( lua_State* L, Fl_Slider* s,
                                      char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 4:
       if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {

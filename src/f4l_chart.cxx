@@ -24,6 +24,7 @@ namespace {
 
   int chart_index_( lua_State* L, Fl_Chart* c,
                     char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
@@ -67,6 +68,7 @@ namespace {
 
   int chart_newindex_( lua_State* L, Fl_Chart* c,
                        char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {

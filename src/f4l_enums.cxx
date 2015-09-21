@@ -3,6 +3,7 @@
 #include <climits>
 
 
+#if 0
 #define DAMAGE_LIST( _ ) \
   _( "DAMAGE_CHILD", FL_DAMAGE_CHILD ) \
   _( "DAMAGE_EXPOSE", FL_DAMAGE_EXPOSE ) \
@@ -26,8 +27,10 @@ MOON_LOCAL Fl_Damage f4l_check_damage( lua_State* L, int idx ) {
 MOON_LOCAL void f4l_push_damage( lua_State* L, Fl_Damage d ) {
   moon_flag_new_damage( L, d );
 }
+#endif
 
 
+#if 0
 #define EVENT_LIST( _ ) \
   _( "NO_EVENT", FL_NO_EVENT ) \
   _( "PUSH", FL_PUSH ) \
@@ -77,6 +80,7 @@ MOON_LOCAL void f4l_push_event( lua_State* L, Fl_Event e ) {
       luaL_error( L, "unknown Fl_Event" );
   }
 }
+#endif
 
 
 #define LABELTYPE_LIST( _ ) \
@@ -118,6 +122,7 @@ MOON_LOCAL void f4l_push_labeltype( lua_State* L, Fl_Labeltype t ) {
 }
 
 
+#if 0
 #define MODE_LIST( _ ) \
   _( "RGB", FL_RGB ) \
   _( "INDEX", FL_INDEX ) \
@@ -146,6 +151,7 @@ MOON_LOCAL Fl_Mode f4l_check_mode( lua_State* L, int idx ) {
 MOON_LOCAL void f4l_push_mode( lua_State* L, Fl_Mode m ) {
   moon_flag_new_mode( L, m );
 }
+#endif
 
 
 #define WHEN_LIST( _ ) \
@@ -375,15 +381,19 @@ MOON_LOCAL void f4l_push_align( lua_State* L, Fl_Align a ) {
   _( "ZAPF_DINGBATS", FL_ZAPF_DINGBATS )
 
 MOON_LOCAL Fl_Font f4l_check_font( lua_State* L, int idx ) {
-  static char const* const names[] = {
-    FONT_LIST( F4L_GEN_NAME )
-    NULL
-  };
-  static Fl_Font const values[] = {
-    FONT_LIST( F4L_GEN_VALUE )
-    (Fl_Font)0 // dummy value
-  };
-  return values[ luaL_checkoption( L, idx, NULL, names ) ];
+  if( lua_type( L, idx ) == LUA_TNUMBER )
+    return moon_checkint( L, idx, 0, FL_FREE_FONT-1 );
+  else {
+    static char const* const names[] = {
+      FONT_LIST( F4L_GEN_NAME )
+      NULL
+    };
+    static Fl_Font const values[] = {
+      FONT_LIST( F4L_GEN_VALUE )
+      (Fl_Font)0 // dummy value
+    };
+    return values[ luaL_checkoption( L, idx, NULL, names ) ];
+  }
 }
 
 MOON_LOCAL void f4l_push_font( lua_State* L, Fl_Font f ) {
@@ -444,19 +454,27 @@ MOON_LOCAL void f4l_push_color( lua_State* L, Fl_Color c ) {
 
 
 MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
+#if 0
   moon_flag_def_damage( L );
+#endif
+#if 0
   moon_flag_def_mode( L );
+#endif
   moon_flag_def_when( L );
   moon_flag_def_align( L );
   moon_flag_def_color( L );
+#if 0
 #define GEN_UDATA( _a, _b ) \
   (moon_flag_new_damage( L, _b ), lua_setfield( L, -2, _a ));
   DAMAGE_LIST( GEN_UDATA )
 #undef GEN_UDATA
+#endif
+#if 0
 #define GEN_UDATA( _a, _b ) \
   (moon_flag_new_mode( L, _b ), lua_setfield( L, -2, _a ));
   MODE_LIST( GEN_UDATA )
 #undef GEN_UDATA
+#endif
 #define GEN_UDATA( _a, _b ) \
   (moon_flag_new_when( L, _b ), lua_setfield( L, -2, _a ));
   WHEN_LIST( GEN_UDATA )

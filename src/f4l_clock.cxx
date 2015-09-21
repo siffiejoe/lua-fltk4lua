@@ -21,6 +21,7 @@ namespace {
 
   int clock_index_( lua_State* L, Fl_Clock_Output* c,
                     char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "hour", 4 ) == 0 ) {
@@ -55,6 +56,7 @@ namespace {
 
   int clock_newindex_( lua_State* L, Fl_Clock_Output* c,
                        char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {

@@ -104,6 +104,7 @@ namespace {
 
 MOON_LOCAL int f4l_button_index_( lua_State* L, Fl_Button* b,
                                   char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 4:
       if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
@@ -136,6 +137,7 @@ MOON_LOCAL int f4l_button_index_( lua_State* L, Fl_Button* b,
 
 MOON_LOCAL int f4l_button_newindex_( lua_State* L, Fl_Button* b,
                                      char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 4:
       if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {

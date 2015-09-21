@@ -11,6 +11,7 @@ namespace {
 
   int progress_index_( lua_State* L, Fl_Progress* p,
                        char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 5:
         if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
@@ -33,6 +34,7 @@ namespace {
 
   int progress_newindex_( lua_State* L, Fl_Progress* p,
                           char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 5:
         if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {

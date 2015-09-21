@@ -149,6 +149,7 @@ MOON_LOCAL void f4l_new_class_table( lua_State* L, char const* name,
 #define F4L_CLOCK_NAME              "fltk4lua.Clock"
 #define F4L_CHART_NAME              "fltk4lua.Chart"
 #define F4L_INPUT_NAME              "fltk4lua.Input"
+#define F4L_FILE_INPUT_NAME         "fltk4lua.File_Input"
 #define F4L_VALUATOR_NAME           "fltk4lua.Valuator"
 #define F4L_ADJUSTER_NAME           "fltk4lua.Adjuster"
 #define F4L_COUNTER_NAME            "fltk4lua.Counter"

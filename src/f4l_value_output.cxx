@@ -15,6 +15,7 @@ namespace {
 
   int value_output_index_( lua_State* L, Fl_Value_Output* v,
                            char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "soft", 4 ) == 0 ) {
@@ -43,6 +44,7 @@ namespace {
 
   int value_output_newindex_( lua_State* L, Fl_Value_Output* v,
                               char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "soft", 4 ) == 0 ) {

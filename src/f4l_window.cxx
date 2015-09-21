@@ -50,6 +50,7 @@ namespace {
 
 MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
                                   char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 5:
       if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
@@ -135,6 +136,7 @@ MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
 
 MOON_LOCAL int f4l_window_newindex_( lua_State* L, Fl_Window* w,
                                      char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 5:
       if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {

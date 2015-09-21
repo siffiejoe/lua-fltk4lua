@@ -16,6 +16,7 @@ namespace {
 
 MOON_LOCAL int f4l_valuator_index_( lua_State* L, Fl_Valuator* v,
                                     char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 4:
       if( F4L_MEMCMP( key, "step", 4 ) == 0 ) {
@@ -44,6 +45,7 @@ MOON_LOCAL int f4l_valuator_index_( lua_State* L, Fl_Valuator* v,
 
 MOON_LOCAL int f4l_valuator_newindex_( lua_State* L, Fl_Valuator* v,
                                        char const* key, size_t n ) {
+  using namespace std;
   switch( n ) {
     case 4:
       if( F4L_MEMCMP( key, "step", 4 ) == 0 ) {

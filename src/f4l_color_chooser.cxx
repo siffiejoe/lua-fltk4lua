@@ -13,6 +13,7 @@ namespace {
 
   int chooser_index_( lua_State* L, Fl_Color_Chooser* c,
                       char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 1:
         switch( *key ) {
@@ -57,6 +58,7 @@ namespace {
 
   int chooser_newindex_( lua_State* L, Fl_Color_Chooser* c,
                          char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "mode", 4 ) == 0 ) {

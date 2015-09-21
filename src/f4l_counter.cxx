@@ -22,6 +22,7 @@ namespace {
 
   int counter_index_( lua_State* L, Fl_Counter* c,
                       char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "step", 4 ) == 0 ) {
@@ -53,6 +54,7 @@ namespace {
 
   int counter_newindex_( lua_State* L, Fl_Counter* c,
                          char const* key, size_t n ) {
+    using namespace std;
     switch( n ) {
       case 4:
         if( F4L_MEMCMP( key, "step", 4 ) == 0 ) {
