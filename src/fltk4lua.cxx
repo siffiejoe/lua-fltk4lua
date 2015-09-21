@@ -225,12 +225,17 @@ MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx ) {
 /* setup functions declared in other files */
 MOON_LOCAL void f4l_enums_setup( lua_State* L );
 MOON_LOCAL void f4l_ask_setup( lua_State* L );
-MOON_LOCAL void f4l_group_setup( lua_State* L );
-MOON_LOCAL void f4l_window_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
 MOON_LOCAL void f4l_button_setup( lua_State* L );
 MOON_LOCAL void f4l_chart_setup( lua_State* L );
 MOON_LOCAL void f4l_clock_setup( lua_State* L );
+MOON_LOCAL void f4l_group_setup( lua_State* L );
+MOON_LOCAL void f4l_color_chooser_setup( lua_State* L );
+MOON_LOCAL void f4l_pack_setup( lua_State* L );
+MOON_LOCAL void f4l_scroll_setup( lua_State* L );
+MOON_LOCAL void f4l_window_setup( lua_State* L );
+MOON_LOCAL void f4l_input_setup( lua_State* L );
+MOON_LOCAL void f4l_progress_setup( lua_State* L );
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L );
 MOON_LOCAL void f4l_counter_setup( lua_State* L );
 MOON_LOCAL void f4l_dial_setup( lua_State* L );
@@ -238,10 +243,6 @@ MOON_LOCAL void f4l_roller_setup( lua_State* L );
 MOON_LOCAL void f4l_slider_setup( lua_State* L );
 MOON_LOCAL void f4l_value_input_setup( lua_State* L );
 MOON_LOCAL void f4l_value_output_setup( lua_State* L );
-MOON_LOCAL void f4l_color_chooser_setup( lua_State* L );
-MOON_LOCAL void f4l_progress_setup( lua_State* L );
-MOON_LOCAL void f4l_input_setup( lua_State* L );
-MOON_LOCAL void f4l_scroll_setup( lua_State* L );
 // ...
 
 
@@ -270,12 +271,17 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   lua_pop( L, 1 ); // remove atexit userdata from stack
   f4l_enums_setup( L );
   f4l_ask_setup( L );
-  f4l_group_setup( L );
-  f4l_window_setup( L );
   f4l_box_setup( L );
   f4l_button_setup( L );
   f4l_chart_setup( L );
   f4l_clock_setup( L );
+  f4l_group_setup( L );
+  f4l_color_chooser_setup( L );
+  f4l_pack_setup( L );
+  f4l_scroll_setup( L );
+  f4l_window_setup( L );
+  f4l_input_setup( L );
+  f4l_progress_setup( L );
   f4l_adjuster_setup( L );
   f4l_counter_setup( L );
   f4l_dial_setup( L );
@@ -283,10 +289,6 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_slider_setup( L );
   f4l_value_input_setup( L );
   f4l_value_output_setup( L );
-  f4l_color_chooser_setup( L );
-  f4l_progress_setup( L );
-  f4l_input_setup( L );
-  f4l_scroll_setup( L );
   // ...
   return 1;
 }

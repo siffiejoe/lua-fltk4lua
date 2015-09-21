@@ -139,20 +139,24 @@ MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx );
 
 /* metatable names for FLTK objects */
 #define F4L_WIDGET_NAME             "fltk4lua.Widget"
-#define F4L_GROUP_NAME              "fltk4lua.Group"
-#define F4L_WINDOW_NAME             "fltk4lua.Window"
 #define F4L_BOX_NAME                "fltk4lua.Box"
 #define F4L_BUTTON_NAME             "fltk4lua.Button"
-#define F4L_CHECK_BUTTON_NAME       "fltk4lua.Check_Button"
 #define F4L_LIGHT_BUTTON_NAME       "fltk4lua.Light_Button"
+#define F4L_CHECK_BUTTON_NAME       "fltk4lua.Check_Button"
 #define F4L_REPEAT_BUTTON_NAME      "fltk4lua.Repeat_Button"
 #define F4L_RETURN_BUTTON_NAME      "fltk4lua.Return_Button"
 #define F4L_ROUND_BUTTON_NAME       "fltk4lua.Round_Button"
+#define F4L_CHART_NAME              "fltk4lua.Chart"
 #define F4L_CLOCK_OUTPUT_NAME       "fltk4lua.Clock_Output"
 #define F4L_CLOCK_NAME              "fltk4lua.Clock"
-#define F4L_CHART_NAME              "fltk4lua.Chart"
+#define F4L_GROUP_NAME              "fltk4lua.Group"
+#define F4L_COLOR_CHOOSER_NAME      "fltk4lua.Color_Chooser"
+#define F4L_PACK_NAME               "fltk4lua.Pack"
+#define F4L_SCROLL_NAME             "fltk4lua.Scroll"
+#define F4L_WINDOW_NAME             "fltk4lua.Window"
 #define F4L_INPUT_NAME              "fltk4lua.Input"
 #define F4L_FILE_INPUT_NAME         "fltk4lua.File_Input"
+#define F4L_PROGRESS_NAME           "fltk4lua.Progress"
 #define F4L_VALUATOR_NAME           "fltk4lua.Valuator"
 #define F4L_ADJUSTER_NAME           "fltk4lua.Adjuster"
 #define F4L_COUNTER_NAME            "fltk4lua.Counter"
@@ -163,9 +167,6 @@ MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx );
 #define F4L_VALUE_SLIDER_NAME       "fltk4lua.Value_Slider"
 #define F4L_VALUE_INPUT_NAME        "fltk4lua.Value_Input"
 #define F4L_VALUE_OUTPUT_NAME       "fltk4lua.Value_Output"
-#define F4L_PROGRESS_NAME           "fltk4lua.Progress"
-#define F4L_COLOR_CHOOSER_NAME      "fltk4lua.Color_Chooser"
-#define F4L_SCROLL_NAME             "fltk4lua.Scroll"
 // ...
 
 
