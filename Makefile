@@ -29,6 +29,7 @@ SOURCES = \
  src/f4l_color_chooser.cxx \
  src/f4l_pack.cxx \
  src/f4l_scroll.cxx \
+ src/f4l_tile.cxx \
  src/f4l_window.cxx \
  src/f4l_input.cxx \
  src/f4l_progress.cxx \
@@ -127,6 +128,8 @@ src/f4l_scroll.o: src/f4l_scroll.cxx src/fltk4lua.hxx moon/moon.h \
 src/f4l_pack.o: src/f4l_pack.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_group.hxx src/f4l_widget.hxx \
  src/f4l_enums.hxx
+src/f4l_tile.o: src/f4l_tile.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_group.hxx src/f4l_widget.hxx
 moon/moon.o: moon/moon.c moon/moon.h
 compat-5.3/c-api/compat-5.3.o: compat-5.3/c-api/compat-5.3.c \
  compat-5.3/c-api/compat-5.3.h
