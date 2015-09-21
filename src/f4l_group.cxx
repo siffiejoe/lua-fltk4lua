@@ -61,11 +61,7 @@ MOON_LOCAL int f4l_group_index_( lua_State* L, Fl_Group* g,
       break;
     case 9:
       if( F4L_MEMCMP( key, "resizable", 9 ) == 0 ) {
-        Fl_Widget* w = g->resizable();
-        if( w )
-          f4l_push_widget( L, w );
-        else
-          lua_pushnil( L );
+        f4l_push_widget( L, g->resizable() );
         return 1;
       }
       break;
