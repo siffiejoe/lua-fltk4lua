@@ -235,6 +235,7 @@ MOON_LOCAL void f4l_pack_setup( lua_State* L );
 MOON_LOCAL void f4l_scroll_setup( lua_State* L );
 MOON_LOCAL void f4l_tile_setup( lua_State* L );
 MOON_LOCAL void f4l_window_setup( lua_State* L );
+MOON_LOCAL void f4l_wizard_setup( lua_State* L );
 MOON_LOCAL void f4l_input_setup( lua_State* L );
 MOON_LOCAL void f4l_progress_setup( lua_State* L );
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L );
@@ -281,6 +282,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_scroll_setup( L );
   f4l_tile_setup( L );
   f4l_window_setup( L );
+  f4l_wizard_setup( L );
   f4l_input_setup( L );
   f4l_progress_setup( L );
   f4l_adjuster_setup( L );

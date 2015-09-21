@@ -155,6 +155,7 @@ MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx );
 #define F4L_SCROLL_NAME             "fltk4lua.Scroll"
 #define F4L_TILE_NAME               "fltk4lua.Tile"
 #define F4L_WINDOW_NAME             "fltk4lua.Window"
+#define F4L_WIZARD_NAME             "fltk4lua.Wizard"
 #define F4L_INPUT_NAME              "fltk4lua.Input"
 #define F4L_FILE_INPUT_NAME         "fltk4lua.File_Input"
 #define F4L_PROGRESS_NAME           "fltk4lua.Progress"
