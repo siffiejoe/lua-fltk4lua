@@ -65,14 +65,18 @@ MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w,
 
 
 MOON_LOCAL void f4l_push_widget( lua_State* L, Fl_Widget* w ) {
-  luaL_checkstack( L, 2, NULL );
-  moon_getcache( L, LUA_REGISTRYINDEX );
-  lua_pushlightuserdata( L, static_cast< void* >( w ) );
-  lua_rawget( L, -2 );
-  lua_replace( L, -2 );
-  if( lua_type( L, -1 ) != LUA_TUSERDATA ) {
-    lua_pop( L, 1 );
-    luaL_error( L, "unknown Fl_Widget pointer" );
+  if( w == NULL )
+    lua_pushnil( L );
+  else {
+    luaL_checkstack( L, 2, NULL );
+    moon_getcache( L, LUA_REGISTRYINDEX );
+    lua_pushlightuserdata( L, static_cast< void* >( w ) );
+    lua_rawget( L, -2 );
+    lua_replace( L, -2 );
+    if( lua_type( L, -1 ) != LUA_TUSERDATA ) {
+      lua_pop( L, 1 );
+      luaL_error( L, "unknown Fl_Widget pointer" );
+    }
   }
 }
 

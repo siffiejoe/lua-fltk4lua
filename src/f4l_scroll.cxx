@@ -26,7 +26,7 @@ namespace {
   }
 
   int scroll_index_( lua_State* L, Fl_Scroll* s,
-                    char const* key, size_t n ) {
+                     char const* key, size_t n ) {
     using namespace std;
     switch( n ) {
       case 4:
@@ -74,7 +74,7 @@ namespace {
   }
 
   int scroll_newindex_( lua_State* L, Fl_Scroll* s,
-                       char const* key, size_t n ) {
+                        char const* key, size_t n ) {
     using namespace std;
     switch( n ) {
       case 4:
