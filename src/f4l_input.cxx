@@ -38,7 +38,8 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       if( !f4l_input_index_( L, i, key, n ) &&
-          !f4l_widget_index_( L, i, key, n ) )
+          !f4l_widget_index_( L, i, key, n ) &&
+          !f4l_bad_property( L, F4L_INPUT_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -50,7 +51,8 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       (void)(f4l_input_newindex_( L, i, key, n ) ||
-             f4l_widget_newindex_( L, i, key, n ));
+             f4l_widget_newindex_( L, i, key, n ) ||
+             f4l_bad_property( L, F4L_INPUT_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }
@@ -114,9 +116,10 @@ namespace {
     size_t n = 0;
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
-      if( !file_input_index_( L, fi, key, n ) ||
-          !f4l_input_index_( L, fi, key, n ) ||
-          !f4l_widget_index_( L, fi, key, n ) )
+      if( !file_input_index_( L, fi, key, n ) &&
+          !f4l_input_index_( L, fi, key, n ) &&
+          !f4l_widget_index_( L, fi, key, n ) &&
+          !f4l_bad_property( L, F4L_FILE_INPUT_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -129,7 +132,8 @@ namespace {
     F4L_TRY {
       (void)(file_input_newindex_( L, fi, key, n ) ||
              f4l_input_newindex_( L, fi, key, n ) ||
-             f4l_widget_newindex_( L, fi, key, n ));
+             f4l_widget_newindex_( L, fi, key, n ) ||
+             f4l_bad_property( L, F4L_FILE_INPUT_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

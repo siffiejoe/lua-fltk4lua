@@ -14,7 +14,8 @@ namespace {
     size_t n = 0;
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
-      if( !f4l_widget_index_( L, b, key, n ) )
+      if( !f4l_widget_index_( L, b, key, n ) &&
+          !f4l_bad_property( L, F4L_BOX_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -25,7 +26,8 @@ namespace {
     size_t n = 0;
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
-      f4l_widget_newindex_( L, b, key, n );
+      (void)(f4l_widget_newindex_( L, b, key, n ) ||
+             f4l_bad_property( L, F4L_BOX_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

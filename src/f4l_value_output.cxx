@@ -78,7 +78,8 @@ namespace {
     F4L_TRY {
       if( !value_output_index_( L, v, key, n ) &&
           !f4l_valuator_index_( L, v, key, n ) &&
-          !f4l_widget_index_( L, v, key, n ) )
+          !f4l_widget_index_( L, v, key, n ) &&
+          !f4l_bad_property( L, F4L_VALUE_OUTPUT_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -91,7 +92,8 @@ namespace {
     F4L_TRY {
       (void)(value_output_newindex_( L, v, key, n ) ||
              f4l_valuator_newindex_( L, v, key, n ) ||
-             f4l_widget_newindex_( L, v, key, n ));
+             f4l_widget_newindex_( L, v, key, n ) ||
+             f4l_bad_property( L, F4L_VALUE_OUTPUT_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

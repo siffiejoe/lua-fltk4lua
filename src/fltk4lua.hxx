@@ -136,6 +136,14 @@ MOON_LOCAL void f4l_new_class_table( lua_State* L, char const* name,
 /* set the properties stored in the table on the userdata */
 MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx );
 
+/* fallback function if a property could not be found */
+MOON_LOCAL int f4l_bad_property( lua_State* L, char const* tname,
+                                 char const* pname );
+#if 0
+/* disable errors for unknown properties */
+#define f4l_bad_property( _a, _b, _c ) (0)
+#endif
+
 
 /* metatable names for FLTK objects */
 #define F4L_WIDGET_NAME             "fltk4lua.Widget"

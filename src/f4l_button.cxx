@@ -30,7 +30,8 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       if( !f4l_button_index_( L, b, key, n ) &&
-          !f4l_widget_index_( L, b, key, n ) )
+          !f4l_widget_index_( L, b, key, n ) &&
+          !f4l_bad_property( L, F4L_BUTTON_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -42,7 +43,8 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       (void)(f4l_button_newindex_( L, b, key, n ) ||
-             f4l_widget_newindex_( L, b, key, n ));
+             f4l_widget_newindex_( L, b, key, n ) ||
+             f4l_bad_property( L, F4L_BUTTON_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

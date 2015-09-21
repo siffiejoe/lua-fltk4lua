@@ -41,7 +41,8 @@ namespace {
     F4L_TRY {
       if( !f4l_slider_index_( L, s, key, n ) &&
           !f4l_valuator_index_( L, s, key, n ) &&
-          !f4l_widget_index_( L, s, key, n ) )
+          !f4l_widget_index_( L, s, key, n ) &&
+          !f4l_bad_property( L, F4L_SLIDER_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -54,7 +55,8 @@ namespace {
     F4L_TRY {
       (void)(f4l_slider_newindex_( L, s, key, n ) ||
              f4l_valuator_newindex_( L, s, key, n ) ||
-             f4l_widget_newindex_( L, s, key, n ));
+             f4l_widget_newindex_( L, s, key, n ) ||
+             f4l_bad_property( L, F4L_SLIDER_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }
@@ -107,7 +109,8 @@ namespace {
       if( !scrollbar_index_( L, s, key, n ) &&
           !f4l_slider_index_( L, s, key, n ) &&
           !f4l_valuator_index_( L, s, key, n ) &&
-          !f4l_widget_index_( L, s, key, n ) )
+          !f4l_widget_index_( L, s, key, n ) &&
+          !f4l_bad_property( L, F4L_SCROLLBAR_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -121,7 +124,8 @@ namespace {
       (void)(scrollbar_newindex_( L, s, key, n ) ||
              f4l_slider_newindex_( L, s, key, n ) ||
              f4l_valuator_newindex_( L, s, key, n ) ||
-             f4l_widget_newindex_( L, s, key, n ));
+             f4l_widget_newindex_( L, s, key, n ) ||
+             f4l_bad_property( L, F4L_SCROLLBAR_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }
@@ -192,7 +196,8 @@ namespace {
       if( !value_slider_index_( L, vs, key, n ) &&
           !f4l_slider_index_( L, vs, key, n ) &&
           !f4l_valuator_index_( L, vs, key, n ) &&
-          !f4l_widget_index_( L, vs, key, n ) )
+          !f4l_widget_index_( L, vs, key, n ) &&
+          !f4l_bad_property( L, F4L_VALUE_SLIDER_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -206,7 +211,8 @@ namespace {
       (void)(value_slider_newindex_( L, vs, key, n ) ||
              f4l_slider_newindex_( L, vs, key, n ) ||
              f4l_valuator_newindex_( L, vs, key, n ) ||
-             f4l_widget_newindex_( L, vs, key, n ));
+             f4l_widget_newindex_( L, vs, key, n ) ||
+             f4l_bad_property( L, F4L_VALUE_SLIDER_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

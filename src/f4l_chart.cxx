@@ -110,7 +110,8 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       if( !chart_index_( L, c, key, n ) &&
-          !f4l_widget_index_( L, c, key, n ) )
+          !f4l_widget_index_( L, c, key, n ) &&
+          !f4l_bad_property( L, F4L_CHART_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -122,7 +123,8 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       (void)(chart_newindex_( L, c, key, n ) ||
-             f4l_widget_newindex_( L, c, key, n ));
+             f4l_widget_newindex_( L, c, key, n ) ||
+             f4l_bad_property( L, F4L_CHART_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

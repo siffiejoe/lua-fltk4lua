@@ -222,6 +222,14 @@ MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx ) {
 }
 
 
+MOON_LOCAL int (f4l_bad_property)( lua_State* L, char const* tname,
+                                   char const* pname ) {
+  /* raise an error when unknown properties are encountered */
+  return luaL_error( L, "bad property '%s' for '%s' object",
+                     pname, tname );
+}
+
+
 /* setup functions defined in the other source files */
 MOON_LOCAL void f4l_enums_setup( lua_State* L );
 MOON_LOCAL void f4l_ask_setup( lua_State* L );

@@ -100,7 +100,8 @@ namespace {
     F4L_TRY {
       if( !scroll_index_( L, s, key, n ) &&
           !f4l_group_index_( L, s, key, n ) &&
-          !f4l_widget_index_( L, s, key, n ) )
+          !f4l_widget_index_( L, s, key, n ) &&
+          !f4l_bad_property( L, F4L_SCROLL_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -113,7 +114,8 @@ namespace {
     F4L_TRY {
       (void)(scroll_newindex_( L, s, key, n ) ||
              f4l_group_newindex_( L, s, key, n ) ||
-             f4l_widget_newindex_( L, s, key, n ));
+             f4l_widget_newindex_( L, s, key, n ) ||
+             f4l_bad_property( L, F4L_SCROLL_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

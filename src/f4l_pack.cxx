@@ -72,7 +72,8 @@ namespace {
     F4L_TRY {
       if( !pack_index_( L, p, key, n ) &&
           !f4l_group_index_( L, p, key, n ) &&
-          !f4l_widget_index_( L, p, key, n ) )
+          !f4l_widget_index_( L, p, key, n ) &&
+          !f4l_bad_property( L, F4L_PACK_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -85,7 +86,8 @@ namespace {
     F4L_TRY {
       (void)(pack_newindex_( L, p, key, n ) ||
              f4l_group_newindex_( L, p, key, n ) ||
-             f4l_widget_newindex_( L, p, key, n ));
+             f4l_widget_newindex_( L, p, key, n ) ||
+             f4l_bad_property( L, F4L_PACK_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

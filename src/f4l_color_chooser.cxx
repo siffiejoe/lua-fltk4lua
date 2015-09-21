@@ -77,7 +77,8 @@ namespace {
     F4L_TRY {
       if( !chooser_index_( L, c, key, n ) &&
           !f4l_group_index_( L, c, key, n ) &&
-          !f4l_widget_index_( L, c, key, n ) )
+          !f4l_widget_index_( L, c, key, n ) &&
+          !f4l_bad_property( L, F4L_COLOR_CHOOSER_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -90,7 +91,8 @@ namespace {
     F4L_TRY {
       (void)(chooser_newindex_( L, c, key, n ) ||
              f4l_group_newindex_( L, c, key, n ) ||
-             f4l_widget_newindex_( L, c, key, n ));
+             f4l_widget_newindex_( L, c, key, n ) ||
+             f4l_bad_property( L, F4L_COLOR_CHOOSER_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }

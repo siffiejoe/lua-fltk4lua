@@ -65,7 +65,8 @@ namespace {
     F4L_TRY {
       if( !tabs_index_( L, t, key, n ) &&
           !f4l_group_index_( L, t, key, n ) &&
-          !f4l_widget_index_( L, t, key, n ) )
+          !f4l_widget_index_( L, t, key, n ) &&
+          !f4l_bad_property( L, F4L_TABS_NAME, key ) )
         lua_pushnil( L );
     } F4L_CATCH( L );
     return 1;
@@ -78,7 +79,8 @@ namespace {
     F4L_TRY {
       (void)(tabs_newindex_( L, t, key, n ) ||
              f4l_group_newindex_( L, t, key, n ) ||
-             f4l_widget_newindex_( L, t, key, n ));
+             f4l_widget_newindex_( L, t, key, n ) ||
+             f4l_bad_property( L, F4L_TABS_NAME, key ));
     } F4L_CATCH( L );
     return 0;
   }
