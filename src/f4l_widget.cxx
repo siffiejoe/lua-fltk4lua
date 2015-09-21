@@ -145,6 +145,9 @@ MOON_LOCAL int f4l_widget_index_( lua_State* L, Fl_Widget* w,
       } else if( F4L_MEMCMP( key, "output", 6 ) == 0 ) {
         lua_pushboolean( L, w->output() );
         return 1;
+      } else if( F4L_MEMCMP( key, "parent", 6 ) == 0 ) {
+        f4l_push_widget( L, w->parent() );
+        return 1;
       }
       break;
     case 7:
