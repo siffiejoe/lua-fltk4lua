@@ -24,13 +24,15 @@ MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
   } else
     has_x_y = top >= 5;
   if( !has_x_y ) {
-    int w = moon_checkint( L, 2, 0, INT_MAX );
-    int h = moon_checkint( L, 3, 0, INT_MAX );
-    char const* label = luaL_optstring( L, 4, NULL );
+    lua_settop( L, 4 );
+    lua_rotate( L, 1, -1 );
+    int w = moon_checkint( L, 1, 0, INT_MAX );
+    int h = moon_checkint( L, 2, 0, INT_MAX );
+    char const* label = luaL_optstring( L, 3, NULL );
     void** p = moon_newpointer( L, tname, f4l_delete< T > );
     lua_newtable( L );
     if( label != NULL ) {
-      lua_pushvalue( L, 4 );
+      lua_pushvalue( L, 3 );
       lua_setfield( L, -2, "label" );
     }
     lua_setuservalue( L, -2 );
@@ -38,7 +40,7 @@ MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
     *p = static_cast< void* >( window );
     f4l_register_widget( L, window );
     if( has_properties )
-      f4l_add_properties( L, -1, 1 );
+      f4l_add_properties( L, 5, 4 );
   } else /* use the normal 4/5 argument Fl_Widget constructor */
     f4l_new_widget< T >( L, tname );
 }

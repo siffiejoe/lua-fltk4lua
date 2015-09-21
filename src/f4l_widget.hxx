@@ -29,17 +29,19 @@ MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
     for( int i = 1; i <= 5; ++i )
       lua_rawgeti( L, 1, i );
   }
-  int x = moon_checkint( L, 2, 0, INT_MAX );
-  int y = moon_checkint( L, 3, 0, INT_MAX );
-  int w = moon_checkint( L, 4, 0, INT_MAX );
-  int h = moon_checkint( L, 5, 0, INT_MAX );
-  char const* label = luaL_optstring( L, 6, NULL );
+  lua_settop( L, 6 );
+  lua_rotate( L, 1, -1 );
+  int x = moon_checkint( L, 1, 0, INT_MAX );
+  int y = moon_checkint( L, 2, 0, INT_MAX );
+  int w = moon_checkint( L, 3, 0, INT_MAX );
+  int h = moon_checkint( L, 4, 0, INT_MAX );
+  char const* label = luaL_optstring( L, 5, NULL );
   void** p = moon_newpointer( L, tname, f4l_delete< T > );
   /* widgets need a uservalue table to store the callback function
    * and for keeping references to child widgets */
   lua_newtable( L );
   if( label != NULL ) {
-    lua_pushvalue( L, 6 );
+    lua_pushvalue( L, 5 );
     lua_setfield( L, -2, "label" );
   }
   lua_setuservalue( L, -2 );
@@ -55,7 +57,7 @@ MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
   /* in case a table was used to pass constructor arguments, there
    * might be more properties to set on the userdata */
   if( has_properties )
-    f4l_add_properties( L, -1, 1 );
+    f4l_add_properties( L, 7, 6 );
 }
 
 /* Sometimes we want access to widgets that are members of another
