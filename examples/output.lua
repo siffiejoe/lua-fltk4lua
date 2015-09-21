@@ -2,7 +2,8 @@
 
 local fl = require( "fltk4lua" )
 
-local text, text2, fonts
+local text, text2
+
 local window = fl.Window( 400, 400 )
 local input = fl.Input( 50, 375, 350, 25 )
 input.value = "The quick brown fox\njumped over\nthe lazy dog."
@@ -19,9 +20,9 @@ sizes:bounds( 1, 64 )
 sizes.step = 1
 sizes.value = 14
 function sizes:callback()
-  text.textsize = sizes.value
+  text.textsize = self.value
   text:redraw()
-  text2.textsize = sizes.value
+  text2.textsize = self.value
   text2:redraw()
 end
 
@@ -32,9 +33,9 @@ fonts:bounds( 0, 15 )
 fonts.step = 1
 fonts.value = 0
 function fonts:callback()
-  text.textfont = fonts.value
+  text.textfont = self.value
   text:redraw()
-  text2.textfont = fonts.value
+  text2.textfont = self.value
   text2:redraw()
 end
 
