@@ -162,21 +162,6 @@ MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L ) {
 }
 
 
-MOON_LOCAL void f4l_new_class_table( lua_State* L, char const* name,
-                                     lua_CFunction constructor,
-                                     luaL_Reg const* smethods ) {
-  luaL_checkstack( L, 3, NULL );
-  lua_newtable( L );
-  if( smethods != 0 )
-    luaL_setfuncs( L, smethods, 0 );
-  lua_createtable( L, 0, 1 );
-  lua_pushcfunction( L, constructor );
-  lua_setfield( L, -2, "__call" );
-  lua_setmetatable( L, -2 );
-  lua_setfield( L, -2, name );
-}
-
-
 /* the following function exploits implementation details in FLTK
  * (that Fl_Window::show( int, char** ) does not modify the arguments)
  * and in Lua (that strings stored in a table cannot move in memory)!
@@ -203,6 +188,37 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc ) {
   }
   *argc = i;
   return argv;
+}
+
+
+MOON_LOCAL void f4l_new_class_table( lua_State* L, char const* name,
+                                     lua_CFunction constructor,
+                                     luaL_Reg const* smethods ) {
+  luaL_checkstack( L, 3, NULL );
+  lua_newtable( L );
+  if( smethods != 0 )
+    luaL_setfuncs( L, smethods, 0 );
+  lua_createtable( L, 0, 1 );
+  lua_pushcfunction( L, constructor );
+  lua_setfield( L, -2, "__call" );
+  lua_setmetatable( L, -2 );
+  lua_setfield( L, -2, name );
+}
+
+
+MOON_LOCAL void f4l_add_properties( lua_State* L, int udidx, int tidx ) {
+  udidx = lua_absindex( L, udidx );
+  tidx = lua_absindex( L, tidx );
+  lua_pushnil( L );
+  while( lua_next( L, tidx ) != 0 ) {
+    if( lua_type( L, -2 ) != LUA_TSTRING )
+      lua_pop( L, 1 ); // ignore non-string keys
+    else {
+      lua_pushvalue( L, -2 );
+      lua_insert( L, -2 );
+      lua_settable( L, udidx );
+    }
+  }
 }
 
 

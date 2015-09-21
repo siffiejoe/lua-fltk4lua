@@ -37,18 +37,8 @@ MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
     T* window = new T( w, h, label );
     *p = static_cast< void* >( window );
     f4l_register_widget( L, window );
-    if( has_properties ) {
-      lua_pushnil( L );
-      while( lua_next( L, 1 ) ) {
-        if( lua_type( L, -1 ) != LUA_TSTRING )
-          lua_pop( L, 1 );
-        else {
-          lua_pushvalue( L, -2 );
-          lua_insert( L, -2 );
-          lua_settable( L, -4 );
-        }
-      }
-    }
+    if( has_properties )
+      f4l_add_properties( L, -1, 1 );
   } else /* use the normal 4/5 argument Fl_Widget constructor */
     f4l_new_widget< T >( L, tname );
 }

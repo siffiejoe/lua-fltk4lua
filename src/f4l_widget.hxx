@@ -54,18 +54,8 @@ MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
   f4l_register_widget( L, widget );
   /* in case a table was used to pass constructor arguments, there
    * might be more properties to set on the userdata */
-  if( has_properties ) {
-    lua_pushnil( L );
-    while( lua_next( L, 1 ) ) {
-      if( lua_type( L, -2 ) != LUA_TSTRING )
-        lua_pop( L, 1 ); // ignore non-string keys
-      else {
-        lua_pushvalue( L, -2 );
-        lua_insert( L, -2 ); // widget, key, key, value
-        lua_settable( L, -4 );
-      }
-    }
-  }
+  if( has_properties )
+    f4l_add_properties( L, -1, 1 );
 }
 
 /* Sometimes we want access to widgets that are members of another
