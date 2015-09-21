@@ -8,7 +8,22 @@
 /* Windows have an additional constructor signature */
 template< typename T >
 MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
-  if( lua_gettop( L ) < 5 ) {
+  int top = lua_gettop( L );
+  int has_properties = 0;
+  int has_x_y = 1;
+  if( top == 2 && lua_istable( L, 2 ) ) {
+    has_properties = 1;
+    if( lua_rawgeti( L, 2, 4 ) == LUA_TNIL ) {
+      has_x_y = 0;
+      lua_pop( L, 1 );
+      lua_replace( L, 1 );
+      for( int i = 1; i <= 3; ++i )
+        lua_rawgeti( L, 1, i );
+    } else
+      lua_pop( L, 1 );
+  } else
+    has_x_y = top >= 5;
+  if( !has_x_y ) {
     int w = moon_checkint( L, 2, 0, INT_MAX );
     int h = moon_checkint( L, 3, 0, INT_MAX );
     char const* label = luaL_optstring( L, 4, NULL );
@@ -22,6 +37,18 @@ MOON_LOCAL void f4l_new_window( lua_State* L, char const* tname ) {
     T* window = new T( w, h, label );
     *p = static_cast< void* >( window );
     f4l_register_widget( L, window );
+    if( has_properties ) {
+      lua_pushnil( L );
+      while( lua_next( L, 1 ) ) {
+        if( lua_type( L, -1 ) != LUA_TSTRING )
+          lua_pop( L, 1 );
+        else {
+          lua_pushvalue( L, -2 );
+          lua_insert( L, -2 );
+          lua_settable( L, -4 );
+        }
+      }
+    }
   } else /* use the normal 4/5 argument Fl_Widget constructor */
     f4l_new_widget< T >( L, tname );
 }

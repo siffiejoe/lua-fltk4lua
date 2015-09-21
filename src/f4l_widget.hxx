@@ -22,6 +22,13 @@ MOON_LOCAL int f4l_our_widget( lua_State* L, Fl_Widget* w );
  * a helper function: */
 template< typename T >
 MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
+  int has_properties = 0;
+  if( lua_gettop( L ) == 2 && lua_istable( L, 2 ) ) {
+    has_properties = 1;
+    lua_replace( L, 1 );
+    for( int i = 1; i <= 5; ++i )
+      lua_rawgeti( L, 1, i );
+  }
   int x = moon_checkint( L, 2, 0, INT_MAX );
   int y = moon_checkint( L, 3, 0, INT_MAX );
   int w = moon_checkint( L, 4, 0, INT_MAX );
@@ -45,6 +52,20 @@ MOON_LOCAL void f4l_new_widget( lua_State* L, char const* tname ) {
    * for the callbacks, and put a reference to this widget into the
    * (Lua) uservalue table of the parent group widget (if any) */
   f4l_register_widget( L, widget );
+  /* in case a table was used to pass constructor arguments, there
+   * might be more properties to set on the userdata */
+  if( has_properties ) {
+    lua_pushnil( L );
+    while( lua_next( L, 1 ) ) {
+      if( lua_type( L, -2 ) != LUA_TSTRING )
+        lua_pop( L, 1 ); // ignore non-string keys
+      else {
+        lua_pushvalue( L, -2 );
+        lua_insert( L, -2 ); // widget, key, key, value
+        lua_settable( L, -4 );
+      }
+    }
+  }
 }
 
 /* Sometimes we want access to widgets that are members of another
