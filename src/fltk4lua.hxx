@@ -146,6 +146,8 @@ MOON_LOCAL int f4l_bad_property( lua_State* L, char const* tname,
 
 
 /* metatable names for FLTK objects */
+#define F4L_IMAGE_NAME              "fltk4lua.Image"
+#define F4L_SHARED_IMAGE_NAME       "fltk4lua.Shared_Image"
 #define F4L_WIDGET_NAME             "fltk4lua.Widget"
 #define F4L_BOX_NAME                "fltk4lua.Box"
 #define F4L_BUTTON_NAME             "fltk4lua.Button"
@@ -167,6 +169,7 @@ MOON_LOCAL int f4l_bad_property( lua_State* L, char const* tname,
 #define F4L_WIZARD_NAME             "fltk4lua.Wizard"
 #define F4L_INPUT_NAME              "fltk4lua.Input"
 #define F4L_FILE_INPUT_NAME         "fltk4lua.File_Input"
+#define F4L_MENU_NAME               "fltk4lua.Menu"
 #define F4L_PROGRESS_NAME           "fltk4lua.Progress"
 #define F4L_VALUATOR_NAME           "fltk4lua.Valuator"
 #define F4L_ADJUSTER_NAME           "fltk4lua.Adjuster"

@@ -12,6 +12,11 @@ namespace {
     return static_cast< Fl_Widget* >( p );
   }
 
+  inline Fl_Image* check_image( lua_State* L, int idx ) {
+    void* p = moon_checkobject( L, idx, F4L_IMAGE_NAME );
+    return static_cast< Fl_Image* >( p );
+  }
+
 
   void f4l_widget_callback( Fl_Widget* w, void* ud ) {
     lua_State** th = static_cast< lua_State** >( ud );
@@ -129,6 +134,10 @@ MOON_LOCAL int f4l_widget_index_( lua_State* L, Fl_Widget* w,
       } else if( F4L_MEMCMP( key, "color", 5 ) == 0 ) {
         f4l_push_color( L, w->color() );
         return 1;
+      } else if( F4L_MEMCMP( key, "image", 5 ) == 0 ) {
+        if( moon_getuvfield( L, 1, "image" ) == LUA_TNIL )
+          lua_pushnil( L );
+        return 1;
       } else if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
         char const* l = w->label();
         if( l )
@@ -153,6 +162,10 @@ MOON_LOCAL int f4l_widget_index_( lua_State* L, Fl_Widget* w,
     case 7:
       if( F4L_MEMCMP( key, "changed", 7 ) == 0 ) {
         lua_pushboolean( L, w->changed() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "deimage", 7 ) == 0 ) {
+        if( moon_getuvfield( L, 1, "deimage" ) == LUA_TNIL )
+          lua_pushnil( L );
         return 1;
       } else if( F4L_MEMCMP( key, "tooltip", 7 ) == 0 ) {
         char const* t = w->tooltip();
@@ -246,6 +259,12 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
       } else if( F4L_MEMCMP( key, "color", 5 ) == 0 ) {
         w->color( f4l_check_color( L, 3 ) );
         return 1;
+      } else if( F4L_MEMCMP( key, "image", 5 ) == 0 ) {
+        Fl_Image* img = check_image( L, 3 );
+        lua_pushvalue( L, 3 );
+        moon_setuvfield( L, 1, "image" );
+        w->image( img );
+        return 1;
       } else if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
         char const* s = luaL_checkstring( L, 3 );
         lua_pushvalue( L, 3 );
@@ -255,7 +274,13 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
       }
       break;
     case 7:
-      if( F4L_MEMCMP( key, "tooltip", 7 ) == 0 ) {
+      if( F4L_MEMCMP( key, "deimage", 7 ) == 0 ) {
+        Fl_Image* img = check_image( L, 3 );
+        lua_pushvalue( L, 3 );
+        moon_setuvfield( L, 1, "deimage" );
+        w->deimage( img );
+        return 1;
+      } else if( F4L_MEMCMP( key, "tooltip", 7 ) == 0 ) {
         char const* s = luaL_checkstring( L, 3 );
         lua_pushvalue( L, 3 );
         moon_setuvfield( L, 1, "tooltip" );

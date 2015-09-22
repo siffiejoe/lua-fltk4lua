@@ -196,12 +196,14 @@ MOON_LOCAL void f4l_new_class_table( lua_State* L, char const* name,
                                      luaL_Reg const* smethods ) {
   luaL_checkstack( L, 3, NULL );
   lua_newtable( L );
-  if( smethods != 0 )
+  if( smethods != NULL )
     luaL_setfuncs( L, smethods, 0 );
-  lua_createtable( L, 0, 1 );
-  lua_pushcfunction( L, constructor );
-  lua_setfield( L, -2, "__call" );
-  lua_setmetatable( L, -2 );
+  if( constructor != 0 ) {
+    lua_createtable( L, 0, 1 );
+    lua_pushcfunction( L, constructor );
+    lua_setfield( L, -2, "__call" );
+    lua_setmetatable( L, -2 );
+  }
   lua_setfield( L, -2, name );
 }
 
@@ -233,6 +235,7 @@ MOON_LOCAL int (f4l_bad_property)( lua_State* L, char const* tname,
 /* setup functions defined in the other source files */
 MOON_LOCAL void f4l_enums_setup( lua_State* L );
 MOON_LOCAL void f4l_ask_setup( lua_State* L );
+MOON_LOCAL void f4l_shared_image_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
 MOON_LOCAL void f4l_button_setup( lua_State* L );
 MOON_LOCAL void f4l_chart_setup( lua_State* L );
@@ -281,6 +284,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   lua_pop( L, 1 ); // remove atexit userdata from stack
   f4l_enums_setup( L );
   f4l_ask_setup( L );
+  f4l_shared_image_setup( L );
   f4l_box_setup( L );
   f4l_button_setup( L );
   f4l_chart_setup( L );
