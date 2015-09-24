@@ -4,7 +4,6 @@
 #include "f4l_enums.hxx"
 #include <FL/Fl_Menu_Button.H>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "NOPOPUP", 0 ) \
@@ -18,6 +17,8 @@ namespace {
 
   F4L_GEN_TYPE_ENUM( TYPE_LIST, popup )
 
+
+namespace {
 
   inline Fl_Menu_Button* check_menu_button( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_MENU_BUTTON_NAME );

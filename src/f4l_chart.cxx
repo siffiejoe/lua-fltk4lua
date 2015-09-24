@@ -3,7 +3,6 @@
 #include "f4l_enums.hxx"
 #include <FL/Fl_Chart.H>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "FL_BAR_CHART", FL_BAR_CHART ) \
@@ -16,6 +15,8 @@ namespace {
 
   F4L_GEN_TYPE_ENUM( TYPE_LIST, chart )
 
+
+namespace {
 
   inline Fl_Chart* check_chart( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_CHART_NAME );

@@ -4,15 +4,15 @@
 #include "f4l_enums.hxx"
 #include <FL/Fl_Pack.H>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "VERTICAL", Fl_Pack::VERTICAL ) \
   _( "HORIZONTAL", Fl_Pack::HORIZONTAL )
 
-
   F4L_GEN_TYPE_ENUM( TYPE_LIST, pack )
 
+
+namespace {
 
   inline Fl_Pack* check_pack( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_PACK_NAME );

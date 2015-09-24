@@ -6,7 +6,6 @@
 #include <cstring>
 #include <climits>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "FL_NORMAL_DIAL", FL_NORMAL_DIAL ) \
@@ -15,6 +14,8 @@ namespace {
 
   F4L_GEN_TYPE_ENUM( TYPE_LIST, dial )
 
+
+namespace {
 
   inline Fl_Dial* check_dial( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_DIAL_NAME );

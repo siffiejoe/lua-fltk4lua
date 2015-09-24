@@ -6,7 +6,6 @@
 #include <cstring>
 #include <climits>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "FL_NORMAL_COUNTER", FL_NORMAL_COUNTER ) \
@@ -14,6 +13,8 @@ namespace {
 
   F4L_GEN_TYPE_ENUM( TYPE_LIST, counter )
 
+
+namespace {
 
   inline Fl_Counter* check_counter( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_COUNTER_NAME );

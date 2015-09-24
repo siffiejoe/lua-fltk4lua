@@ -5,7 +5,6 @@
 #include <cstring>
 #include <climits>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "FL_NORMAL_INPUT", FL_NORMAL_INPUT ) \
@@ -21,6 +20,8 @@ namespace {
 
   F4L_GEN_TYPE_ENUM( TYPE_LIST, input )
 
+
+namespace {
 
   inline Fl_Input* check_input( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_INPUT_NAME );

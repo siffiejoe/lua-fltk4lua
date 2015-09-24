@@ -5,7 +5,6 @@
 #include <cstring>
 #include <climits>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "FL_SQUARE_CLOCK", FL_SQUARE_CLOCK ) \
@@ -13,6 +12,8 @@ namespace {
 
   F4L_GEN_TYPE_ENUM( TYPE_LIST, clock )
 
+
+namespace {
 
   inline Fl_Clock_Output* check_clock( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_CLOCK_OUTPUT_NAME );

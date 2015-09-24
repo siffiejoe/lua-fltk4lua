@@ -163,6 +163,7 @@ MOON_LOCAL int f4l_bad_property( lua_State* L, char const* tname,
 #define F4L_COLOR_CHOOSER_NAME      "fltk4lua.Color_Chooser"
 #define F4L_PACK_NAME               "fltk4lua.Pack"
 #define F4L_SCROLL_NAME             "fltk4lua.Scroll"
+#define F4L_SPINNER_NAME            "fltk4lua.Spinner"
 #define F4L_TABS_NAME               "fltk4lua.Tabs"
 #define F4L_TILE_NAME               "fltk4lua.Tile"
 #define F4L_WINDOW_NAME             "fltk4lua.Window"

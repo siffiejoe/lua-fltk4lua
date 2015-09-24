@@ -6,7 +6,6 @@
 #include <cstring>
 #include <climits>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "FL_VERTICAL", FL_VERTICAL ) \
@@ -18,6 +17,8 @@ namespace {
 
   F4L_GEN_TYPE_ENUM( TYPE_LIST, slider )
 
+
+namespace {
 
   inline Fl_Slider* check_slider( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_SLIDER_NAME );

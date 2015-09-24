@@ -4,7 +4,6 @@
 #include "f4l_enums.hxx"
 #include <FL/Fl_Scroll.H>
 
-namespace {
 
 #define TYPE_LIST( _ ) \
   _( "NO_SCROLLBARS", 0 ) \
@@ -16,9 +15,10 @@ namespace {
   _( "VERTICAL_ALWAYS", Fl_Scroll::VERTICAL_ALWAYS ) \
   _( "BOTH_ALWAYS", Fl_Scroll::BOTH_ALWAYS )
 
-
   F4L_GEN_TYPE_ENUM( TYPE_LIST, scroll )
 
+
+namespace {
 
   inline Fl_Scroll* check_scroll( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_SCROLL_NAME );
