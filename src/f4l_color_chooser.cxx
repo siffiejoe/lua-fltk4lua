@@ -76,7 +76,9 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       if( !chooser_index_( L, c, key, n ) &&
+#if 0
           !f4l_group_index_( L, c, key, n ) &&
+#endif
           !f4l_widget_index_( L, c, key, n ) &&
           !f4l_bad_property( L, F4L_COLOR_CHOOSER_NAME, key ) )
         lua_pushnil( L );
@@ -90,7 +92,9 @@ namespace {
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
       (void)(chooser_newindex_( L, c, key, n ) ||
+#if 0
              f4l_group_newindex_( L, c, key, n ) ||
+#endif
              f4l_widget_newindex_( L, c, key, n ) ||
              f4l_bad_property( L, F4L_COLOR_CHOOSER_NAME, key ));
     } F4L_CATCH( L );
@@ -132,7 +136,9 @@ namespace {
 MOON_LOCAL void f4l_color_chooser_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
+#if 0
     F4L_GROUP_METHODS,
+#endif
     { "rgb", chooser_rgb },
     { "hsv", chooser_hsv },
     { "__index", chooser_index },
@@ -140,8 +146,10 @@ MOON_LOCAL void f4l_color_chooser_setup( lua_State* L ) {
     { NULL, NULL }
   };
   moon_defobject( L, F4L_COLOR_CHOOSER_NAME, 0, methods, 0 );
+#if 0
   moon_defcast( L, F4L_COLOR_CHOOSER_NAME, F4L_GROUP_NAME,
                 f4l_cast< Fl_Color_Chooser, Fl_Group > );
+#endif
   moon_defcast( L, F4L_COLOR_CHOOSER_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Color_Chooser, Fl_Widget > );
   f4l_new_class_table( L, "Color_Chooser", new_color_chooser );
