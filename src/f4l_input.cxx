@@ -190,6 +190,9 @@ MOON_LOCAL int f4l_input_index_( lua_State* L, Fl_Input* i,
       } else if( F4L_MEMCMP( key, "readonly", 8 ) == 0 ) {
         lua_pushboolean( L, i->readonly() );
         return 1;
+      } else if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
+        f4l_push_shortcut( L, i->shortcut() );
+        return 1;
       } else if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
         f4l_push_font( L, i->textfont() );
         return 1;
@@ -259,6 +262,9 @@ MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* i,
         return 1;
       } else if( F4L_MEMCMP( key, "readonly", 8 ) == 0 ) {
         i->readonly( lua_toboolean( L, 3 ) );
+        return 1;
+      } else if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
+        i->shortcut( f4l_check_shortcut( L, 3 ) );
         return 1;
       } else if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
         i->textfont( f4l_check_font( L, 3 ) );

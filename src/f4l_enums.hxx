@@ -36,6 +36,9 @@
   }
 
 
+MOON_LOCAL Fl_Shortcut f4l_check_shortcut( lua_State* L, int idx );
+MOON_LOCAL void f4l_push_shortcut( lua_State* L, Fl_Shortcut s );
+
 MOON_LOCAL Fl_Damage f4l_check_damage( lua_State* L, int idx );
 MOON_LOCAL void f4l_push_damage( lua_State* L, Fl_Damage d );
 

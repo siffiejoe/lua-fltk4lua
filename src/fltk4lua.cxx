@@ -145,7 +145,7 @@ namespace {
 
 MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L ) {
   static char xyz = 0; /* used as a unique key */
-  luaL_checkstack( L, 3, NULL );
+  luaL_checkstack( L, 3, "f4l_get_active_thread" );
   lua_pushlightuserdata( L, static_cast< void* >( &xyz ) );
   lua_rawget( L, LUA_REGISTRYINDEX );
   if( lua_type( L, -1 ) != LUA_TUSERDATA ) {
@@ -194,7 +194,7 @@ MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc ) {
 MOON_LOCAL void f4l_new_class_table( lua_State* L, char const* name,
                                      lua_CFunction constructor,
                                      luaL_Reg const* smethods ) {
-  luaL_checkstack( L, 3, NULL );
+  luaL_checkstack( L, 3, "f4l_new_class_table" );
   lua_newtable( L );
   if( smethods != NULL )
     luaL_setfuncs( L, smethods, 0 );
@@ -249,6 +249,7 @@ MOON_LOCAL void f4l_tile_setup( lua_State* L );
 MOON_LOCAL void f4l_window_setup( lua_State* L );
 MOON_LOCAL void f4l_wizard_setup( lua_State* L );
 MOON_LOCAL void f4l_input_setup( lua_State* L );
+MOON_LOCAL void f4l_menu_setup( lua_State* L );
 MOON_LOCAL void f4l_progress_setup( lua_State* L );
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L );
 MOON_LOCAL void f4l_counter_setup( lua_State* L );
@@ -298,6 +299,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_window_setup( L );
   f4l_wizard_setup( L );
   f4l_input_setup( L );
+  f4l_menu_setup( L );
   f4l_progress_setup( L );
   f4l_adjuster_setup( L );
   f4l_counter_setup( L );

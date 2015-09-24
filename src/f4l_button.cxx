@@ -124,8 +124,10 @@ MOON_LOCAL int f4l_button_index_( lua_State* L, Fl_Button* b,
       if( F4L_MEMCMP( key, "down_box", 8 ) == 0 ) {
         f4l_push_boxtype( L, b->down_box() );
         return 1;
+      } else if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
+        f4l_push_shortcut( L, b->shortcut() );
+        return 1;
       }
-      // TODO: shortcut
       break;
     case 10:
       if( F4L_MEMCMP( key, "down_color", 10 ) == 0 ) {
@@ -157,8 +159,10 @@ MOON_LOCAL int f4l_button_newindex_( lua_State* L, Fl_Button* b,
       if( F4L_MEMCMP( key, "down_box", 8 ) == 0 ) {
         b->down_box( f4l_check_boxtype( L, 3 ) );
         return 1;
+      } else if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
+        b->shortcut( f4l_check_shortcut( L, 3 ) );
+        return 1;
       }
-      // TODO: shortcut
       break;
     case 10:
       if( F4L_MEMCMP( key, "down_color", 10 ) == 0 ) {

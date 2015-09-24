@@ -1,6 +1,169 @@
 #include "fltk4lua.hxx"
 #include "f4l_enums.hxx"
+#include <FL/fl_draw.H>
 #include <climits>
+#include <cctype>
+
+
+#define SHORTCUT_LIST( _ ) \
+  _( "Button1", FL_Button + 1 ) \
+  _( "Button2", FL_Button + 2 ) \
+  _( "Button3", FL_Button + 3 ) \
+  _( "BackSpace", FL_BackSpace ) \
+  _( "Tab", FL_Tab ) \
+  _( "Iso_Key", FL_Iso_Key ) \
+  _( "Enter", FL_Enter ) \
+  _( "Pause", FL_Pause ) \
+  _( "Scroll_Lock", FL_Scroll_Lock ) \
+  _( "Escape", FL_Escape ) \
+  _( "Home", FL_Home ) \
+  _( "Left", FL_Left ) \
+  _( "Up", FL_Up ) \
+  _( "Right", FL_Right ) \
+  _( "Down", FL_Down ) \
+  _( "Page_Up", FL_Page_Up ) \
+  _( "Page_Down", FL_Page_Down ) \
+  _( "End", FL_End ) \
+  _( "Print", FL_Print ) \
+  _( "Insert", FL_Insert ) \
+  _( "Menu", FL_Menu ) \
+  _( "Help", FL_Help ) \
+  _( "Num_Lock", FL_Num_Lock ) \
+  _( "KP0", FL_KP + 0 ) \
+  _( "KP1", FL_KP + 1 ) \
+  _( "KP2", FL_KP + 2 ) \
+  _( "KP3", FL_KP + 3 ) \
+  _( "KP4", FL_KP + 4 ) \
+  _( "KP5", FL_KP + 5 ) \
+  _( "KP6", FL_KP + 6 ) \
+  _( "KP7", FL_KP + 7 ) \
+  _( "KP8", FL_KP + 8 ) \
+  _( "KP9", FL_KP + 9 ) \
+  _( "KP_Enter", FL_KP_Enter ) \
+  _( "F1", FL_F + 1 ) \
+  _( "F2", FL_F + 2 ) \
+  _( "F3", FL_F + 3 ) \
+  _( "F4", FL_F + 4 ) \
+  _( "F5", FL_F + 5 ) \
+  _( "F6", FL_F + 6 ) \
+  _( "F7", FL_F + 7 ) \
+  _( "F8", FL_F + 8 ) \
+  _( "F9", FL_F + 9 ) \
+  _( "F10", FL_F + 10 ) \
+  _( "F11", FL_F + 11 ) \
+  _( "F12", FL_F + 12 ) \
+  _( "Shift_L", FL_Shift_L ) \
+  _( "Shift_R", FL_Shift_R ) \
+  _( "Control_L", FL_Control_L ) \
+  _( "Control_R", FL_Control_R ) \
+  _( "Caps_Lock", FL_Caps_Lock ) \
+  _( "Meta_L", FL_Meta_L ) \
+  _( "Meta_R", FL_Meta_R ) \
+  _( "Alt_L", FL_Alt_L ) \
+  _( "Alt_R", FL_ALT_R ) \
+  _( "Delete", FL_Delete ) \
+  _( "Volume_Down", FL_Volume_Down ) \
+  _( "Volume_Mute", FL_Volume_Mute ) \
+  _( "Volume_Up", FL_Volume_Up ) \
+  _( "Media_Play", FL_Media_Play ) \
+  _( "Media_Stop", FL_Media_Stop ) \
+  _( "Media_Prev", FL_Media_Prev ) \
+  _( "Media_Next", FL_Media_Next ) \
+  _( "Home_Page", FL_Home_Page ) \
+  _( "Mail", FL_Mail ) \
+  _( "Search", FL_Search ) \
+  _( "Back", FL_Back ) \
+  _( "Forward", FL_Forward ) \
+  _( "Stop", FL_Stop ) \
+  _( "Refresh", FL_Refresh ) \
+  _( "Sleep", FL_Sleep ) \
+  _( "Favorites", FL_Favorites ) \
+  _( "SHIFT", FL_SHIFT ) \
+  _( "CAPS_LOCK", FL_CAPS_LOCK ) \
+  _( "CTRL", FL_CTRL ) \
+  _( "ALT", FL_ALT ) \
+  _( "NUM_LOCK", FL_NUM_LOCK ) \
+  _( "META", FL_META ) \
+  _( "SCROLL_LOCK", FL_SCROLL_LOCK ) \
+  _( "BUTTON1", FL_BUTTON1 ) \
+  _( "BUTTON2", FL_BUTTON2 ) \
+  _( "BUTTON3", FL_BUTTON3 ) \
+  _( "COMMAND", FL_COMMAND ) \
+  _( "CONTROL", FL_CONTROL )
+
+#define MOON_FLAG_NAME "fltk4lua.Shortcut"
+#define MOON_FLAG_TYPE Fl_Shortcut
+#define MOON_FLAG_SUFFIX shortcut
+/* we add our own operations below! */
+#define MOON_NOBITOPS
+#include "moon_flag.h"
+
+/* XXX: FLTK doesn't support the full UNICODE range in shortcuts
+ * anyway, so we only accept (extended) ASCII values for now! */
+MOON_LOCAL Fl_Shortcut f4l_check_shortcut( lua_State* L, int idx ) {
+  using namespace std;
+  int t = lua_type( L, idx );
+  if( t == LUA_TNUMBER && 0 == lua_tointeger( L, idx ) )
+    return 0;
+  else if( t == LUA_TSTRING ) {
+    char const* sc = lua_tostring( L, idx );
+    char const* s = sc;
+    int valid = 0, numeric = 1, number = 0;
+    if( *s == '#' || *s == '+' || *s == '^' )
+      ++s;
+    while( s != '\0' ) {
+      if( numeric && isdigit( (unsigned char)*s ) && number < 128 ) {
+        valid = 1;
+        number = number*10 + (*s - '0'); // XXX assumption about order
+      } else if( numeric && number == 0 && (unsigned char)*s < 128 ) {
+        valid = 1;
+        numeric = 0;
+      } else {
+        valid = 0;
+        break;
+      }
+      ++s;
+    }
+    if( number >= 128 )
+      valid = 0;
+    if( !valid )
+      luaL_argerror( L, idx, "invalid shortcut string" );
+    return fl_old_shortcut( sc );
+  } else
+    return moon_flag_get_shortcut( L, idx );
+}
+
+MOON_LOCAL void f4l_push_shortcut( lua_State* L, Fl_Shortcut s ) {
+  moon_flag_new_shortcut( L, s );
+}
+
+namespace {
+
+  int shortcut_add( lua_State* L ) {
+    int t1 = lua_type( L, 1 ), t2 = lua_type( L, 2 );
+    Fl_Shortcut s1 = 0, s2 = 0;
+    size_t n = 0;
+    if( t1 == LUA_TSTRING ) {
+      char const* s = lua_tolstring( L, 1, &n );
+      luaL_argcheck( L, n == 1, 1, "need single-leter string" );
+      s1 = (unsigned char)*s;
+      s2 = moon_flag_get_shortcut( L, 2 );
+    } else {
+      s1 = moon_flag_get_shortcut( L, 1 );
+      if( t2 == LUA_TSTRING ) {
+        char const* s = lua_tolstring( L, 2, &n );
+        luaL_argcheck( L, n == 1, 2, "need single-leter string" );
+        s2 = (unsigned char)*s;
+      } else
+        s2 = moon_flag_get_shortcut( L, 2 );
+    }
+    luaL_argcheck( L, (s1 & FL_KEY_MASK) && (s2 & FL_KEY_MASK), 2,
+                   "invalid shortcut combination" );
+    moon_flag_new_shortcut( L, s1+s2 );
+    return 1;
+  }
+
+} // anonymous namespace
 
 
 #if 0
@@ -454,6 +617,12 @@ MOON_LOCAL void f4l_push_color( lua_State* L, Fl_Color c ) {
 
 
 MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
+  moon_flag_def_shortcut( L );
+  // the default moon_flag operations are insufficient in this case:
+  luaL_getmetatable( L, "fltk4lua.Shortcut" );
+  lua_pushcfunction( L, shortcut_add );
+  lua_setfield( L, -2, "__add" );
+  lua_pop( L, 1 );
 #if 0
   moon_flag_def_damage( L );
 #endif

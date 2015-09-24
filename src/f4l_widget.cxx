@@ -20,16 +20,18 @@ namespace {
 
   void f4l_widget_callback( Fl_Widget* w, void* ud ) {
     lua_State** th = static_cast< lua_State** >( ud );
-    if( th != NULL || *th != NULL ) {
-      int top = lua_gettop( *th );
-      f4l_push_widget( *th, w );
-      if( moon_getuvfield( *th, -1, "callback" ) == LUA_TFUNCTION ) {
-        lua_insert( *th, -2 );
-        if( moon_getuvfield( *th, -1, "user_data" ) == LUA_TNIL )
-          lua_pushnil( *th );
-        lua_call( *th, 2, 0 );
+    if( th != NULL && *th != NULL ) {
+      lua_State* L = *th;
+      luaL_checkstack( L, 4, "f4l_widget_callback" );
+      int top = lua_gettop( L );
+      f4l_push_widget( L, w );
+      if( moon_getuvfield( L, -1, "callback" ) == LUA_TFUNCTION ) {
+        lua_insert( L, -2 ); // callback, widget
+        if( moon_getuvfield( L, -1, "user_data" ) == LUA_TNIL )
+          lua_pushnil( L );
+        lua_call( L, 2, 0 );
       }
-      lua_settop( *th, top );
+      lua_settop( L, top );
     }
   }
 
@@ -38,7 +40,7 @@ namespace {
 
 MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w,
                                      int setud ) {
-  luaL_checkstack( L, 3, NULL );
+  luaL_checkstack( L, 3, "f4l_register_widget" );
   moon_getcache( L, LUA_REGISTRYINDEX );
   lua_pushlightuserdata( L, static_cast< void* >( w ) );
   lua_pushvalue( L, -3 ); // duplicate widget userdata on stack top
@@ -73,7 +75,7 @@ MOON_LOCAL void f4l_push_widget( lua_State* L, Fl_Widget* w ) {
   if( w == NULL )
     lua_pushnil( L );
   else {
-    luaL_checkstack( L, 2, NULL );
+    luaL_checkstack( L, 2, "f4l_push_widget" );
     moon_getcache( L, LUA_REGISTRYINDEX );
     lua_pushlightuserdata( L, static_cast< void* >( w ) );
     lua_rawget( L, -2 );
@@ -292,7 +294,8 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
       if( F4L_MEMCMP( key, "callback", 8 ) == 0 ) {
         luaL_argcheck( L, f4l_our_widget( L, w ), 1,
                        "internal FLTK widget" );
-        luaL_checktype( L, 3, LUA_TFUNCTION );
+        if( !lua_isnoneornil( L, 3 ) )
+          luaL_checktype( L, 3, LUA_TFUNCTION );
         lua_settop( L, 3 );
         moon_setuvfield( L, 1, "callback" );
         w->callback( f4l_widget_callback );

@@ -34,7 +34,10 @@ namespace {
         }
         break;
       case 8:
-        if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
+        if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
+          f4l_push_shortcut( L, v->shortcut() );
+          return 1;
+        } else if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
           f4l_push_font( L, v->textfont() );
           return 1;
         } else if( F4L_MEMCMP( key, "textsize", 8 ) == 0 ) {
@@ -69,7 +72,10 @@ namespace {
         }
         break;
       case 8:
-        if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
+        if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
+          v->shortcut( f4l_check_shortcut( L, 3 ) );
+          return 1;
+        } else if( F4L_MEMCMP( key, "textfont", 8 ) == 0 ) {
           v->textfont( f4l_check_font( L, 3 ) );
           return 1;
         } else if( F4L_MEMCMP( key, "textsize", 8 ) == 0 ) {
