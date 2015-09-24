@@ -119,9 +119,8 @@ namespace {
   }
 
   // setup the menu item mirror table in the uservalue table
-  int menu_array_sync( lua_State* L, int idx, Fl_Menu_* m ) {
+  void menu_array_sync( lua_State* L, int idx, Fl_Menu_* m, int msize ) {
     idx = lua_absindex( L, idx );
-    int msize = m->size();
     lua_getuservalue( L, idx );
     if( lua_getfield( L, -1, "menu" ) != LUA_TTABLE ) {
       lua_pop( L, 1 );
@@ -129,7 +128,7 @@ namespace {
       lua_pushvalue( L, -1 );
       lua_setfield( L, -3, "menu" );
     }
-    lua_replace( L, -2 );
+    lua_replace( L, -2 ); // remove uservalue table, keep mirror table
     Fl_Menu_Item const* p = m->menu();
     for( int i = 0; i < msize; ++i ) {
       char const* t = p[ i ].label();
@@ -147,31 +146,56 @@ namespace {
       lua_pop( L, 1 );
     }
     table_shrink( L, -1, msize );
-    return msize;
-  }
-
-  void menu_array_prealloc( lua_State* L, int msize, int est_sub,
-                            int est_term, int cbidx, int udidx ) {
-    // preallocate memory for sub-menus
-    for( int i = 0; i < est_sub; ++i ) {
-      lua_newtable( L );
-      lua_rawseti( L, -2, msize+i+1 );
-    }
-    // this is the actual object!
-    lua_createtable( L, 0, 2 );
-    lua_pushvalue( L, cbidx );
-    lua_setfield( L, -2, "callback" );
-    lua_pushvalue( L, udidx );
-    lua_setfield( L, -2, "user_data" );
-    lua_rawseti( L, -2, msize+est_sub+2 );
-    // preallocate memory for sub-menu terminators
-    for( int i = est_sub+1; i < est_sub+est_term+1; ++i ) {
-      lua_pushboolean( L, 0 );
-      lua_rawseti( L, -2, msize+i+1 );
-    }
   }
 
 } // anonymous namespace
+
+
+MOON_LOCAL void f4l_prepare_menu_insert( lua_State* L, int midx,
+                                         Fl_Menu_* m, int msize,
+                                         char const* nlabel ) {
+  menu_array_sync( L, midx, m, msize ); // pushes mirror table
+  /* the number of slashes in the label gives an upper limit to the
+   * number of submenus that will be added automatically */
+  int n_slashes = 0;
+  for( ; *nlabel != '\0'; ++nlabel )
+    if( *nlabel == '/' )
+      ++n_slashes;
+  // preallocate memory for sub-menus + element to be inserted
+  for( int i = 0; i < n_slashes+1; ++i ) {
+    lua_newtable( L );
+    lua_rawseti( L, -2, msize+i+1 );
+  }
+  // preallocate sub-menu terminators
+  for( int i = n_slashes+1; i < 2*n_slashes+2; ++i ) {
+    lua_pushboolean( L, 0 );
+    lua_rawseti( L, -2, msize+i+1 );
+  }
+}
+
+
+MOON_LOCAL void f4l_commit_menu_insert( lua_State* L, int midx,
+                                        Fl_Menu_* m, int osize,
+                                        int pos ) {
+  (void)midx; // don't need it
+  int newsize = m->size();
+  /* update the mirror table by shifting preallocated items to the
+   * correct positions. */
+  if( newsize > osize ) {
+    int tsize = luaL_len( L, -1 );
+    int added = newsize-osize;
+    int n_submenus = (added-1)/2, n_terminators = added/2;
+    int n_pasubmenus = (tsize - osize)/2 - 1;
+    // remove preallocated terminators we don't need
+    table_shrink( L, -1, osize+n_pasubmenus+1+n_terminators );
+    // move preallocated stuff to the right position
+    table_rotate( L, -1, pos+1, n_submenus+1+n_terminators );
+  }
+  // remove preallocated leftovers
+  table_shrink( L, -1, newsize );
+  lua_rawgeti( L, -1, pos+1 );
+  lua_replace( L, -2 ); // remove mirror, put item table on stack top
+}
 
 
 MOON_LOCAL int f4l_menu_index_( lua_State* L, Fl_Menu_* m,
@@ -252,12 +276,6 @@ MOON_LOCAL int f4l_menu_add( lua_State* L ) {
     char const* label = luaL_checklstring( L, 2, &n );
     luaL_argcheck( L, n < 1024, 2,
                    "menu label too long (FLTK limitation)" );
-    // we need an estimate of menu items to be created so that we can
-    // preallocate the corresponding Lua table in the uservalue table
-    int n_slashes = 0;
-    for( size_t i = 0; i < n; ++i )
-      if( label[ i ] == '/' )
-        ++n_slashes;
     lua_settop( L, 6 );
     Fl_Shortcut sc = luaL_opt( L, f4l_check_shortcut, 3, 0 );
     int have_cb = 0;
@@ -268,31 +286,16 @@ MOON_LOCAL int f4l_menu_add( lua_State* L ) {
     int mflags = luaL_opt( L, moon_flag_get_menu, 6, 0 );
     luaL_argcheck( L, !(mflags & FL_SUBMENU), 6,
                    "FL_SUBMENU not allowed (FLTK bug)" );
-    int msize = menu_array_sync( L, 1, m );
-    // preallocate memory for the shadow table
-    menu_array_prealloc( L, msize, n_slashes, n_slashes+1, 4, 5 );
-    // do the actual adding:
+    int msize = m->size();
+    f4l_prepare_menu_insert( L, 1, m, msize, label );
     int pos = m->add( label, sc, have_cb ? f4l_menu_callback : 0,
                       NULL, mflags );
-    int newsize = m->size();
-    // update the shadow table (without causing memory allocation)
-    if( newsize == msize ) { // menu item got replaced
-      lua_rawgeti( L, -1, pos+1 );
-      lua_pushvalue( L, 4 );
-      lua_setfield( L, -2, "callback" );
-      lua_pushvalue( L, 5 );
-      lua_setfield( L, -2, "user_data" );
-      lua_pop( L, 1 );
-    } else {
-      int added = newsize-msize;
-      int n_submenus = (added-1)/2, n_terminators = added/2;
-      // remove preallocated terminators we don't need
-      table_shrink( L, -1, msize+n_slashes+1+n_terminators );
-      // move preallocated stuff to the right position
-      table_rotate( L, -1, pos+1, n_submenus+1+n_terminators );
-      // remove preallocated leftovers
-      table_shrink( L, -1, newsize );
-    }
+    f4l_commit_menu_insert( L, 1, m, msize, pos );
+    // set callback and user_data fields
+    lua_pushvalue( L, 4 );
+    lua_setfield( L, -2, "callback" );
+    lua_pushvalue( L, 5 );
+    lua_setfield( L, -2, "user_data" );
     lua_pushinteger( L, pos );
   } F4L_CATCH( L );
   return 1;
@@ -346,53 +349,32 @@ MOON_LOCAL int f4l_menu_find_index( lua_State* L ) {
 MOON_LOCAL int f4l_menu_insert( lua_State* L ) {
   F4L_TRY {
     Fl_Menu_* m = check_rw_menu( L, 1 );
+    int msize = m->size();
     int idx = moon_checkint( L, 2, -1, INT_MAX );
+    luaL_argcheck( L, idx < msize, 2, "index too large" );
     size_t n = 0;
     char const* label = luaL_checklstring( L, 3, &n );
     luaL_argcheck( L, n < 1024, 3,
                    "menu label too long (FLTK limitation)" );
-    // we need an estimate of menu items to be created so that we can
-    // preallocate the corresponding Lua table in the uservalue table
-    int n_slashes = 0;
-    for( size_t i = 0; i < n; ++i )
-      if( label[ i ] == '/' )
-        ++n_slashes;
     lua_settop( L, 7 );
     Fl_Shortcut sc = luaL_opt( L, f4l_check_shortcut, 4, 0 );
     int have_cb = 0;
     if( !lua_isnil( L, 5 ) ) {
-      luaL_checktype( L, 6, LUA_TFUNCTION );
+      luaL_checktype( L, 5, LUA_TFUNCTION );
       have_cb = 1;
     }
     int mflags = luaL_opt( L, moon_flag_get_menu, 7, 0 );
     luaL_argcheck( L, !(mflags & FL_SUBMENU), 7,
                    "FL_SUBMENU not allowed (FLTK bug)" );
-    int msize = menu_array_sync( L, 1, m );
-    luaL_argcheck( L, idx < msize, 2, "index too large" );
-    // preallocate memory for the shadow table
-    menu_array_prealloc( L, msize, n_slashes, n_slashes+1, 5, 6 );
-    // do the actual inserting:
+    f4l_prepare_menu_insert( L, 1, m, msize, label );
     int pos = m->insert( idx, label, sc, have_cb ? f4l_menu_callback : 0,
                          NULL, mflags );
-    int newsize = m->size();
-    // update the shadow table (without causing memory allocation)
-    if( newsize == msize ) { // menu item got replaced
-      lua_rawgeti( L, -1, pos+1 );
-      lua_pushvalue( L, 5 );
-      lua_setfield( L, -2, "callback" );
-      lua_pushvalue( L, 6 );
-      lua_setfield( L, -2, "user_data" );
-      lua_pop( L, 1 );
-    } else {
-      int added = newsize-msize;
-      int n_submenus = (added-1)/2, n_terminators = added/2;
-      // remove preallocated terminators we don't need
-      table_shrink( L, -1, msize+n_slashes+1+n_terminators );
-      // move preallocated stuff to the right position
-      table_rotate( L, -1, pos+1, n_submenus+1+n_terminators );
-      // remove preallocated leftovers
-      table_shrink( L, -1, newsize );
-    }
+    f4l_commit_menu_insert( L, 1, m, msize, pos );
+    // set callback and user_data fields
+    lua_pushvalue( L, 5 );
+    lua_setfield( L, -2, "callback" );
+    lua_pushvalue( L, 6 );
+    lua_setfield( L, -2, "user_data" );
     lua_pushinteger( L, pos );
   } F4L_CATCH( L );
   return 1;

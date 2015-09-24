@@ -5,6 +5,16 @@
 #include <FL/Fl_Menu_.H>
 
 
+/* Functions for keeping the mirror table in the uservalue in sync
+ * with the menu items array */
+MOON_LOCAL void f4l_prepare_menu_insert( lua_State* L, int midx,
+                                         Fl_Menu_* m, int msize,
+                                         char const* nlabel );
+MOON_LOCAL void f4l_commit_menu_insert( lua_State* L, int midx,
+                                        Fl_Menu_* m, int msize,
+                                        int pos );
+
+
 /* (Meta-)methods for Fl_Menu_ widgets: */
 MOON_LOCAL int f4l_menu_index_( lua_State* L, Fl_Menu_* m,
                                 char const* key, size_t n );
