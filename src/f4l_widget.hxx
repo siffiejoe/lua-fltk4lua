@@ -6,6 +6,13 @@
 #include <climits>
 
 
+/* Custom flag to use in moon_object_headers to indicate that the
+ * widget is running a callback (this is used by the menu code,
+ * which prevents you from modifying the menu items when during
+ * the callback). */
+#define F4L_CALLBACK_ACTIVE (0x80u)
+
+
 /* Inside a FLTK callback the Fl_Widget pointer must be mapped to
  * a real userdata. This is done using a weak table in the registry.
  */

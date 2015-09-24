@@ -5,11 +5,6 @@
 #include <FL/Fl_Menu_.H>
 
 
-/* custom flag to use in moon_object_headers to indicate that
- * the menu is readonly */
-#define F4L_CONST_MENU (0x80u)
-
-
 /* (Meta-)methods for Fl_Menu_ widgets: */
 MOON_LOCAL int f4l_menu_index_( lua_State* L, Fl_Menu_* m,
                                 char const* key, size_t n );

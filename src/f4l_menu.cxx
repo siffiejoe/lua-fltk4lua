@@ -37,7 +37,7 @@ namespace {
     void* p = lua_touserdata( L, idx );
     moon_object_header* h = NULL;
     h = static_cast< moon_object_header* >( p );
-    if( h->flags & F4L_CONST_MENU )
+    if( h->flags & F4L_CALLBACK_ACTIVE )
       luaL_error( L, "menu is temporarily readonly" );
     return m;
   }
@@ -62,10 +62,10 @@ namespace {
           lua_insert( L, -3 ); // widget, callback, widget, menu-entry
           lua_getfield( L, -1, "user_data" );
           lua_replace( L, -2 ); // widget, callback, widget, user_data
-          int oldf = h->flags & F4L_CONST_MENU;
-          h->flags |= F4L_CONST_MENU;
-          int status = lua_pcall( *th, 2, 0, 0 );
-          h->flags = (h->flags & ~F4L_CONST_MENU) | oldf;
+          int oldf = h->flags & F4L_CALLBACK_ACTIVE;
+          h->flags |= F4L_CALLBACK_ACTIVE;
+          int status = lua_pcall( L, 2, 0, 0 );
+          h->flags = (h->flags & ~F4L_CALLBACK_ACTIVE) | oldf;
           if( status != 0 ) {
             lua_replace( L, -2 );
             lua_error( L );
@@ -544,16 +544,19 @@ MOON_LOCAL int f4l_menu_menuitem_setp( lua_State* L ) {
         break;
       case 8:
         if( F4L_MEMCMP( key, "callback", 8 ) == 0 ) {
+          int has_cb = 0;
           luaL_argcheck( L, f4l_our_widget( L, m ), 1,
                          "internal FLTK widget" );
-          if( !lua_isnoneornil( L, 4 ) )
+          if( !lua_isnoneornil( L, 4 ) ) {
             luaL_checktype( L, 4, LUA_TFUNCTION );
+            has_cb = 1;
+          }
           if( moon_getuvfield( L, 1, "menu" ) == LUA_TTABLE &&
               lua_rawgeti( L, -1, idx+1 ) == LUA_TTABLE ) {
             lua_pushvalue( L, 4 );
             lua_setfield( L, -2, "callback" );
             const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
-              .callback( f4l_menu_callback );
+              .callback( has_cb ? f4l_menu_callback : 0 );
           } else
             luaL_error( L, "menu item %d doesn't have a uservalue table",
                         idx );

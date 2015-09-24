@@ -37,6 +37,9 @@ SOURCES = \
  src/f4l_wizard.cxx \
  src/f4l_input.cxx \
  src/f4l_menu.cxx \
+ src/f4l_choice.cxx \
+ src/f4l_menu_bar.cxx \
+ src/f4l_menu_button.cxx \
  src/f4l_progress.cxx \
  src/f4l_valuator.cxx \
  src/f4l_adjuster.cxx \
@@ -135,6 +138,13 @@ src/f4l_input.o: src/f4l_input.cxx src/fltk4lua.hxx moon/moon.h \
 src/f4l_menu.o: src/f4l_menu.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_menu.hxx src/f4l_widget.hxx \
  src/f4l_enums.hxx moon/moon_flag.h
+src/f4l_choice.o: src/f4l_choice.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_menu.hxx src/f4l_widget.hxx
+src/f4l_menu_bar.o: src/f4l_menu_bar.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_menu.hxx src/f4l_widget.hxx
+src/f4l_menu_button.o: src/f4l_menu_button.cxx src/fltk4lua.hxx \
+ moon/moon.h compat-5.3/c-api/compat-5.3.h src/f4l_menu.hxx \
+ src/f4l_widget.hxx src/f4l_enums.hxx
 src/f4l_scroll.o: src/f4l_scroll.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_group.hxx src/f4l_widget.hxx \
  src/f4l_enums.hxx

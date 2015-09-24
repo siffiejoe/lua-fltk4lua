@@ -25,11 +25,21 @@ namespace {
       luaL_checkstack( L, 4, "f4l_widget_callback" );
       int top = lua_gettop( L );
       f4l_push_widget( L, w );
+      lua_pushvalue( L, -1 ); // widget, widget
+      moon_object_header* h = NULL;
+      h = static_cast< moon_object_header* >( lua_touserdata( L, -2 ) );
       if( moon_getuvfield( L, -1, "callback" ) == LUA_TFUNCTION ) {
-        lua_insert( L, -2 ); // callback, widget
+        lua_insert( L, -2 ); // widget, callback, widget
         if( moon_getuvfield( L, -1, "user_data" ) == LUA_TNIL )
           lua_pushnil( L );
-        lua_call( L, 2, 0 );
+        int oldf = h->flags & F4L_CALLBACK_ACTIVE;
+        h->flags |= F4L_CALLBACK_ACTIVE;
+        int status = lua_pcall( L, 2, 0, 0 );
+        h->flags = (h->flags & ~F4L_CALLBACK_ACTIVE) | oldf;
+        if( status != 0 ) {
+          lua_replace( L, -2 );
+          lua_error( L );
+        }
       }
       lua_settop( L, top );
     }
