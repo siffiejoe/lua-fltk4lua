@@ -319,11 +319,10 @@ MOON_LOCAL int f4l_menu_clear_submenu( lua_State* L ) {
   F4L_TRY {
     int oldsize = m->size();
     luaL_argcheck( L, idx < oldsize, 2, "index too large" );
+    menu_array_sync( L, 1, m, oldsize ); // pushes mirror table
     if( m->clear_submenu( idx ) == 0 ) {
-      if( moon_getuvfield( L, 1, "menu" ) == LUA_TTABLE ) {
-        int newsize = m->size();
-        table_remove( L, -1, idx+2, oldsize-newsize );
-      }
+      int newsize = m->size();
+      table_remove( L, -1, idx+1, oldsize-newsize );
       lua_pushboolean( L, 1 );
     } else
       lua_pushnil( L );
@@ -388,11 +387,10 @@ MOON_LOCAL int f4l_menu_remove( lua_State* L ) {
     int oldsize = m->size();
     luaL_argcheck( L, idx < oldsize, 2, "index too large" );
     if( m->text( idx ) != NULL ) { // don't remove terminators
+      menu_array_sync( L, 1, m, oldsize ); // pushes mirror table
       m->remove( idx );
-      if( moon_getuvfield( L, 1, "menu" ) == LUA_TTABLE ) {
-        int newsize = m->size();
-        table_remove( L, -1, idx+1, oldsize-newsize );
-      }
+      int newsize = m->size();
+      table_remove( L, -1, idx+1, oldsize-newsize );
     }
   } F4L_CATCH( L );
   return 0;
