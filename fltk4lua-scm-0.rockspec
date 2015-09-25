@@ -7,7 +7,7 @@ description = {
   summary = "Lua binding to FLTK, the Fast Light ToolKit",
   detailed = "Lua binding to FLTK, the Fast Light ToolKit",
   homepage = "...",
-  license = "MIT"
+  license = "MIT+LGPL"
 }
 dependencies = {
   "lua >= 5.1, < 5.4",

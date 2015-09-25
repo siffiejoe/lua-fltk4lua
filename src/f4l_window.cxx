@@ -208,15 +208,6 @@ MOON_LOCAL int f4l_window_default_cursor( lua_State* L ) {
 }
 
 
-MOON_LOCAL int f4l_window_free_position( lua_State* L ) {
-  Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
-    window->free_position();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
 MOON_LOCAL int f4l_window_fullscreen( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
   F4L_TRY {

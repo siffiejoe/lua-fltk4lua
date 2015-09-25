@@ -72,7 +72,6 @@ MOON_LOCAL int f4l_window_size_range( lua_State* L );
   { "clear_border", f4l_window_clear_border }, \
   { "cursor", f4l_window_cursor }, \
   { "default_cursor", f4l_window_default_cursor }, \
-  { "free_position", f4l_window_free_position }, \
   { "fullscreen", f4l_window_fullscreen }, \
   { "fullscreen_off", f4l_window_fullscreen_off }, \
   { "iconize", f4l_window_iconize }, \
