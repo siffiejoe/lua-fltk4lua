@@ -60,7 +60,7 @@
   _( "Meta_L", FL_Meta_L ) \
   _( "Meta_R", FL_Meta_R ) \
   _( "Alt_L", FL_Alt_L ) \
-  _( "Alt_R", FL_ALT_R ) \
+  _( "Alt_R", FL_Alt_R ) \
   _( "Delete", FL_Delete ) \
   _( "Volume_Down", FL_Volume_Down ) \
   _( "Volume_Mute", FL_Volume_Mute ) \
@@ -98,20 +98,18 @@
 #define MOON_NOBITOPS
 #include "moon_flag.h"
 
-/* XXX: FLTK doesn't support the full UNICODE range in shortcuts
- * anyway, so we only accept (extended) ASCII values for now! */
 MOON_LOCAL Fl_Shortcut f4l_check_shortcut( lua_State* L, int idx ) {
   using namespace std;
   int t = lua_type( L, idx );
-  if( t == LUA_TNUMBER && 0 == lua_tointeger( L, idx ) )
-    return 0;
+  if( t == LUA_TNUMBER )
+    return moon_checkint( L, idx, 0, FL_KEY_MASK );
   else if( t == LUA_TSTRING ) {
     char const* sc = lua_tostring( L, idx );
     char const* s = sc;
     int valid = 0, numeric = 1, number = 0;
-    if( *s == '#' || *s == '+' || *s == '^' )
+    while( *s == '#' || *s == '+' || *s == '^' || *s == '!' || *s == '@' )
       ++s;
-    while( s != '\0' ) {
+    while( *s != '\0' ) {
       if( numeric && isdigit( (unsigned char)*s ) && number < 128 ) {
         valid = 1;
         number = number*10 + (*s - '0'); // XXX assumption about order
@@ -145,20 +143,20 @@ namespace {
     size_t n = 0;
     if( t1 == LUA_TSTRING ) {
       char const* s = lua_tolstring( L, 1, &n );
-      luaL_argcheck( L, n == 1, 1, "need single-leter string" );
+      luaL_argcheck( L, n == 1, 1, "need single-letter string" );
       s1 = (unsigned char)*s;
       s2 = moon_flag_get_shortcut( L, 2 );
     } else {
       s1 = moon_flag_get_shortcut( L, 1 );
       if( t2 == LUA_TSTRING ) {
         char const* s = lua_tolstring( L, 2, &n );
-        luaL_argcheck( L, n == 1, 2, "need single-leter string" );
+        luaL_argcheck( L, n == 1, 2, "need single-letter string" );
         s2 = (unsigned char)*s;
       } else
         s2 = moon_flag_get_shortcut( L, 2 );
     }
-    luaL_argcheck( L, (s1 & FL_KEY_MASK) && (s2 & FL_KEY_MASK), 2,
-                   "invalid shortcut combination" );
+    luaL_argcheck( L, !(s1 & FL_KEY_MASK) + !(s2 & FL_KEY_MASK) >= 1,
+                   2, "invalid shortcut combination" );
     moon_flag_new_shortcut( L, s1+s2 );
     return 1;
   }
@@ -632,6 +630,10 @@ MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
   moon_flag_def_when( L );
   moon_flag_def_align( L );
   moon_flag_def_color( L );
+#define GEN_UDATA( _a, _b ) \
+  (moon_flag_new_shortcut( L, _b ), lua_setfield( L, -2, _a ));
+  SHORTCUT_LIST( GEN_UDATA )
+#undef GEN_UDATA
 #if 0
 #define GEN_UDATA( _a, _b ) \
   (moon_flag_new_damage( L, _b ), lua_setfield( L, -2, _a ));

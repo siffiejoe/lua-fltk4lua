@@ -4,6 +4,7 @@
 #include "f4l_enums.hxx"
 #include <cstring>
 #include <climits>
+#include <cstdio>
 
 
 #define MENU_FLAG_LIST( _ ) \
@@ -56,7 +57,7 @@ namespace {
       moon_object_header* h = NULL;
       h = static_cast< moon_object_header* >( lua_touserdata( L, -2 ) );
       if( moon_getuvfield( L, -1, "menu" ) == LUA_TTABLE &&
-          lua_rawgeti( L, -1, v ) == LUA_TTABLE ) {
+          lua_rawgeti( L, -1, v+1 ) == LUA_TTABLE ) {
         lua_replace( L, -2 ); // widget, widget, menu-entry
         if( lua_getfield( L, -1, "callback" ) == LUA_TFUNCTION ) {
           lua_insert( L, -3 ); // widget, callback, widget, menu-entry
@@ -118,8 +119,49 @@ namespace {
     }
   }
 
+
+#if 0
+  // for debugging only; otherwise unused function
+  void menu_array_dump( lua_State* L, int idx ) {
+    using namespace std;
+    idx = lua_absindex( L, idx );
+    moon_checkobject( L, idx, F4L_MENU_NAME );
+    int t = moon_getuvfield( L, idx, "menu" );
+    if( t == LUA_TNIL ) {
+      fprintf( stderr, "no menu item mirror table\n" );
+    } else if( t != LUA_TTABLE ) {
+      fprintf( stderr, "menu uservalue field has wrong type: %s\n",
+               lua_typename( L, t ) );
+      lua_pop( L, 1 );
+    } else {
+      luaL_checkstack( L, 5, "menu_array_dump" );
+      int n = luaL_len( L, -1 );
+      for( int i = 1; i <= n; ++i ) {
+        int it = lua_rawgeti( L, -1, i );
+        fprintf( stderr, "item %d, lua type: %s\n", i-1,
+                 lua_typename( L, it ) );
+        if( it == LUA_TTABLE ) {
+          lua_getfield( L, -1, "callback" );
+          lua_getfield( L, -2, "user_data" );
+          char const* cb = luaL_tolstring( L, -2, NULL );
+          char const* ud = luaL_tolstring( L, -2, NULL );
+          fprintf( stderr, "  callback: %s, user_data: %s\n", cb, ud );
+          lua_pop( L, 4 );
+        }
+        lua_pop( L, 1 );
+      }
+      lua_pop( L, 1 );
+    }
+  }
+#endif
+
+
+#undef MENU_SYNC_WARN
+#define MENU_SYNC_ERROR
+
   // setup the menu item mirror table in the uservalue table
   void menu_array_sync( lua_State* L, int idx, Fl_Menu_* m, int msize ) {
+    using namespace std;
     idx = lua_absindex( L, idx );
     lua_getuservalue( L, idx );
     if( lua_getfield( L, -1, "menu" ) != LUA_TTABLE ) {
@@ -134,11 +176,25 @@ namespace {
       char const* t = p[ i ].label();
       if( t == NULL ) { // sub-menu terminator
         if( lua_rawgeti( L, -1, i+1 ) != LUA_TBOOLEAN ) {
+#ifdef MENU_SYNC_WARN
+          fprintf( stderr, "menu out of sync (item: %d, Lua type: %s)!\n",
+                   i, luaL_typename( L, -1 ) );
+#endif
+#ifdef MENU_SYNC_ERROR
+          luaL_error( L, "menu out of sync (item %d)", i );
+#endif
           lua_pushboolean( L, 0 ); // terminators are falses
           lua_rawseti( L, -3, i+1 );
         }
       } else { // normal menu element
         if( lua_rawgeti( L, -1, i+1 ) != LUA_TTABLE ) {
+#ifdef MENU_SYNC_WARN
+          fprintf( stderr, "menu out of sync (item: %d, Lua type: %s)!\n",
+                   i, luaL_typename( L, -1 ) );
+#endif
+#ifdef MENU_SYNC_ERROR
+          luaL_error( L, "menu out of sync (item %d)", i );
+#endif
           lua_newtable( L );
           lua_rawseti( L, -3, i+1 );
         }
@@ -189,7 +245,7 @@ MOON_LOCAL void f4l_commit_menu_insert( lua_State* L, int midx,
     // remove preallocated terminators we don't need
     table_shrink( L, -1, osize+n_pasubmenus+1+n_terminators );
     // move preallocated stuff to the right position
-    table_rotate( L, -1, pos+1, n_submenus+1+n_terminators );
+    table_rotate( L, -1, pos+1-n_submenus, n_submenus+1+n_terminators );
   }
   // remove preallocated leftovers
   table_shrink( L, -1, newsize );
