@@ -22,8 +22,9 @@ namespace {
     lua_State** th = static_cast< lua_State** >( ud );
     if( th != NULL && *th != NULL ) {
       lua_State* L = *th;
-      luaL_checkstack( L, 4, "f4l_widget_callback" );
+      luaL_checkstack( L, 5, "f4l_widget_callback" );
       int top = lua_gettop( L );
+      lua_pushcfunction( L, f4l_backtrace );
       f4l_push_widget( L, w );
       lua_pushvalue( L, -1 ); // widget, widget
       moon_object_header* h = NULL;
@@ -34,10 +35,11 @@ namespace {
           lua_pushnil( L );
         int oldf = h->flags & F4L_CALLBACK_ACTIVE;
         h->flags |= F4L_CALLBACK_ACTIVE;
-        int status = lua_pcall( L, 2, 0, 0 );
+        int status = lua_pcall( L, 2, 0, top+1 );
         h->flags = (h->flags & ~F4L_CALLBACK_ACTIVE) | oldf;
         if( status != 0 ) {
-          lua_replace( L, -2 );
+          lua_replace( L, -3 );
+          lua_pop( L, 1 );
           lua_error( L );
         }
       }

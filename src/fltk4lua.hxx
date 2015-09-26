@@ -122,6 +122,9 @@ MOON_LOCAL void f4l_delete( void* p ) {
 }
 
 
+/* lua_pcall message handler that produces a standard back trace */
+MOON_LOCAL int f4l_backtrace( lua_State* L );
+
 /* the Lua callbacks need a lua_State pointer to run */
 MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L );
 

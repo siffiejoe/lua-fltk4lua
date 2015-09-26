@@ -143,6 +143,14 @@ namespace {
 } // anonymous namespace
 
 
+MOON_LOCAL int f4l_backtrace( lua_State* L ) {
+  char const* msg = lua_tostring( L, 1 );
+  if( msg != NULL )
+    luaL_traceback( L, L, msg, 1 );
+  return 1;
+}
+
+
 MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L ) {
   static char xyz = 0; /* used as a unique key */
   luaL_checkstack( L, 3, "f4l_get_active_thread" );
