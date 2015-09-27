@@ -612,7 +612,6 @@ MOON_LOCAL int f4l_menu_menuitem_setp( lua_State* L ) {
         } else if( F4L_MEMCMP( key, "labelsize", 9 ) == 0 ) {
           const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
             .labelsize( moon_checkint( L, 4, 0, INT_MAX ) );
-          lua_pushinteger( L, m->menu()[ idx ].labelsize() );
           return 0;
         } else if( F4L_MEMCMP( key, "user_data", 9 ) == 0 ) {
           if( moon_getuvfield( L, 1, "menu" ) == LUA_TTABLE &&
