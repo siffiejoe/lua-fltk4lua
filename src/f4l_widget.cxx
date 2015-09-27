@@ -437,9 +437,9 @@ MOON_LOCAL int f4l_widget_hide( lua_State* L ) {
 
 MOON_LOCAL int f4l_widget_inside( lua_State* L ) {
   Fl_Widget* widget = check_widget( L, 1 );
-  Fl_Widget* widget2 = check_widget( L, 2 );
+  Fl_Widget* widget2 = luaL_opt( L, check_widget, 2, NULL );
   F4L_TRY {
-    widget->inside( widget2 );
+    lua_pushboolean( L, widget->inside( widget2 ) );
   } F4L_CATCH( L );
   return 1;
 }
