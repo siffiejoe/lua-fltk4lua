@@ -150,6 +150,31 @@ MOON_LOCAL int f4l_backtrace( lua_State* L ) {
   return 1;
 }
 
+MOON_LOCAL void f4l_fix_backtrace( lua_State* L ) {
+  size_t n = 0;
+  char const* msg = lua_tolstring( L, -1, &n );
+  if( msg != NULL && n > 0 ) {
+    /* figure out our current stack level */
+    int lvl = 0;
+    lua_Debug d;
+    while( lua_getstack( L, lvl, &d ) )
+      ++lvl;
+    /* remove the last lines of the stack trace that belongs to the
+     * levels below us */
+    char const* p = msg + n - 1;
+    int cnt = 2;
+    while( p != msg && (*p != '\n' || cnt < lvl) ) {
+      if( *p == '\n' )
+        ++cnt;
+      --p;
+    }
+    if( p != msg ) {
+      lua_pushlstring( L, msg, p-msg );
+      lua_replace( L, -2 );
+    }
+  }
+}
+
 
 MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L ) {
   static char xyz = 0; /* used as a unique key */

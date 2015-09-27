@@ -71,6 +71,7 @@ namespace {
           if( status != 0 ) {
             lua_replace( L, -3 );
             lua_pop( L, 1 );
+            f4l_fix_backtrace( L );
             lua_error( L );
           }
         }
