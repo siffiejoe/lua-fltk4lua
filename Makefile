@@ -10,8 +10,8 @@ CXX = g++
 CFLAGS = -Wall -Wextra -fpic -Os
 MYCFLAGS = ${CFLAGS} -I${LUA_INCDIR} -Imoon -Icompat-5.3/c-api \
            -DMOON_PREFIX=f4lx -DCOMPAT53_PREFIX=f4lx -DNDEBUG \
-           `${FLTK_CONFIG} --cxxflags`
-MYLDFLAGS = `${FLTK_CONFIG} --ldflags`
+           `${FLTK_CONFIG} --use-images --cxxflags`
+MYLDFLAGS = `${FLTK_CONFIG} --use-images --ldflags`
 LIBFLAG = -shared
 LIB_EXTENSION = so
 

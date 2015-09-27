@@ -96,14 +96,16 @@ namespace {
   }
 
 
-  inline int protected_register_images( void ) {
-#if 0
+  inline int protected_register_images( lua_State* L ) {
+#if 1
     F4L_TRY {
       // add support for more image formats (PNG, JPEG)
       // you will need to link to the fltk_images library
       // use `fltk-config --use-images ...` to get appropriate flags
       fl_register_images();
     } F4L_CATCH( L );
+#else
+    (void)L;
 #endif
     return 0;
   }
@@ -128,6 +130,6 @@ MOON_LOCAL void f4l_shared_image_setup( lua_State* L ) {
   moon_defcast( L, F4L_SHARED_IMAGE_NAME, F4L_IMAGE_NAME,
                 f4l_cast< Fl_Shared_Image, Fl_Image > );
   f4l_new_class_table( L, "Shared_Image", 0, smethods );
-  (void)protected_register_images();
+  protected_register_images( L );
 }
 
