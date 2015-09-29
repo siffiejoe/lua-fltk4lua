@@ -300,7 +300,7 @@ MOON_LOCAL int f4l_menu_newindex_( lua_State* L, Fl_Menu_* m,
       if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
         int i = moon_checkint( L, 3, 0, INT_MAX );
         luaL_argcheck( L, 0 <= i && i < m->size(), 3,
-                       "index not in range" );
+                       "index out of range" );
         m->value( i );
         return 1;
       }

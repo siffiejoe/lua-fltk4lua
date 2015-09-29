@@ -10,7 +10,6 @@
   _( "HORIZONTAL", Fl_Scroll::HORIZONTAL ) \
   _( "VERTICAL", Fl_Scroll::VERTICAL ) \
   _( "BOTH", Fl_Scroll::BOTH ) \
-  _( "ALWAYS_ON", Fl_Scroll::ALWAYS_ON ) \
   _( "HORIZONTAL_ALWAYS", Fl_Scroll::HORIZONTAL_ALWAYS ) \
   _( "VERTICAL_ALWAYS", Fl_Scroll::VERTICAL_ALWAYS ) \
   _( "BOTH_ALWAYS", Fl_Scroll::BOTH_ALWAYS )

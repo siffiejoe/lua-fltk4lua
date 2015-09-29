@@ -28,6 +28,10 @@ SOURCES = \
  src/f4l_chart.cxx \
  src/f4l_clock.cxx \
  src/f4l_group.cxx \
+ src/f4l_browserx.cxx \
+ src/f4l_browser.cxx \
+ src/f4l_file_browser.cxx \
+ src/f4l_check_browser.cxx \
  src/f4l_input_choice.cxx \
  src/f4l_color_chooser.cxx \
  src/f4l_pack.cxx \
@@ -91,6 +95,18 @@ src/f4l_widget.o: src/f4l_widget.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_widget.hxx src/f4l_enums.hxx
 src/f4l_group.o: src/f4l_group.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_group.hxx src/f4l_widget.hxx
+src/f4l_browserx.o: src/f4l_browserx.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_browserx.hxx src/f4l_enums.hxx
+src/f4l_browser.o: src/f4l_browser.cxx src/fltk4lua.hxx moon/moon.h \
+ compat-5.3/c-api/compat-5.3.h src/f4l_browser.hxx src/f4l_browserx.hxx \
+ src/f4l_group.hxx src/f4l_widget.hxx src/f4l_enums.hxx
+src/f4l_file_browser.o: src/f4l_file_browser.cxx src/fltk4lua.hxx \
+ moon/moon.h compat-5.3/c-api/compat-5.3.h src/f4l_browser.hxx \
+ src/f4l_browserx.hxx src/f4l_group.hxx src/f4l_widget.hxx \
+ src/f4l_enums.hxx
+src/f4l_check_browser.o: src/f4l_check_browser.cxx src/fltk4lua.hxx \
+ moon/moon.h compat-5.3/c-api/compat-5.3.h src/f4l_browserx.hxx \
+ src/f4l_group.hxx src/f4l_widget.hxx
 src/f4l_enums.o: src/f4l_enums.cxx src/fltk4lua.hxx moon/moon.h \
  compat-5.3/c-api/compat-5.3.h src/f4l_enums.hxx moon/moon_flag.h
 src/f4l_box.o: src/f4l_box.cxx src/fltk4lua.hxx moon/moon.h \

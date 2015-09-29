@@ -78,7 +78,6 @@ MOON_LOCAL void* f4l_cast( void* p ) {
 }
 
 
-/* groups need special attention during destruction */
 namespace {
   /* FLTK does some automatic memory management for the children
    * of an Fl_Group which interferes with the finalizers used in
@@ -121,6 +120,12 @@ MOON_LOCAL void f4l_delete( void* p ) {
   safe_delete< T >( static_cast< void* >( t1 ), t1 );
 }
 
+
+/* type checking function for a single character/byte string */
+MOON_LOCAL char f4l_check_char( lua_State* L, int idx );
+MOON_LOCAL inline void f4l_push_char( lua_State* L, char c ) {
+  lua_pushlstring( L, &c, 1 );
+}
 
 /* lua_pcall message handler that produces a standard back trace */
 MOON_LOCAL int f4l_backtrace( lua_State* L );

@@ -208,7 +208,7 @@ precedence over inherited ones.
 *   `obj.type  [get: s; set: s]`
 *   `obj.maxsize  [get: i; set: i]`
 *   `obj.autosize  [get: b; set: b]`
-*   `obj.textsize  [get: i; set: is]`
+*   `obj.textsize  [get: i; set: i]`
 *   `obj.textcolor  [get: u; set: iu]`
 *   `obj.chart_size  [get: i; set: -]` (corresponds to
     `Fl_Chart::size()`)
@@ -254,13 +254,99 @@ precedence over inherited ones.
 *   `obj.clip_children  [get: b; set: b]`
 *   properties defined for the `Widget` userdata type
 
-`Browser_` (abstract): NYI
+`Browser_` (abstract):
+*   `obj:deselect( b ) ==> b`
+*   `obj:scrollbar_left()`
+*   `obj:scrollbar_right()`
+*   `obj:sort( ns )`
+*   `obj.textfont  [get: s; set: is]`
+*   `obj.textsize  [get: i; set: i]`
+*   `obj.textcolor  [get: u; set: iu]`
+*   `obj.hposition  [get: i; set: i]`
+*   `obj.vposition  [get: i; set: i]` (corresponds to
+    `Fl_Browser_::position()`)
+*   `obj.has_scrollbar  [get: s; set: s]`
+*   `obj.scrollbar_size  [get: i; set: i]`
+*   `obj.scrollbar_width  [get: i; set: i]`
 
-`Browser`: NYI
+`Browser`:
+*   `fl.Browser( i, i, i, i, ns ) ==> u`
+*   `fl.Browser( t ) ==> u` (table constructor syntax)
+*   `obj:add( ns )`
+*   `obj:clear()`
+*   `obj:displayed( i ) ==> b`
+*   `obj:hide( ni )`
+*   `obj:insert( i, ns )`
+*   `obj:load( s ) ==> b / (n, s, i)`
+*   `obj:make_visible( i )`
+*   `obj:move( i, i )`
+*   `obj:remove( i )`
+*   `obj:select( i ) ==> b`
+*   `obj:selected( i ) ==> b`
+*   `obj:show( ni )`
+*   `obj:size( i, i )`
+*   `obj:swap( i, i )`
+*   `obj:text( i ) ==> ns`
+*   `obj:text( i, s )`
+*   `obj:visible( i ) ==> b`
+*   methods defined for the `Browser_` userdata type
+*   methods defined for the `Widget` userdata type
+*   `obj.type  [get: s; set: s]`
+*   `obj.value  [get: i; set: i]`
+*   `obj.nitems  [get: i; set: -]` (corresponds to
+    `Fl_Browser::size()`)
+*   `obj.topline  [get: i; set: i]`
+*   `obj.bottomline  [get: -; set: i]`
+*   `obj.middleline  [get: -; set: i]`
+*   `obj.column_char  [get: s; set: -]`
+*   `obj.format_char  [get: s; set: -]`
+*   `obj.column_widths  [get: t; set: t]`
+*   properties defined for the `Browser_` userdata type
+*   properties defined for the `Widget` userdata type
+*   (note: `Browser` does not inherit the methods and properties of
+    `Group`, although `Fl_Browser` is implemented as a sub-class of
+    `Fl_Group`!)
 
-`File_Browser`: NYI
+`File_Browser`:
+*   `fl.File_Browser( i, i, i, i, ns ) ==> u`
+*   `fl.File_Browser( t ) ==> u` (table constructor syntax)
+*   `obj:load( s, s ) ==> b / (n, s, i)`
+*   methods defined for the `Browser` userdata type
+*   methods defined for the `Browser_` userdata type
+*   methods defined for the `Widget` userdata type
+*   `obj.filter  [get: s; set: s]`
+*   `obj.filetype  [get: s; set: s]`
+*   `obj.iconsize  [get: i; set: i]`
+*   `obj.textsize  [get: i; set: i]`
+*   properties defined for the `Browser` userdata type
+*   properties defined for the `Browser_` userdata type
+*   properties defined for the `Widget` userdata type
+*   (note: `File_Browser` does not inherit the methods and properties
+    of `Group`, although `Fl_File_Browser` is implemented as a
+    sub-class of `Fl_Group`!)
 
-`Check_Browser`: NYI
+`Check_Browser`:
+*   `fl.Check_Browser( i, i, i, i, ns ) ==> u`
+*   `fl.Check_Browser( t ) ==> u` (table constructor syntax)
+*   `obj:add( ns, b )`
+*   `obj:check_all()`
+*   `obj:check_none()`
+*   `obj:checked( i ) ==> b`
+*   `obj:checked( i, b )`
+*   `obj:clear()`
+*   `obj:remove( i ) ==> i`
+*   `obj:set_checked( i )`
+*   `obj:text( i ) ==> ns`
+*   methods defined for the `Browser_` userdata type
+*   methods defined for the `Widget` userdata type
+*   `obj.value  [get: i; set: -]`
+*   `obj.nitems  [get: i; set: -]`
+*   `obj.nchecked  [get: i; set: -]`
+*   properties defined for the `Browser_` userdata type
+*   properties defined for the `Widget` userdata type
+*   (note: `Check_Browser` does not inherit the methods and properties
+    of `Group`, although `Fl_Check_Browser` is implemented as a
+    sub-class of `Fl_Group`!)
 
 `Color_Chooser`:
 *   `fl.Color_Chooser( i, i, i, i, ns ) ==> u`
@@ -615,7 +701,8 @@ precedence over inherited ones.
 `Scrollbar`:
 *   `fl.Scrollbar( i, i, i, i, ns ) ==> u`
 *   `fl.Scrollbar( t ) ==> u` (table constructor syntax)
-*   `obj:setvalue( i, i, i, i )`
+*   `obj:setvalue( i, i, i, i )` (corresponds to
+    `Fl_Scrollbar::value(int, int, int, int)`)
 *   methods defined for the `Slider` userdata type
 *   methods defined for the `Valuator` userdata type
 *   methods defined for the `Widget` userdata type

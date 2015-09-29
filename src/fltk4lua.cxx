@@ -143,6 +143,14 @@ namespace {
 } // anonymous namespace
 
 
+MOON_LOCAL char f4l_check_char( lua_State* L, int idx ) {
+  size_t len = 0;
+  char const* s = luaL_checklstring( L, idx, &len );
+  luaL_argcheck( L, len == 1, idx, "single character expected" );
+  return *s;
+}
+
+
 MOON_LOCAL int f4l_backtrace( lua_State* L ) {
   char const* msg = lua_tostring( L, 1 );
   if( msg != NULL )
@@ -274,6 +282,9 @@ MOON_LOCAL void f4l_button_setup( lua_State* L );
 MOON_LOCAL void f4l_chart_setup( lua_State* L );
 MOON_LOCAL void f4l_clock_setup( lua_State* L );
 MOON_LOCAL void f4l_group_setup( lua_State* L );
+MOON_LOCAL void f4l_browser_setup( lua_State* L );
+MOON_LOCAL void f4l_file_browser_setup( lua_State* L );
+MOON_LOCAL void f4l_check_browser_setup( lua_State* L );
 MOON_LOCAL void f4l_color_chooser_setup( lua_State* L );
 MOON_LOCAL void f4l_input_choice_setup( lua_State* L );
 MOON_LOCAL void f4l_pack_setup( lua_State* L );
@@ -329,6 +340,9 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_chart_setup( L );
   f4l_clock_setup( L );
   f4l_group_setup( L );
+  f4l_browser_setup( L );
+  f4l_file_browser_setup( L );
+  f4l_check_browser_setup( L );
   f4l_color_chooser_setup( L );
   f4l_input_choice_setup( L );
   f4l_pack_setup( L );

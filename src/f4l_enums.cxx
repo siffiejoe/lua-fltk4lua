@@ -140,19 +140,14 @@ namespace {
   int shortcut_add( lua_State* L ) {
     int t1 = lua_type( L, 1 ), t2 = lua_type( L, 2 );
     Fl_Shortcut s1 = 0, s2 = 0;
-    size_t n = 0;
     if( t1 == LUA_TSTRING ) {
-      char const* s = lua_tolstring( L, 1, &n );
-      luaL_argcheck( L, n == 1, 1, "need single-letter string" );
-      s1 = (unsigned char)*s;
+      s1 = (unsigned char)f4l_check_char( L, 1 );
       s2 = moon_flag_get_shortcut( L, 2 );
     } else {
       s1 = moon_flag_get_shortcut( L, 1 );
-      if( t2 == LUA_TSTRING ) {
-        char const* s = lua_tolstring( L, 2, &n );
-        luaL_argcheck( L, n == 1, 2, "need single-letter string" );
-        s2 = (unsigned char)*s;
-      } else
+      if( t2 == LUA_TSTRING )
+        s2 = (unsigned char)f4l_check_char( L, 2 );
+      else
         s2 = moon_flag_get_shortcut( L, 2 );
     }
     luaL_argcheck( L, !(s1 & FL_KEY_MASK) + !(s2 & FL_KEY_MASK) >= 1,
