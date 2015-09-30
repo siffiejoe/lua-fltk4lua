@@ -607,9 +607,98 @@ MOON_LOCAL void f4l_push_color( lua_State* L, Fl_Color c ) {
 }
 
 
+namespace {
+
+  int f4l_inactive( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    F4L_TRY {
+      f4l_push_color( L, fl_inactive( c ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_contrast( lua_State* L ) {
+    Fl_Color fg = f4l_check_color( L, 1 );
+    Fl_Color bg = f4l_check_color( L, 2 );
+    F4L_TRY {
+      f4l_push_color( L, fl_contrast( fg, bg ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_color_average( lua_State* L ) {
+    Fl_Color c1 = f4l_check_color( L, 1 );
+    Fl_Color c2 = f4l_check_color( L, 2 );
+    float weight = static_cast< float >( luaL_checknumber( L, 3 ) );
+    F4L_TRY {
+      f4l_push_color( L, fl_color_average( c1, c2, weight ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_lighter( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    F4L_TRY {
+      f4l_push_color( L, fl_lighter( c ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_darker( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    F4L_TRY {
+      f4l_push_color( L, fl_darker( c ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_rgb_color( lua_State* L ) {
+    F4L_TRY {
+      if( lua_gettop( L ) > 1 ) {
+        uchar r = moon_checkint( L, 1, 0, 255 );
+        uchar g = moon_checkint( L, 2, 0, 255 );
+        uchar b = moon_checkint( L, 3, 0, 255 );
+        f4l_push_color( L, fl_rgb_color( r, g, b ) );
+      } else {
+        uchar g = moon_checkint( L, 1, 0, 255 );
+        f4l_push_color( L, fl_rgb_color( g ) );
+      }
+    } F4L_CATCH( L );
+    return 1;
+  }
+
+
+  int f4l_cursor( lua_State* L ) {
+    Fl_Cursor c = f4l_check_cursor( L, 1 );
+    Fl_Color fg = f4l_check_color( L, 2 );
+    Fl_Color bg = f4l_check_color( L, 3 );
+    F4L_TRY {
+      fl_cursor( c, fg, bg );
+    } F4L_CATCH( L );
+    return 0;
+  }
+
+} // anonymous namespace
+
+
 
 
 MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
+  luaL_Reg const functions[] = {
+    { "inactive", f4l_inactive },
+    { "contrast", f4l_contrast },
+    { "color_average", f4l_color_average },
+    { "lighter", f4l_lighter },
+    { "darker", f4l_darker },
+    { "rgb_color", f4l_rgb_color },
+    { "cursor", f4l_cursor },
+    { NULL, NULL }
+  };
   moon_flag_def_shortcut( L );
   // the default moon_flag operations are insufficient in this case:
   luaL_getmetatable( L, "fltk4lua.Shortcut" );
@@ -653,5 +742,6 @@ MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
   (moon_flag_new_color( L, _b ), lua_setfield( L, -2, _a ));
   COLOR_LIST( GEN_UDATA )
 #undef GEN_UDATA
+  luaL_setfuncs( L, functions, 0 );
 }
 
