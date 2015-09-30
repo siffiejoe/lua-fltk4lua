@@ -98,7 +98,7 @@ fl.Value_Output{
   tooltip="Value Output", labelsize=8, maximum=100, step=0.1,
 }
 fl.Box{
-  300, 10, 130, 120, "   Fl_Scrollbar",
+  300, 10, 130, 120, "Fl_Scrollbar",
   box="FL_ENGRAVED_BOX", labelfont=1,
   align=fl.ALIGN_TOP_LEFT+fl.ALIGN_INSIDE,
 }
@@ -165,11 +165,17 @@ fl.Dial{
   type="FL_LINE_DIAL", color=10, selection_color=1, labelsize=8,
   value=0.5, callback=cb,
 }
+--[[
+-- FIXME: For some reason manipulating this Fill_Dial will cause my
+-- X-Session to die (the same happens when using C++, so it's probably
+-- not my fault). Disable for now, but if you are feeling lucky, you
+-- can try ...
 fl.Dial{
   480, 295, 65, 65, "FL_FILL_DIAL",
   type="FL_FILL_DIAL", color=10, selection_color=1, labelsize=8,
   value=1, callback=cb,
 }:angles( 0, 360 )
+--]]
 fl.Box{
   300, 385, 150, 115, "Fl_Roller",
   box="FL_ENGRAVED_BOX", labelfont=1, align=a17,
