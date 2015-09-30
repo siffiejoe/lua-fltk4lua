@@ -187,6 +187,19 @@ namespace {
     return 1;
   }
 
+
+  int f4l_message_hotspot( lua_State* L ) {
+    F4L_TRY {
+      if( lua_gettop( L ) > 0 ) {
+        fl_message_hotspot( lua_toboolean( L, 1 ) );
+        return 0;
+      } else {
+        lua_pushboolean( L, fl_message_hotspot() );
+        return 1;
+      }
+    } F4L_CATCH( L );
+  }
+
 } // anonymous namespace
 
 
@@ -201,6 +214,7 @@ MOON_LOCAL void f4l_ask_setup( lua_State* L ) {
     { "input", f4l_input },
     { "message", f4l_message },
     { "password", f4l_password },
+    { "message_hotspot", f4l_message_hotspot },
     { NULL, NULL }
   };
   luaL_setfuncs( L, functions, 0 );

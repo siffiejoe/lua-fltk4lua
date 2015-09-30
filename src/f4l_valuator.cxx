@@ -1,8 +1,17 @@
 #include "fltk4lua.hxx"
 #include "f4l_valuator.hxx"
 #include "f4l_widget.hxx"
+#include "f4l_enums.hxx"
 #include <cstring>
 #include <climits>
+
+
+#define TYPE_LIST( _ ) \
+  _( "FL_VERTICAL", FL_VERTICAL ) \
+  _( "FL_HORIZONTAL", FL_HORIZONTAL )
+
+  F4L_GEN_TYPE_ENUM( TYPE_LIST, valuator )
+
 
 namespace {
 

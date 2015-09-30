@@ -10,12 +10,31 @@ namespace {
     return static_cast< Fl_Roller* >( p );
   }
 
+  int roller_index_( lua_State* L, Fl_Roller* r,
+                     char const* key, size_t n ) {
+    if( n == 4 && F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+      f4l_push_type_valuator( L, r->type() );
+      return 1;
+    }
+    return 0;
+  }
+
+  int roller_newindex_( lua_State* L, Fl_Roller* r,
+                        char const* key, size_t n ) {
+    if( n == 4 && F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+      r->type( f4l_check_type_valuator( L, 3 ) );
+      return 1;
+    }
+    return 0;
+  }
+
   int roller_index( lua_State* L ) {
     Fl_Roller* r = check_roller( L, 1 );
     size_t n = 0;
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
-      if( !f4l_valuator_index_( L, r, key, n ) &&
+      if( !roller_index_( L, r, key, n ) &&
+          !f4l_valuator_index_( L, r, key, n ) &&
           !f4l_widget_index_( L, r, key, n ) &&
           !f4l_bad_property( L, F4L_ROLLER_NAME, key ) )
         lua_pushnil( L );
@@ -28,7 +47,8 @@ namespace {
     size_t n = 0;
     char const* key = luaL_checklstring( L, 2, &n );
     F4L_TRY {
-      (void)(f4l_valuator_newindex_( L, r, key, n ) ||
+      (void)(roller_newindex_( L, r, key, n ) ||
+             f4l_valuator_newindex_( L, r, key, n ) ||
              f4l_widget_newindex_( L, r, key, n ) ||
              f4l_bad_property( L, F4L_ROLLER_NAME, key ));
     } F4L_CATCH( L );

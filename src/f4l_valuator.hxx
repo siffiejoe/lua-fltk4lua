@@ -4,6 +4,8 @@
 #include "fltk4lua.hxx"
 #include <FL/Fl_Valuator.H>
 
+MOON_LOCAL int f4l_check_type_valuator( lua_State* L, int idx );
+MOON_LOCAL void f4l_push_type_valuator( lua_State* L, int v );
 
 /* (Meta-)methods for Fl_Valuators: */
 MOON_LOCAL int f4l_valuator_index_( lua_State* L, Fl_Valuator* v,
