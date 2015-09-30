@@ -73,7 +73,7 @@ fl.Value_Slider{
 }
 fl.Value_Slider{
   140, 330, 130, 20, "FL_HOR_FILL_SLIDER",
-  type="FL_HOR_FILL_SLIDER", selection_color=1, labelsize=8,
+  type="FL_HOR_FILL_SLIDER", selection_color=1, labelsize=8, callback=cb,
 }
 fl.Value_Slider{
   140, 370, 130, 20, "FL_HOR_NICE_SLIDER",
@@ -144,12 +144,12 @@ fl.Box{
 fl.Spinner{
   465, 176, 80, 24, "FL_INT_INPUT",
   labelsize=8, minimum=-30, maximum=30, step=2, value=5,
-  align=fl.ALIGN_BOTTOM,
+  align=fl.ALIGN_BOTTOM, callback=cb,
 }
 fl.Spinner{
   465, 216, 80, 24, "FL_FLOAT_INPUT",
   type="FL_FLOAT_INPUT", labelsize=8, minimum=0, maximum=1, step=0.01,
-  value=0.05, align=fl.ALIGN_BOTTOM,
+  value=0.05, align=fl.ALIGN_BOTTOM, callback=cb,
 }
 fl.Box{
   300, 270, 270, 105, "Fl_Dial",
