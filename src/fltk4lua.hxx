@@ -5,11 +5,11 @@
 extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
-}
 /* toolkit for easier binding to C/C++ code */
 #include "moon.h"
 /* compatibility functions for older Lua versions */
 #include "compat-5.3.h"
+}
 /* common C++ headers */
 #include <exception> // for std::exception
 /* basic FLTK headers */

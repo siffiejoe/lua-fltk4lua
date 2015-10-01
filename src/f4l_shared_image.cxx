@@ -73,7 +73,7 @@ namespace {
                                   shared_image_delete );
       Fl_Shared_Image* si2 = Fl_Shared_Image::get( name, w, h );
       if( si2 == NULL )
-        luaL_error( L, "could not load image '%d'", name );
+        luaL_error( L, "could not load image '%s'", name );
       *p = static_cast< void* >( si2 );
     } F4L_CATCH( L );
     return 1;
