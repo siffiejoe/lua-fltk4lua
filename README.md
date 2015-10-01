@@ -112,13 +112,13 @@ precedence over inherited ones.
 *   `obj.when  [get: u; set: u]`
 *   `obj.align  [get: u; set: su]`
 *   `obj.color  [get: u; set: iu]`
-*   `obj.image  [get: nu; set: u]`
+*   `obj.image  [get: nu; set: nu]`
 *   `obj.label  [get: s; set: s]`
 *   `obj.active  [get: b; set: -]`
 *   `obj.output  [get: b; set: -]`
 *   `obj.parent  [get: u; set: -]`
 *   `obj.changed  [get: b; set: -]`
-*   `obj.deimage  [get: nu; set: u]`
+*   `obj.deimage  [get: nu; set: nu]`
 *   `obj.tooltip  [get: s; set: s]`
 *   `obj.visible  [get: b; set: -]`
 *   `obj.active_r  [get: b; set: -]`

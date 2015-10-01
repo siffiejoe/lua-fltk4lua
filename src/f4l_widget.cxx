@@ -275,8 +275,8 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
         w->color( f4l_check_color( L, 3 ) );
         return 1;
       } else if( F4L_MEMCMP( key, "image", 5 ) == 0 ) {
-        Fl_Image* img = check_image( L, 3 );
-        lua_pushvalue( L, 3 );
+        Fl_Image* img = luaL_opt( L, check_image, 3, NULL );
+        lua_settop( L, 3 );
         moon_setuvfield( L, 1, "image" );
         w->image( img );
         return 1;
@@ -290,8 +290,8 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
       break;
     case 7:
       if( F4L_MEMCMP( key, "deimage", 7 ) == 0 ) {
-        Fl_Image* img = check_image( L, 3 );
-        lua_pushvalue( L, 3 );
+        Fl_Image* img = luaL_opt( L, check_image, 3, NULL );
+        lua_settop( L, 3 );
         moon_setuvfield( L, 1, "deimage" );
         w->deimage( img );
         return 1;
