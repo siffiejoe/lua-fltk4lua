@@ -6,12 +6,12 @@ DLL_INSTALL_DIR = /usr/lib/lua/5.2
 LUA_INCDIR = /usr/include/lua5.2
 FLTK_CONFIG = fltk-config
 
-CXX = g++
+CC = gcc
 CFLAGS = -Wall -Wextra -fpic -Os
 MYCFLAGS = ${CFLAGS} -I${LUA_INCDIR} -Imoon -Icompat-5.3/c-api \
            -DMOON_PREFIX=f4lx -DCOMPAT53_PREFIX=f4lx -DNDEBUG \
            `${FLTK_CONFIG} --use-images --cxxflags`
-MYLDFLAGS = `${FLTK_CONFIG} --use-images --ldflags`
+MYLDFLAGS = `${FLTK_CONFIG} --use-images --ldflags` -lstdc++
 LIBFLAG = -shared
 LIB_EXTENSION = so
 
@@ -60,13 +60,13 @@ OBJECTS = ${SOURCES:%.cxx=%.o} moon/moon.o compat-5.3/c-api/compat-5.3.o
 all: ${DLLBASENAME}.${LIB_EXTENSION}
 
 ${DLLBASENAME}.${LIB_EXTENSION}: ${OBJECTS}
-	${CXX} ${MYCFLAGS} ${LIBFLAG} -o $@ ${OBJECTS} ${MYLDFLAGS}
+	${CC} ${MYCFLAGS} ${LIBFLAG} -o $@ ${OBJECTS} ${MYLDFLAGS}
 
 .c.o:
-	${CXX} ${MYCFLAGS} -c -o $@ $<
+	${CC} ${MYCFLAGS} -c -o $@ $<
 
 .cxx.o:
-	${CXX} ${MYCFLAGS} -c -o $@ $<
+	${CC} ${MYCFLAGS} -c -o $@ $<
 
 install: ${DLLBASENAME}.${LIB_EXTENSION}
 	mkdir -p ${DLL_INSTALL_DIR}
