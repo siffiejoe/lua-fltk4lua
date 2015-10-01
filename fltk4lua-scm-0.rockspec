@@ -85,6 +85,8 @@ build = {
             "src/f4l_slider.cxx",
             "src/f4l_value_input.cxx",
             "src/f4l_value_output.cxx",
+            "moon/moon.c",
+            "compat-5.3/c-api/compat-5.3.c",
           },
           defines = {
             "MOON_PREFIX=f4lx",
@@ -92,13 +94,23 @@ build = {
             "NDEBUG",
             "_CRT_SECURE_NO_WARNINGS"
           },
-          libraries = { "fltk_images", "fltk", "comctl32" },
+          libraries = {
+            "fltk_images",
+            "fltk_jpeg",
+            "fltk_png",
+            "fltk_z",
+            "fltk",
+            "gdi32",
+            "ole32",
+            "uuid",
+            "comctl32",
+          },
           incdirs = {
-            "${FLTK_INCDIR}",
+            "$(FLTK_INCDIR)",
             "moon",
             "compat-5.3/c-api"
           },
-          libdirs = { "${FLTK_LIBDIR}" }
+          libdirs = { "$(FLTK_LIBDIR)" }
         }
       }
     }
