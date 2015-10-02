@@ -93,6 +93,7 @@ namespace {
             char const* s = luaL_optstring( L, 3, NULL );
             ic->value( s );
           }
+          return 1;
         }
         break;
       case 8:
