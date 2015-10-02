@@ -260,6 +260,8 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
                    (int)FL_MAJOR_VERSION, (int)FL_MINOR_VERSION,
                    (int)FL_PATCH_VERSION );
   lua_setfield( L, -2, "_VERSION" );
+  lua_pushstring( L, Fl::help );
+  lua_setfield( L, -2, "help" );
   *moon_atexit( L, delete_remaining_widgets ) = 1;
   lua_pop( L, 1 ); // remove atexit userdata from stack
   f4l_enums_setup( L );
