@@ -64,6 +64,28 @@ namespace {
   }
 
 
+  int f4l_redraw( lua_State* L ) {
+    F4L_TRY {
+      Fl::redraw();
+    } F4L_CATCH( L );
+    return 0;
+  }
+
+
+  int f4l_option( lua_State* L ) {
+    Fl::Fl_Option o = f4l_check_option( L, 1 );
+    F4L_TRY {
+      if( lua_gettop( L ) > 1 ) {
+        Fl::option( o, lua_toboolean( L, 2 ) );
+        return 0;
+      } else {
+        lua_pushboolean( L, Fl::option( o ) );
+        return 1;
+      }
+    } F4L_CATCH( L );
+  }
+
+
   /* registered via moon_atexit to make sure that all widgets
    * are deleted, even those collected during a callback */
   int delete_remaining_widgets( lua_State* L ) {
@@ -252,6 +274,8 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
     { "check", f4l_check },
     { "args", f4l_args },
     { "get_system_colors", f4l_get_system_colors },
+    { "redraw", f4l_redraw },
+    { "option", f4l_option },
     { NULL, NULL }
   };
   luaL_newlib( L, functions );

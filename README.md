@@ -434,7 +434,6 @@ precedence over inherited ones.
     `Group`, although `Fl_Spinner` is implemented as a sub-class of
     `Fl_Group`!)
 
-
 `Tabs`:
 *   `fl.Tabs( i, i, i, i, ns ) ==> u`
 *   `fl.Tabs( t ) ==> u` (table constructor syntax)
@@ -518,7 +517,7 @@ precedence over inherited ones.
 *   `obj.type  [get: s; set: s]`
 *   `obj.wrap  [get: b; set: b]`
 *   `obj.value  [get: s; set: s]`
-*   `obj.tab_nav  [get: -; set: b]`
+*   `obj.tab_nav  [get: b; set: b]`
 *   `obj.position  [get: i; set: i]`
 *   `obj.readonly  [get: b; set: b]`
 *   `obj.shortcut  [get: u; set: isu]`
@@ -530,7 +529,6 @@ precedence over inherited ones.
 *   `obj.cursor_color  [get: u; set: iu]`
 *   `obj.maximum_size  [get: i; set: i]`
 *   properties defined for the `Widget` userdata type
-
 
 `File_Input`:
 *   `fl.File_Input( i, i, i, i, ns ) ==> u`
@@ -752,22 +750,27 @@ precedence over inherited ones.
 *   properties defined for the `Valuator` userdata type
 *   properties defined for the `Widget` userdata type
 
-additional global functions:
+Additional global functions:
 *   `fl.run() ==> i`
 *   `fl.wait( nd ) ==> b`
 *   `fl.check() ==> b`
 *   `fl.args( t )`
 *   `fl.get_system_colors()`
+*   `fl.redraw()`
+*   `fl.option( s ) ==> b`
+*   `fl.option( s, b )`
 *   `fl.inactive( iu ) ==> u`
 *   `fl.contrast( iu, iu ) ==> u`
 *   `fl.color_average( iu, iu ) ==> u`
 *   `fl.lighter( iu ) ==> u`
 *   `fl.darger( iu ) == u`
 *   `fl.rgb_color( i [, i, i] ) ==> u`
+*   `fl.get_color( ui ) ==> i, i, i`
+*   `fl.set_color( ui, i, i, i )`
 *   `fl.alert( s )`
 *   `fl.beep( ns )`
 *   `fl.choice( s, ns, ns, ns ) ==> ns`
-*   `fl.color_chooser( s, ni ) ==> nu`
+*   `fl.color_chooser( ns, ni, ni, ni, ni ) ==> nu`
 *   `fl.dir_chooser( s, s, b ) == ns`
 *   `fl.file_chooser( s, s, s, b ) ==> ns`
 *   `fl.input( s, ns ) ==> ns`

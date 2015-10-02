@@ -607,6 +607,25 @@ MOON_LOCAL void f4l_push_color( lua_State* L, Fl_Color c ) {
 }
 
 
+#define OPTION_LIST( _ ) \
+  _( "OPTION_ARROW_FOCUS", Fl::OPTION_ARROW_FOCUS ) \
+  _( "OPTION_VISIBLE_FOCUS", Fl::OPTION_VISIBLE_FOCUS ) \
+  _( "OPTION_DND_TEXT", Fl::OPTION_DND_TEXT ) \
+  _( "OPTION_SHOW_TOOLTIPS", Fl::OPTION_SHOW_TOOLTIPS )
+
+MOON_LOCAL Fl::Fl_Option f4l_check_option( lua_State* L, int idx ) {
+  static char const* const names[] = {
+    OPTION_LIST( F4L_GEN_RNAME )
+    NULL
+  };
+  static Fl::Fl_Option const values[] = {
+    OPTION_LIST( F4L_GEN_VALUE )
+    (Fl::Fl_Option)0 // dummy value
+  };
+  return values[ luaL_checkoption( L, idx, NULL, names ) ];
+}
+
+
 namespace {
 
   int f4l_inactive( lua_State* L ) {
@@ -673,6 +692,31 @@ namespace {
   }
 
 
+  int f4l_get_color( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    uchar r, g, b;
+    F4L_TRY {
+      Fl::get_color( c, r, g, b );
+      lua_pushinteger( L, r );
+      lua_pushinteger( L, g );
+      lua_pushinteger( L, b );
+    } F4L_CATCH( L );
+    return 3;
+  }
+
+
+  int f4l_set_color( lua_State* L ) {
+    Fl_Color c = f4l_check_color( L, 1 );
+    uchar r = moon_checkint( L, 2, 0, 255 );
+    uchar g = moon_checkint( L, 3, 0, 255 );
+    uchar b = moon_checkint( L, 4, 0, 255 );
+    F4L_TRY {
+      Fl::set_color( c, r, g, b );
+    } F4L_CATCH( L );
+    return 0;
+  }
+
+
   int f4l_cursor( lua_State* L ) {
     Fl_Cursor c = f4l_check_cursor( L, 1 );
     Fl_Color fg = f4l_check_color( L, 2 );
@@ -696,6 +740,8 @@ MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
     { "lighter", f4l_lighter },
     { "darker", f4l_darker },
     { "rgb_color", f4l_rgb_color },
+    { "get_color", f4l_get_color },
+    { "set_color", f4l_set_color },
     { "cursor", f4l_cursor },
     { NULL, NULL }
   };

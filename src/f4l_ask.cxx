@@ -73,9 +73,11 @@ namespace {
 
 
   int f4l_color_chooser_( lua_State* L ) {
-    char const* s = luaL_checkstring( L, 1 );
-    int mode = moon_optint( L, 2, -1, 3, -1 );
-    uchar r, g, b;
+    char const* s = luaL_optstring( L, 1, NULL );
+    uchar r = moon_optint( L, 2, 0, 255, 0 );
+    uchar g = moon_optint( L, 3, 0, 255, 0 );
+    uchar b = moon_optint( L, 4, 0, 255, 0 );
+    int mode = moon_optint( L, 5, -1, 3, -1 );
     F4L_TRY {
       if( fl_color_chooser( s, r, g, b, mode ) )
         f4l_push_color( L, fl_rgb_color( r, g, b ) );

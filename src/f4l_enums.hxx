@@ -69,6 +69,8 @@ MOON_LOCAL void f4l_push_font( lua_State* L, Fl_Font f );
 MOON_LOCAL Fl_Color f4l_check_color( lua_State* L, int idx );
 MOON_LOCAL void f4l_push_color( lua_State* L, Fl_Color c );
 
+MOON_LOCAL Fl::Fl_Option f4l_check_option( lua_State* L, int idx );
+
 MOON_LOCAL void f4l_enums_setup( lua_State* L );
 
 
