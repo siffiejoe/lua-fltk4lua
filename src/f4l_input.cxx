@@ -409,6 +409,7 @@ MOON_LOCAL void f4l_input_setup( lua_State* L ) {
     F4L_INPUT_METHODS,
     { "__index", file_input_index },
     { "__newindex", file_input_newindex },
+    { NULL, NULL }
   };
 
   moon_defobject( L, F4L_INPUT_NAME, 0, methods, 0 );

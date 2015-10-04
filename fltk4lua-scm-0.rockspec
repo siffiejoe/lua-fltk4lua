@@ -91,6 +91,7 @@ build = {
           defines = {
             "MOON_PREFIX=f4lx",
             "COMPAT53_PREFIX=f4lx",
+            "WIN32",
             "NDEBUG",
             "_CRT_SECURE_NO_WARNINGS"
           },
@@ -100,10 +101,13 @@ build = {
             "fltk_png",
             "fltk_z",
             "fltk",
+            "advapi32",
+            "comctl32",
             "gdi32",
             "ole32",
+            "shell32",
+            "user32",
             "uuid",
-            "comctl32",
           },
           incdirs = {
             "$(FLTK_INCDIR)",

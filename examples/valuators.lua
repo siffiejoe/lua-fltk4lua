@@ -52,7 +52,7 @@ fl.Box{
 }
 fl.Value_Slider{
   30, 260, 30, 145, "0",
-  tooltip="Valut Slider", selection_color=1, labelsize=8,
+  tooltip="Value Slider", selection_color=1, labelsize=8,
   align=fl.ALIGN_TOP, callback=cb,
 }
 fl.Value_Slider{

@@ -18,6 +18,7 @@ TODO
 *.a
 *.lib
 *.exp
+*.def
 
 # executables
 *.exe

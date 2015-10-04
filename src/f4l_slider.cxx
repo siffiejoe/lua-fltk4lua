@@ -343,6 +343,7 @@ MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
     F4L_SLIDER_METHODS,
     { "__index", value_slider_index },
     { "__newindex", value_slider_newindex },
+    { NULL, NULL }
   };
 
   moon_defobject( L, F4L_SLIDER_NAME, 0, methods, 0 );
