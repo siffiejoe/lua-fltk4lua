@@ -47,9 +47,9 @@ namespace {
     Fl_Menu_* menu = static_cast< Fl_Menu_* >( w );
     int v = menu->value();
     // we use the Menu_'s user_data instead of the Menu_Item's:
-    lua_State** th = static_cast< lua_State** >( w->user_data() );
-    if( th != NULL && *th != NULL && v >= 0 ) {
-      lua_State* L = *th;
+    f4l_active_L* th = static_cast< f4l_active_L* >( w->user_data() );
+    if( th != NULL && th->cb_L != NULL && v >= 0 ) {
+      lua_State* L = th->cb_L;
       luaL_checkstack( L, 6, "f4l_menu_callback" );
       int top = lua_gettop( L );
       lua_pushcfunction( L, f4l_backtrace );

@@ -48,24 +48,33 @@ extern "C" {
  * created by `f4l_get_active_thread()`. This thread pointer is not
  * just important for the callbacks to get a lua_State* to run with,
  * but also for the finalizers which use it to determine whether they
- * run inside a callback, so special care is taken that *_sp is valid
- * even if an error/exception is thrown! */
+ * run inside a callback, so special care is taken that _sp->cb_L is
+ * valid even if an error/exception is thrown! */
 #define F4L_CALL_PROTECTED( L, _f, _r ) \
   do { \
     lua_State* _l = L; \
     int _n = lua_gettop( _l ); \
     luaL_checkstack( _l, 2*_n+2, NULL ); \
-    lua_State** _sp = f4l_get_active_thread( _l ); \
+    f4l_active_L* _sp = f4l_get_active_thread( _l ); \
     lua_pushcfunction( _l, _f ); \
     for( int _i = 1; _i <= _n; ++_i ) \
       lua_pushvalue( _l, _i ); \
-    lua_State* _oldL = *_sp; \
-    *_sp = _l; \
+    lua_State* _oldL = _sp->cb_L; \
+    _sp->cb_L = _l; \
     int _status = lua_pcall( _l, _n, _r, 0 ); \
-    *_sp = _oldL; \
-    if( _status != 0 ) /* reraise Lua error */ \
+    _sp->cb_L = _oldL; \
+    if( _status != 0 ) /* re-raise Lua error */ \
       lua_error( _l ); \
   } while( 0 )
+
+
+/* Userdata type to keep track of coroutines suitable for calling FLTK
+ * callbacks. */
+struct f4l_active_L {
+  lua_State* L;    // currently running coroutine
+  lua_State* cb_L; // L used for callbacks (strict stack discipline)
+  int thread_ref;  // anchor for L in the Lua registry
+};
 
 
 /* generic function for casting a pointer to sub-type to a pointer
@@ -100,8 +109,8 @@ namespace {
    * non-NULL value in f4l_get_active_thread()). */
   template< typename T >
   inline void safe_delete( void*, Fl_Widget* w ) {
-    lua_State** ud = static_cast< lua_State** >( w->user_data() );
-    if( ud != NULL && *ud != NULL )
+    f4l_active_L* ud = static_cast< f4l_active_L* >( w->user_data() );
+    if( ud != NULL && ud->cb_L != NULL )
       Fl::delete_widget( w );
     else
       delete w;
@@ -132,7 +141,8 @@ MOON_LOCAL int f4l_backtrace( lua_State* L );
 MOON_LOCAL void f4l_fix_backtrace( lua_State* L );
 
 /* the Lua callbacks need a lua_State pointer to run */
-MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L );
+MOON_LOCAL f4l_active_L* f4l_get_active_thread( lua_State* L );
+MOON_LOCAL void f4l_set_active_thread( lua_State* L );
 
 /* make argc/argv pair from a Lua arg table */
 MOON_LOCAL char** f4l_push_argv( lua_State* L, int idx, int* argc );

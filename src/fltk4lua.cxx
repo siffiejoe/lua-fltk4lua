@@ -142,22 +142,33 @@ MOON_LOCAL void f4l_fix_backtrace( lua_State* L ) {
 }
 
 
-MOON_LOCAL lua_State** f4l_get_active_thread( lua_State* L ) {
-  static char xyz = 0; /* used as a unique key */
+MOON_LOCAL f4l_active_L* f4l_get_active_thread( lua_State* L ) {
+  static char xyz = 0; // used as a unique key
   luaL_checkstack( L, 3, "f4l_get_active_thread" );
   lua_pushlightuserdata( L, static_cast< void* >( &xyz ) );
   lua_rawget( L, LUA_REGISTRYINDEX );
   if( lua_type( L, -1 ) != LUA_TUSERDATA ) {
     lua_pop( L, 1 );
-    void* p = lua_newuserdata( L, sizeof( lua_State* ) );
-    lua_State** sp = static_cast< lua_State** >( p );
-    *sp = NULL;
+    void* p = lua_newuserdata( L, sizeof( f4l_active_L ) );
+    f4l_active_L* sp = static_cast< f4l_active_L* >( p );
+    sp->L = NULL;
+    sp->cb_L = NULL;
     lua_pushlightuserdata( L, static_cast< void* >( &xyz ) );
     lua_pushvalue( L, -2 );
     lua_rawset( L, LUA_REGISTRYINDEX );
+    lua_pushvalue( L, -1 ); // used as a place holder, since L is NULL
+    sp->thread_ref = luaL_ref( L, LUA_REGISTRYINDEX );
     return sp;
   } else
-    return static_cast< lua_State** >( lua_touserdata( L, -1 ) );
+    return static_cast< f4l_active_L* >( lua_touserdata( L, -1 ) );
+}
+
+
+MOON_LOCAL void f4l_set_active_thread( lua_State* L ) {
+  f4l_active_L* th = f4l_get_active_thread( L );
+  lua_pushthread( L );
+  lua_rawseti( L, LUA_REGISTRYINDEX, th->thread_ref );
+  lua_pop( L, 1 );
 }
 
 

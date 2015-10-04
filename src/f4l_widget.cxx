@@ -19,9 +19,9 @@ namespace {
 
 
   void f4l_widget_callback( Fl_Widget* w, void* ud ) {
-    lua_State** th = static_cast< lua_State** >( ud );
-    if( th != NULL && *th != NULL ) {
-      lua_State* L = *th;
+    f4l_active_L* th = static_cast< f4l_active_L* >( ud );
+    if( th != NULL && th->cb_L != NULL ) {
+      lua_State* L = th->cb_L;
       luaL_checkstack( L, 5, "f4l_widget_callback" );
       int top = lua_gettop( L );
       lua_pushcfunction( L, f4l_backtrace );
