@@ -48,6 +48,15 @@ namespace {
     }
   }
 
+
+  int widget_label_shortcut( lua_State* L ) {
+    char const* t = luaL_checkstring( L, 1 );
+    F4L_TRY {
+      lua_pushinteger( L, Fl_Widget::label_shortcut( t ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
 } // anonymous namespace
 
 
@@ -562,5 +571,14 @@ MOON_LOCAL int f4l_widget_take_focus( lua_State* L ) {
     lua_pushboolean( L, widget->take_focus() );
   } F4L_CATCH( L );
   return 1;
+}
+
+
+MOON_LOCAL void f4l_widget_setup( lua_State* L ) {
+  luaL_Reg const classmethods[] = {
+    { "label_shortcut", widget_label_shortcut },
+    { NULL, NULL }
+  };
+  f4l_new_class_table( L, "Widget", 0, classmethods );
 }
 

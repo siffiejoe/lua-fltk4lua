@@ -246,6 +246,7 @@ MOON_LOCAL int (f4l_bad_property)( lua_State* L, char const* tname,
 MOON_LOCAL void f4l_enums_setup( lua_State* L );
 MOON_LOCAL void f4l_ask_setup( lua_State* L );
 MOON_LOCAL void f4l_shared_image_setup( lua_State* L );
+MOON_LOCAL void f4l_widget_setup( lua_State* L );
 MOON_LOCAL void f4l_box_setup( lua_State* L );
 MOON_LOCAL void f4l_button_setup( lua_State* L );
 MOON_LOCAL void f4l_chart_setup( lua_State* L );
@@ -302,6 +303,7 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
   f4l_enums_setup( L );
   f4l_ask_setup( L );
   f4l_shared_image_setup( L );
+  f4l_widget_setup( L );
   f4l_box_setup( L );
   f4l_button_setup( L );
   f4l_chart_setup( L );

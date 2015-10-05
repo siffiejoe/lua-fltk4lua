@@ -82,6 +82,7 @@ precedence over inherited ones.
 *   properties defined for the `Image` userdata type
 
 `Widget` (abstract):
+*   `fl.Widget.label_shortcut( s ) ==> i`
 *   `obj:activate()`
 *   `obj:clear_changed()`
 *   `obj:clear_damage()`
@@ -239,6 +240,8 @@ precedence over inherited ones.
 `Group`:
 *   `fl.Group( i, i, i, i, ns ) ==> u`
 *   `fl.Group( t ) ==> u` (table constructor syntax)
+*   `fl.Group.current() ==> nu`
+*   `fl.Group.current( nu )`
 *   `obj:add( u )`
 *   `obj:add_resizable( u )`
 *   `obj:begin()`

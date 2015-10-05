@@ -48,6 +48,19 @@ namespace {
     return 1;
   }
 
+  int group_current( lua_State* L ) {
+    F4L_TRY {
+      if( lua_gettop( L ) > 0 ) {
+        Fl_Group* g = luaL_opt( L, check_group, 1, NULL );
+        Fl_Group::current( g );
+        return 0;
+      } else {
+        f4l_push_widget( L, Fl_Group::current() );
+        return 1;
+      }
+    } F4L_CATCH( L );
+  }
+
 } // anonymous namespace
 
 
@@ -275,6 +288,10 @@ MOON_LOCAL int f4l_group_remove( lua_State* L ) {
 
 
 MOON_LOCAL void f4l_group_setup( lua_State* L ) {
+  luaL_Reg const classmethods[] = {
+    { "current", group_current },
+    { NULL, NULL }
+  };
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
     F4L_GROUP_METHODS,
@@ -285,6 +302,6 @@ MOON_LOCAL void f4l_group_setup( lua_State* L ) {
   moon_defobject( L, F4L_GROUP_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_GROUP_NAME, F4L_WIDGET_NAME,
                 f4l_cast< Fl_Group, Fl_Widget > );
-  f4l_new_class_table( L, "Group", new_group );
+  f4l_new_class_table( L, "Group", new_group, classmethods );
 }
 
