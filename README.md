@@ -245,6 +245,7 @@ precedence over inherited ones.
 *   `obj:add( u )`
 *   `obj:add_resizable( u )`
 *   `obj:begin()`
+*   `obj:begin_group()` (same as `obj:begin()`)
 *   `obj:child( i ) ==> u`
 *   `obj:clear()`
 *   `obj:end_group()` (corresponds to `Fl_Group::end()`)
@@ -759,9 +760,12 @@ Additional global functions:
 *   `fl.check() ==> b`
 *   `fl.args( t )`
 *   `fl.get_system_colors()`
+*   `fl.scheme() ==> ns`
+*   `fl.scheme( ns )`
 *   `fl.redraw()`
 *   `fl.option( s ) ==> b`
 *   `fl.option( s, b )`
+*   `fl.open_uri( s ) ==> b`
 *   `fl.inactive( iu ) ==> u`
 *   `fl.contrast( iu, iu ) ==> u`
 *   `fl.color_average( iu, iu ) ==> u`

@@ -1,5 +1,6 @@
 #include "fltk4lua.hxx"
 #include "f4l_enums.hxx"
+#include <FL/filename.H>
 
 
 namespace {
@@ -64,6 +65,26 @@ namespace {
   }
 
 
+  int f4l_scheme( lua_State* L ) {
+    F4L_TRY {
+      if( lua_gettop( L ) > 0 ) {
+        size_t len = 0;
+        char const* s = luaL_optlstring( L, 1, NULL, &len );
+        luaL_argcheck( L, len < 1024, 1, "scheme name too long" );
+        Fl::scheme( s );
+        return 0;
+      } else {
+        char const* s = Fl::scheme();
+        if( s != NULL )
+          lua_pushstring( L, s );
+        else
+          lua_pushnil( L );
+        return 1;
+      }
+    } F4L_CATCH( L );
+  }
+
+
   int f4l_redraw( lua_State* L ) {
     F4L_TRY {
       Fl::redraw();
@@ -83,6 +104,15 @@ namespace {
         return 1;
       }
     } F4L_CATCH( L );
+  }
+
+
+  int f4l_open_uri( lua_State* L ) {
+    char const* uri = luaL_checkstring( L, 1 );
+    F4L_TRY {
+      lua_pushboolean( L, fl_open_uri( uri, NULL, 0 ) );
+    } F4L_CATCH( L );
+    return 1;
   }
 
 
@@ -286,8 +316,10 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
     { "check", f4l_check },
     { "args", f4l_args },
     { "get_system_colors", f4l_get_system_colors },
+    { "scheme", f4l_scheme },
     { "redraw", f4l_redraw },
     { "option", f4l_option },
+    { "open_uri", f4l_open_uri },
     { NULL, NULL }
   };
   luaL_newlib( L, functions );

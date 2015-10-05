@@ -26,6 +26,7 @@ MOON_LOCAL int f4l_group_remove( lua_State* L );
   { "add", f4l_group_add }, \
   { "add_resizable", f4l_group_add_resizable }, \
   { "begin", f4l_group_begin }, \
+  { "begin_group", f4l_group_begin }, \
   { "child", f4l_group_child }, \
   { "clear", f4l_group_clear }, \
   { "end_group", f4l_group_end }, \
