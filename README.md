@@ -755,7 +755,7 @@ precedence over inherited ones.
 *   properties defined for the `Valuator` userdata type
 *   properties defined for the `Widget` userdata type
 
-Additional global functions:
+Additional module functions:
 *   `fl.run() ==> i`
 *   `fl.wait( nd ) ==> b`
 *   `fl.check() ==> b`
@@ -775,6 +775,8 @@ Additional global functions:
 *   `fl.rgb_color( i [, i, i] ) ==> u`
 *   `fl.get_color( ui ) ==> i, i, i`
 *   `fl.set_color( ui, i, i, i )`
+*   `fl.cursor( s, iu, iu )`
+*   `fl.shortcut_label( isu ) ==> s`
 *   `fl.alert( s )`
 *   `fl.beep( ns )`
 *   `fl.choice( s, ns, ns, ns ) ==> ns`
