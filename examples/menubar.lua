@@ -3,8 +3,19 @@
 local unpack = table.unpack or unpack
 
 local fl = require( "fltk4lua" )
+local WIDTH=700
+local window = fl.Window( WIDTH, 400 )
+function window:callback()
+  print( "window callback called" )
+  self:hide()
+end
 
 local hugemenu = {}
+
+local function quit_cb()
+  --os.exit( 0, true ) -- bad style
+  window:hide()
+end
 
 local menutable = {
   { "foo", nil, nil, nil, fl.MENU_INACTIVE },
@@ -131,14 +142,6 @@ for i = 1, 99 do
   hugemenu[ i ] = { "item "..(i-1) }
 end
 
-local WIDTH=700
-
-local window = fl.Window( WIDTH, 400 )
-function window:callback()
-  print( "window callback called" )
-  self:hide()
-end
-
 -- a function that takes a literal menu specification like in the
 -- c++ code
 local function Menu( m, t, stack, n_stack )
@@ -213,11 +216,6 @@ local function test_cb( self )
       print( lb )
     end
   end
-end
-
-local function quit_cb()
-  --os.exit( 0, true ) -- bad style
-  window:hide()
 end
 
 local menubar = fl.Menu_Bar( 0, 0, WIDTH, 30 )
