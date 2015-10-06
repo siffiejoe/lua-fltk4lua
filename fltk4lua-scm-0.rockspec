@@ -1,12 +1,12 @@
 package = "fltk4lua"
 version = "scm-0"
 source = {
-  url = "..."
+  url = "gitrec+https://github.com/siffiejoe/lua-fltk4lua.git"
 }
 description = {
   summary = "Lua binding to FLTK, the Fast Light ToolKit",
   detailed = "Lua binding to FLTK, the Fast Light ToolKit",
-  homepage = "...",
+  homepage = "https://github.com/siffiejoe/lua-fltk4lua/",
   license = "MIT+LGPL"
 }
 supported_platforms = { "unix", "windows" }
