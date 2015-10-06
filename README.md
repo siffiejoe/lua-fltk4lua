@@ -573,6 +573,7 @@ precedence over inherited ones.
     -   `"shortcut": isu`
     -   `"labelfont": is`
     -   `"labelsize": i`
+    -   `"labeltype": s`
     -   `"user_data": na`
     -   `"labelcolor": iu`
 *   `obj:menuitem_activate( i )`

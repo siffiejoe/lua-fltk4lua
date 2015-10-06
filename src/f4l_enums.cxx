@@ -142,13 +142,13 @@ namespace {
     Fl_Shortcut s1 = 0, s2 = 0;
     if( t1 == LUA_TSTRING ) {
       s1 = (unsigned char)f4l_check_char( L, 1 );
-      s2 = moon_flag_get_shortcut( L, 2 );
+      s2 = moon_flag_get_shortcut( L, 2 ); // can only be userdata
     } else {
-      s1 = moon_flag_get_shortcut( L, 1 );
+      s1 = f4l_check_shortcut( L, 1 );
       if( t2 == LUA_TSTRING )
         s2 = (unsigned char)f4l_check_char( L, 2 );
       else
-        s2 = moon_flag_get_shortcut( L, 2 );
+        s2 = f4l_check_shortcut( L, 2 );
     }
     luaL_argcheck( L, !(s1 & FL_KEY_MASK) + !(s2 & FL_KEY_MASK) >= 1,
                    2, "invalid shortcut combination" );
@@ -727,6 +727,15 @@ namespace {
     return 0;
   }
 
+
+  int f4l_shortcut_label( lua_State* L ) {
+    Fl_Shortcut s = f4l_check_shortcut( L, 1 );
+    F4L_TRY {
+      lua_pushstring( L, fl_shortcut_label( s ) );
+    } F4L_CATCH( L );
+    return 1;
+  }
+
 } // anonymous namespace
 
 
@@ -743,6 +752,7 @@ MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
     { "get_color", f4l_get_color },
     { "set_color", f4l_set_color },
     { "cursor", f4l_cursor },
+    { "shortcut_label", f4l_shortcut_label },
     { NULL, NULL }
   };
   moon_flag_def_shortcut( L );

@@ -614,6 +614,13 @@ MOON_LOCAL int f4l_menu_menuitem_setp( lua_State* L ) {
           const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
             .labelsize( moon_checkint( L, 4, 0, INT_MAX ) );
           return 0;
+        } else if( F4L_MEMCMP( key, "labeltype", 9 ) == 0 ) {
+          Fl_Labeltype t = f4l_check_labeltype( L, 4 );
+          luaL_argcheck( L, t != _FL_IMAGE_LABEL, 4,
+                         "this labeltype is invalid here" );
+          const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
+            .labeltype( t );
+          return 0;
         } else if( F4L_MEMCMP( key, "user_data", 9 ) == 0 ) {
           if( moon_getuvfield( L, 1, "menu" ) == LUA_TTABLE &&
               lua_rawgeti( L, -1, idx+1 ) == LUA_TTABLE ) {
