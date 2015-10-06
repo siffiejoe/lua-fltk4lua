@@ -157,42 +157,42 @@ precedence over inherited ones.
 `Light_Button`:
 *   `fl.Light_Button( i, i, i, i, ns ) ==> u`
 *   `fl.Light_Button( t ) ==> u` (table constructor syntax)
-*   methods defined for the `Box` userdata type
+*   methods defined for the `Button` userdata type
 *   methods defined for the `Widget` userdata type
-*   properties defined for the `Box` userdata type
+*   properties defined for the `Button` userdata type
 *   properties defined for the `Widget` userdata type
 
 `Check_Button`:
 *   `fl.Check_Button( i, i, i, i, ns ) ==> u`
 *   `fl.Check_Button( t ) ==> u` (table constructor syntax)
-*   methods defined for the `Box` userdata type
+*   methods defined for the `Button` userdata type
 *   methods defined for the `Widget` userdata type
-*   properties defined for the `Box` userdata type
+*   properties defined for the `Button` userdata type
 *   properties defined for the `Widget` userdata type
 
 `Repeat_Button`:
 *   `fl.Repeat_Button( i, i, i, i, ns ) ==> u`
 *   `fl.Repeat_Button( t ) ==> u` (table constructor syntax)
 *   `obj:deactivate()`
-*   methods defined for the `Box` userdata type
+*   methods defined for the `Button` userdata type
 *   methods defined for the `Widget` userdata type
-*   properties defined for the `Box` userdata type
+*   properties defined for the `Button` userdata type
 *   properties defined for the `Widget` userdata type
 
 `Return_Button`:
 *   `fl.Return_Button( i, i, i, i, ns ) ==> u`
 *   `fl.Return_Button( t ) ==> u` (table constructor syntax)
-*   methods defined for the `Box` userdata type
+*   methods defined for the `Button` userdata type
 *   methods defined for the `Widget` userdata type
-*   properties defined for the `Box` userdata type
+*   properties defined for the `Button` userdata type
 *   properties defined for the `Widget` userdata type
 
 `Round_Button`:
 *   `fl.Round_Button( i, i, i, i, ns ) ==> u`
 *   `fl.Round_Button( t ) ==> u` (table constructor syntax)
-*   methods defined for the `Box` userdata type
+*   methods defined for the `Button` userdata type
 *   methods defined for the `Widget` userdata type
-*   properties defined for the `Box` userdata type
+*   properties defined for the `Button` userdata type
 *   properties defined for the `Widget` userdata type
 
 `Chart`:
