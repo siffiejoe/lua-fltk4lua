@@ -788,6 +788,46 @@ Additional module functions:
 *   `fl.password( s, ns ) ==> ns`
 
 
+##                        Building/Installing                       ##
+
+**fltk4lua** is compatible with Lua 5.1 (including LuaJIT), 5.2, and
+5.3, for which the required include files have to be available. You
+will also need a C/C++ compiler (yes, one that actually can do both)
+and FLTK version 1.3 installed. On Unixes you can probably use the
+package manager for that (on Debian/Ubuntu it's `libfltk1.3-dev`). On
+Windows you will need to compile FLTK yourself (I have had success for
+both MinGW and MSVC++ Express 10.0 using CMAKE).
+
+The supplied Makefile is configured for Lua 5.2 on a Debian/Ubuntu
+Linux system. For other Unixes or other Lua installs you will have to
+change some variables in the Makefile (in particular `DLL_INSTALL_DIR`
+and `LUA_INCDIR` near the top -- most other compilation settings are
+determined by calling `fltk-config`).
+
+For Windows the only supported way of building **fltk4lua** is using
+[LuaRocks][3]. The rockspec included in the repository should take
+care of installing the required dependencies, however one particular
+(`luarocks-build-cpp`) is not compatible with Lua 5.3 at the time of
+this writing. If an updated version is not available in the main
+repository, you can find a working fork on [here on GitHub][4]. Unless
+you install from a (recursively) cloned repository, you will also need
+a `git` executable that LuaRocks can use. Once all that is settled, a
+```sh
+luarocks install --server=http://luarocks.org/dev fltk4lua \
+        FLTK_INCDIR=/path/to/FL/incdir FLTK_LIBDIR=/path/to/fltk/libs
+```
+or if you build from a local cloned repository
+```sh
+luarocks make \
+        FLTK_INCDIR=/path/to/FL/incdir FLTK_LIBDIR=/path/to/fltk/libs
+```
+should do the trick. (On Unixes the `FLTK_xxxDIR` variables are not
+necessary thanks to `fltk-config`.)
+
+  [3]:  http://luarocks.org/
+  [4]:  https://github.com/siffiejoe/luarocks-build-cpp
+
+
 ##                              Contact                             ##
 
 Philipp Janda, siffiejoe(a)gmx.net
