@@ -138,7 +138,7 @@ do
     }:end_group()
     fl.Window{
       110, 175, 40, 55,
-      box="FL_THIN_DOWN_BOX", color=167, selection_color=fl.BACKGROUND_COLOR,
+      box="FL_THIN_DOWN_BOX", color=239, selection_color=fl.BACKGROUND_COLOR,
       labeltype="FL_NORMAL_LABEL", labelfont=0, labelsize=14,
       labelcolor=fl.FOREGROUND_COLOR, align=fl.ALIGN_CENTER+fl.ALIGN_INSIDE,
       when=fl.WHEN_RELEASE,
