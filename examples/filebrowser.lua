@@ -15,9 +15,13 @@ fbrowser.type = "FL_SELECT_BROWSER"
 function fbrowser:callback()
   local fname = self:text( self.value )
   print( self.value, fname )
+  self:deactivate()
+  fl.check()
   if not fname:match( "[/\\]$" ) then
     print( os.execute( exe.." \""..dir..dirsep..fname.."\"" ) )
   end
+  fl.check()
+  self:activate()
 end
 assert( fbrowser:load( dir, "fl_alphasort" ) )
 window:end_group()
