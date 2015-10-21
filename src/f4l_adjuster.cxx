@@ -10,6 +10,7 @@ namespace {
     return static_cast< Fl_Adjuster* >( p );
   }
 
+
   int adjuster_index_( lua_State* L, Fl_Adjuster* a,
                        char const* key, size_t n ) {
     using namespace std;
@@ -23,6 +24,7 @@ namespace {
     }
     return 0;
   }
+
 
   int adjuster_newindex_( lua_State* L, Fl_Adjuster* a,
                           char const* key, size_t n ) {
@@ -38,42 +40,54 @@ namespace {
     return 0;
   }
 
-  int adjuster_index( lua_State* L ) {
-    Fl_Adjuster* a = check_adjuster( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !adjuster_index_( L, a, key, n ) &&
-          !f4l_valuator_index_( L, a, key, n ) &&
-          !f4l_widget_index_( L, a, key, n ) &&
-          !f4l_bad_property( L, F4L_ADJUSTER_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int adjuster_newindex( lua_State* L ) {
-    Fl_Adjuster* a = check_adjuster( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(adjuster_newindex_( L, a, key, n ) ||
-             f4l_valuator_newindex_( L, a, key, n ) ||
-             f4l_widget_newindex_( L, a, key, n ) ||
-             f4l_bad_property( L, F4L_ADJUSTER_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_adjuster( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Adjuster >( L, F4L_ADJUSTER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
 
+
+F4L_LUA_LLINKAGE_BEGIN
+static int adjuster_index( lua_State* L ) {
+  Fl_Adjuster* a = check_adjuster( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !adjuster_index_( L, a, key, n ) &&
+        !f4l_valuator_index_( L, a, key, n ) &&
+        !f4l_widget_index_( L, a, key, n ) &&
+        !f4l_bad_property( L, F4L_ADJUSTER_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+static int adjuster_newindex( lua_State* L ) {
+  Fl_Adjuster* a = check_adjuster( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(adjuster_newindex_( L, a, key, n ) ||
+           f4l_valuator_newindex_( L, a, key, n ) ||
+           f4l_widget_newindex_( L, a, key, n ) ||
+           f4l_bad_property( L, F4L_ADJUSTER_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Adjuster )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_adjuster( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Adjuster >( L, F4L_ADJUSTER_NAME,
+                                   f4l_delete_Fl_Adjuster );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_CAST( Fl_Adjuster, Fl_Valuator )
+F4L_DEF_CAST( Fl_Adjuster, Fl_Widget )
 
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -85,9 +99,9 @@ MOON_LOCAL void f4l_adjuster_setup( lua_State* L ) {
   };
   moon_defobject( L, F4L_ADJUSTER_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_ADJUSTER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Adjuster, Fl_Valuator > );
+                f4l_cast_Fl_Adjuster_Fl_Valuator );
   moon_defcast( L, F4L_ADJUSTER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Adjuster, Fl_Widget > );
+                f4l_cast_Fl_Adjuster_Fl_Widget );
   f4l_new_class_table( L, "Adjuster", new_adjuster );
 }
 

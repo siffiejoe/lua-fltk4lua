@@ -18,7 +18,7 @@ function butt:callback( w )
   local progress = fl.Progress( 10, 50, 200, 30 )
   progress.minimum = 0
   progress.maximum = 1
-  progress.color = 2290649088 -- new Lua version also now hex numbers
+  progress.color = 2290649088 -- new Lua versions also know hex numbers
   progress.selection_color = 1145372416
   progress.labelcolor = fl.WHITE
   w:end_group()

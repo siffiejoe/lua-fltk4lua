@@ -14,6 +14,7 @@ extern "C" {
 #include <exception> // for std::exception
 /* basic FLTK headers */
 #include <FL/Fl.H>
+#include <FL/Fl_Widget.H>
 #include <FL/Fl_Group.H>
 
 
@@ -26,6 +27,14 @@ extern "C" {
 #ifndef F4L_API
 #  define F4L_API extern "C" MOON_EXPORT
 #endif
+
+
+/* language linkage decorations for various functions to be passed to
+ * Lua or the moon toolkit */
+#define F4L_MOON_LLINKAGE_BEGIN extern "C" {
+#define F4L_MOON_LLINKAGE_END   }
+#define F4L_LUA_LLINKAGE_BEGIN  extern "C" {
+#define F4L_LUA_LLINKAGE_END    }
 
 
 /* transform standard C++ exceptions to Lua errors */
@@ -77,58 +86,31 @@ struct f4l_active_L {
 };
 
 
-/* generic function for casting a pointer to sub-type to a pointer
- * to a super-type */
-template< typename T1, typename T2 >
-MOON_LOCAL void* f4l_cast( void* p ) {
-  T1* t1 = static_cast< T1* >( p );
-  T2* t2 = t1; // implicit conversion should be enough here
-  return static_cast< void* >( t2 );
-}
+/* Macro for generating cast functions used by the moon toolkit.
+ * We can't use a template here, because the functions need to have
+ * "C" linkage! */
+#define F4L_DEF_CAST( _t1, _t2 ) \
+  F4L_MOON_LLINKAGE_BEGIN \
+  static void* f4l_cast_ ## _t1 ## _ ## _t2( void* p ) { \
+    _t1* p1 = static_cast< _t1* >( p ); \
+    _t2* p2 = p1; /* implicit conversion should be enough here */ \
+    return static_cast< void* >( p2 ); \
+  } \
+  F4L_MOON_LLINKAGE_END
 
 
-namespace {
-  /* FLTK does some automatic memory management for the children
-   * of an Fl_Group which interferes with the finalizers used in
-   * Lua, so an Fl_Group-derived object is cleared before its
-   * destructor runs, and the child widgets are deleted in their
-   * respective finalizers! */
-  inline void clear_child_widgets( Fl_Group* g ) {
-    for( int i = g->children(); i > 0; --i )
-      g->remove( i-1 );
-  }
-  inline void clear_child_widgets( ... ) {} // for non-Fl_Groups
-
-  template< typename T >
-  inline void safe_delete( void* p, ... ) {
-    delete static_cast< T* >( p );
-  }
-  /* Widgets must not be deleted during a callback, so the
-   * Fl::delete_widget() function is used instead in case a
-   * Fl::run()/Fl::wait()/Fl::check() is active (checked via a
-   * non-NULL value in f4l_get_active_thread()). */
-  template< typename T >
-  inline void safe_delete( void*, Fl_Widget* w ) {
-    f4l_active_L* ud = static_cast< f4l_active_L* >( w->user_data() );
-    if( ud != NULL && ud->cb_L != NULL )
-      Fl::delete_widget( w );
-    else
-      delete w;
-  }
-
-} // anonymous namespace for helper functions
+/* Macro to generate destructor functions for FLTK widgets. We can't
+ * use templates, because those functions need to have "C" linkage! */
+#define F4L_DEF_DELETE( _t ) \
+  F4L_MOON_LLINKAGE_BEGIN \
+  static void f4l_delete_ ## _t( void* p ) { \
+    f4l_delete_widget( static_cast< _t* >( p ) ); \
+  } \
+  F4L_MOON_LLINKAGE_END
 
 
-/* Generic function for calling delete on an FLTK Widget pointer. */
-template< typename T >
-MOON_LOCAL void f4l_delete( void* p ) {
-  T* t1 = static_cast< T* >( p );
-  clear_child_widgets( t1 );
-  /* This is a hack to select an overload based on whether T is
-   * derived from Fl_Widget: */
-  safe_delete< T >( static_cast< void* >( t1 ), t1 );
-}
-
+MOON_LOCAL void f4l_delete_widget( Fl_Widget* w );
+MOON_LOCAL void f4l_delete_widget( Fl_Group* g );
 
 /* type checking function for a single character/byte string */
 MOON_LOCAL char f4l_check_char( lua_State* L, int idx );

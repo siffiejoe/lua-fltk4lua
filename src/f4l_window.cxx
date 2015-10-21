@@ -6,6 +6,7 @@
 #include <cstring>
 #include <climits>
 
+
 namespace {
 
   inline Fl_Window* check_window( lua_State* L, int idx ) {
@@ -13,41 +14,51 @@ namespace {
     return static_cast< Fl_Window* >( p );
   }
 
-  int window_index( lua_State* L ) {
-    Fl_Window* w = check_window( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !f4l_window_index_( L, w, key, n ) &&
-          !f4l_group_index_( L, w, key, n ) &&
-          !f4l_widget_index_( L, w, key, n ) &&
-          !f4l_bad_property( L, F4L_WINDOW_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int window_newindex( lua_State* L ) {
-    Fl_Window* w = check_window( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(f4l_window_newindex_( L, w, key, n ) ||
-             f4l_group_newindex_( L, w, key, n ) ||
-             f4l_widget_newindex_( L, w, key, n ) ||
-             f4l_bad_property( L, F4L_WINDOW_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_window( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_window< Fl_Window >( L, F4L_WINDOW_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
+
+
+F4L_LUA_LLINKAGE_BEGIN
+static int window_index( lua_State* L ) {
+  Fl_Window* w = check_window( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !f4l_window_index_( L, w, key, n ) &&
+        !f4l_group_index_( L, w, key, n ) &&
+        !f4l_widget_index_( L, w, key, n ) &&
+        !f4l_bad_property( L, F4L_WINDOW_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int window_newindex( lua_State* L ) {
+  Fl_Window* w = check_window( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(f4l_window_newindex_( L, w, key, n ) ||
+           f4l_group_newindex_( L, w, key, n ) ||
+           f4l_widget_newindex_( L, w, key, n ) ||
+           f4l_bad_property( L, F4L_WINDOW_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Window )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_window( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_window< Fl_Window >( L, F4L_WINDOW_NAME,
+                                 f4l_delete_Fl_Window );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
@@ -136,6 +147,7 @@ MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
   return 0;
 }
 
+
 MOON_LOCAL int f4l_window_newindex_( lua_State* L, Fl_Window* w,
                                      char const* key, size_t n ) {
   using namespace std;
@@ -175,6 +187,7 @@ MOON_LOCAL int f4l_window_newindex_( lua_State* L, Fl_Window* w,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_window_clear_border( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
   F4L_TRY {
@@ -308,7 +321,11 @@ MOON_LOCAL int f4l_window_size_range( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
+F4L_LUA_LLINKAGE_END
 
+
+F4L_DEF_CAST( Fl_Window, Fl_Group )
+F4L_DEF_CAST( Fl_Window, Fl_Widget )
 
 MOON_LOCAL void f4l_window_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -321,9 +338,9 @@ MOON_LOCAL void f4l_window_setup( lua_State* L ) {
   };
   moon_defobject( L, F4L_WINDOW_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_WINDOW_NAME, F4L_GROUP_NAME,
-                f4l_cast< Fl_Window, Fl_Group > );
+                f4l_cast_Fl_Window_Fl_Group );
   moon_defcast( L, F4L_WINDOW_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Window, Fl_Widget > );
+                f4l_cast_Fl_Window_Fl_Widget );
   f4l_new_class_table( L, "Window", new_window );
 }
 

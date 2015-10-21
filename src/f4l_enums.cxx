@@ -135,28 +135,27 @@ MOON_LOCAL void f4l_push_shortcut( lua_State* L, Fl_Shortcut s ) {
   moon_flag_new_shortcut( L, s );
 }
 
-namespace {
 
-  int shortcut_add( lua_State* L ) {
-    int t1 = lua_type( L, 1 ), t2 = lua_type( L, 2 );
-    Fl_Shortcut s1 = 0, s2 = 0;
-    if( t1 == LUA_TSTRING ) {
-      s1 = (unsigned char)f4l_check_char( L, 1 );
-      s2 = moon_flag_get_shortcut( L, 2 ); // can only be userdata
-    } else {
-      s1 = f4l_check_shortcut( L, 1 );
-      if( t2 == LUA_TSTRING )
-        s2 = (unsigned char)f4l_check_char( L, 2 );
-      else
-        s2 = f4l_check_shortcut( L, 2 );
-    }
-    luaL_argcheck( L, !(s1 & FL_KEY_MASK) + !(s2 & FL_KEY_MASK) >= 1,
-                   2, "invalid shortcut combination" );
-    moon_flag_new_shortcut( L, s1+s2 );
-    return 1;
+F4L_LUA_LLINKAGE_BEGIN
+static int shortcut_add( lua_State* L ) {
+  int t1 = lua_type( L, 1 ), t2 = lua_type( L, 2 );
+  Fl_Shortcut s1 = 0, s2 = 0;
+  if( t1 == LUA_TSTRING ) {
+    s1 = (unsigned char)f4l_check_char( L, 1 );
+    s2 = moon_flag_get_shortcut( L, 2 ); // can only be userdata
+  } else {
+    s1 = f4l_check_shortcut( L, 1 );
+    if( t2 == LUA_TSTRING )
+      s2 = (unsigned char)f4l_check_char( L, 2 );
+    else
+      s2 = f4l_check_shortcut( L, 2 );
   }
-
-} // anonymous namespace
+  luaL_argcheck( L, !(s1 & FL_KEY_MASK) + !(s2 & FL_KEY_MASK) >= 1,
+                 2, "invalid shortcut combination" );
+  moon_flag_new_shortcut( L, s1+s2 );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 #if 0
@@ -626,117 +625,116 @@ MOON_LOCAL Fl::Fl_Option f4l_check_option( lua_State* L, int idx ) {
 }
 
 
-namespace {
-
-  int f4l_inactive( lua_State* L ) {
-    Fl_Color c = f4l_check_color( L, 1 );
-    F4L_TRY {
-      f4l_push_color( L, fl_inactive( c ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-
-  int f4l_contrast( lua_State* L ) {
-    Fl_Color fg = f4l_check_color( L, 1 );
-    Fl_Color bg = f4l_check_color( L, 2 );
-    F4L_TRY {
-      f4l_push_color( L, fl_contrast( fg, bg ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
+F4L_LUA_LLINKAGE_BEGIN
+static int f4l_inactive( lua_State* L ) {
+  Fl_Color c = f4l_check_color( L, 1 );
+  F4L_TRY {
+    f4l_push_color( L, fl_inactive( c ) );
+  } F4L_CATCH( L );
+  return 1;
+}
 
 
-  int f4l_color_average( lua_State* L ) {
-    Fl_Color c1 = f4l_check_color( L, 1 );
-    Fl_Color c2 = f4l_check_color( L, 2 );
-    float weight = static_cast< float >( luaL_checknumber( L, 3 ) );
-    F4L_TRY {
-      f4l_push_color( L, fl_color_average( c1, c2, weight ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
+static int f4l_contrast( lua_State* L ) {
+  Fl_Color fg = f4l_check_color( L, 1 );
+  Fl_Color bg = f4l_check_color( L, 2 );
+  F4L_TRY {
+    f4l_push_color( L, fl_contrast( fg, bg ) );
+  } F4L_CATCH( L );
+  return 1;
+}
 
 
-  int f4l_lighter( lua_State* L ) {
-    Fl_Color c = f4l_check_color( L, 1 );
-    F4L_TRY {
-      f4l_push_color( L, fl_lighter( c ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
+static int f4l_color_average( lua_State* L ) {
+  Fl_Color c1 = f4l_check_color( L, 1 );
+  Fl_Color c2 = f4l_check_color( L, 2 );
+  float weight = static_cast< float >( luaL_checknumber( L, 3 ) );
+  F4L_TRY {
+    f4l_push_color( L, fl_color_average( c1, c2, weight ) );
+  } F4L_CATCH( L );
+  return 1;
+}
 
 
-  int f4l_darker( lua_State* L ) {
-    Fl_Color c = f4l_check_color( L, 1 );
-    F4L_TRY {
-      f4l_push_color( L, fl_darker( c ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
+static int f4l_lighter( lua_State* L ) {
+  Fl_Color c = f4l_check_color( L, 1 );
+  F4L_TRY {
+    f4l_push_color( L, fl_lighter( c ) );
+  } F4L_CATCH( L );
+  return 1;
+}
 
 
-  int f4l_rgb_color( lua_State* L ) {
-    F4L_TRY {
-      if( lua_gettop( L ) > 1 ) {
-        uchar r = moon_checkint( L, 1, 0, 255 );
-        uchar g = moon_checkint( L, 2, 0, 255 );
-        uchar b = moon_checkint( L, 3, 0, 255 );
-        f4l_push_color( L, fl_rgb_color( r, g, b ) );
-      } else {
-        uchar g = moon_checkint( L, 1, 0, 255 );
-        f4l_push_color( L, fl_rgb_color( g ) );
-      }
-    } F4L_CATCH( L );
-    return 1;
-  }
+static int f4l_darker( lua_State* L ) {
+  Fl_Color c = f4l_check_color( L, 1 );
+  F4L_TRY {
+    f4l_push_color( L, fl_darker( c ) );
+  } F4L_CATCH( L );
+  return 1;
+}
 
 
-  int f4l_get_color( lua_State* L ) {
-    Fl_Color c = f4l_check_color( L, 1 );
-    uchar r, g, b;
-    F4L_TRY {
-      Fl::get_color( c, r, g, b );
-      lua_pushinteger( L, r );
-      lua_pushinteger( L, g );
-      lua_pushinteger( L, b );
-    } F4L_CATCH( L );
-    return 3;
-  }
+static int f4l_rgb_color( lua_State* L ) {
+  F4L_TRY {
+    if( lua_gettop( L ) > 1 ) {
+      uchar r = moon_checkint( L, 1, 0, 255 );
+      uchar g = moon_checkint( L, 2, 0, 255 );
+      uchar b = moon_checkint( L, 3, 0, 255 );
+      f4l_push_color( L, fl_rgb_color( r, g, b ) );
+    } else {
+      uchar g = moon_checkint( L, 1, 0, 255 );
+      f4l_push_color( L, fl_rgb_color( g ) );
+    }
+  } F4L_CATCH( L );
+  return 1;
+}
 
 
-  int f4l_set_color( lua_State* L ) {
-    Fl_Color c = f4l_check_color( L, 1 );
-    uchar r = moon_checkint( L, 2, 0, 255 );
-    uchar g = moon_checkint( L, 3, 0, 255 );
-    uchar b = moon_checkint( L, 4, 0, 255 );
-    F4L_TRY {
-      Fl::set_color( c, r, g, b );
-    } F4L_CATCH( L );
-    return 0;
-  }
+static int f4l_get_color( lua_State* L ) {
+  Fl_Color c = f4l_check_color( L, 1 );
+  uchar r, g, b;
+  F4L_TRY {
+    Fl::get_color( c, r, g, b );
+    lua_pushinteger( L, r );
+    lua_pushinteger( L, g );
+    lua_pushinteger( L, b );
+  } F4L_CATCH( L );
+  return 3;
+}
 
 
-  int f4l_cursor( lua_State* L ) {
-    Fl_Cursor c = f4l_check_cursor( L, 1 );
-    Fl_Color fg = f4l_check_color( L, 2 );
-    Fl_Color bg = f4l_check_color( L, 3 );
-    F4L_TRY {
-      fl_cursor( c, fg, bg );
-    } F4L_CATCH( L );
-    return 0;
-  }
+static int f4l_set_color( lua_State* L ) {
+  Fl_Color c = f4l_check_color( L, 1 );
+  uchar r = moon_checkint( L, 2, 0, 255 );
+  uchar g = moon_checkint( L, 3, 0, 255 );
+  uchar b = moon_checkint( L, 4, 0, 255 );
+  F4L_TRY {
+    Fl::set_color( c, r, g, b );
+  } F4L_CATCH( L );
+  return 0;
+}
 
 
-  int f4l_shortcut_label( lua_State* L ) {
-    Fl_Shortcut s = f4l_check_shortcut( L, 1 );
-    F4L_TRY {
-      lua_pushstring( L, fl_shortcut_label( s ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
+static int f4l_cursor( lua_State* L ) {
+  Fl_Cursor c = f4l_check_cursor( L, 1 );
+  Fl_Color fg = f4l_check_color( L, 2 );
+  Fl_Color bg = f4l_check_color( L, 3 );
+  F4L_TRY {
+    fl_cursor( c, fg, bg );
+  } F4L_CATCH( L );
+  return 0;
+}
 
-} // anonymous namespace
+
+static int f4l_shortcut_label( lua_State* L ) {
+  Fl_Shortcut s = f4l_check_shortcut( L, 1 );
+  F4L_TRY {
+    lua_pushstring( L, fl_shortcut_label( s ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
 
 
 

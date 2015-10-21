@@ -20,6 +20,7 @@ namespace {
     return static_cast< Fl_Clock_Output* >( p );
   }
 
+
   int clock_index_( lua_State* L, Fl_Clock_Output* c,
                     char const* key, size_t n ) {
     using namespace std;
@@ -55,6 +56,7 @@ namespace {
     return 0;
   }
 
+
   int clock_newindex_( lua_State* L, Fl_Clock_Output* c,
                        char const* key, size_t n ) {
     using namespace std;
@@ -78,59 +80,75 @@ namespace {
     return 0;
   }
 
-  int clock_index( lua_State* L ) {
-    Fl_Clock_Output* c = check_clock( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !clock_index_( L, c, key, n ) &&
-          !f4l_widget_index_( L, c, key, n ) &&
-          !f4l_bad_property( L, F4L_CLOCK_OUTPUT_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int clock_newindex( lua_State* L ) {
-    Fl_Clock_Output* c = check_clock( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(clock_newindex_( L, c, key, n ) ||
-             f4l_widget_newindex_( L, c, key, n ) ||
-             f4l_bad_property( L, F4L_CLOCK_OUTPUT_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_clock_output( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Clock_Output >( L, F4L_CLOCK_OUTPUT_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_clock( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Clock >( L, F4L_CLOCK_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-
-  int clock_setvalue( lua_State* L ) {
-    Fl_Clock_Output* c = check_clock( L, 1 );
-    int h = moon_checkint( L, 2, 0, 23 );
-    int m = moon_checkint( L, 3, 0, 59 );
-    int s = moon_checkint( L, 4, 0, 60 );
-    F4L_TRY {
-      c->value( h, m, s );
-    } F4L_CATCH( L );
-    return 0;
-  }
-
 } // anonymous namespace
 
+
+F4L_LUA_LLINKAGE_BEGIN
+static int clock_index( lua_State* L ) {
+  Fl_Clock_Output* c = check_clock( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !clock_index_( L, c, key, n ) &&
+        !f4l_widget_index_( L, c, key, n ) &&
+        !f4l_bad_property( L, F4L_CLOCK_OUTPUT_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int clock_newindex( lua_State* L ) {
+  Fl_Clock_Output* c = check_clock( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(clock_newindex_( L, c, key, n ) ||
+           f4l_widget_newindex_( L, c, key, n ) ||
+           f4l_bad_property( L, F4L_CLOCK_OUTPUT_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int clock_setvalue( lua_State* L ) {
+  Fl_Clock_Output* c = check_clock( L, 1 );
+  int h = moon_checkint( L, 2, 0, 23 );
+  int m = moon_checkint( L, 3, 0, 59 );
+  int s = moon_checkint( L, 4, 0, 60 );
+  F4L_TRY {
+    c->value( h, m, s );
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Clock_Output )
+F4L_DEF_DELETE( Fl_Clock )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_clock_output( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Clock_Output >( L, F4L_CLOCK_OUTPUT_NAME,
+                                       f4l_delete_Fl_Clock_Output );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+static int new_clock( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Clock >( L, F4L_CLOCK_NAME,
+                                f4l_delete_Fl_Clock );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_CAST( Fl_Clock_Output, Fl_Widget )
+F4L_DEF_CAST( Fl_Clock, Fl_Clock_Output )
+F4L_DEF_CAST( Fl_Clock, Fl_Widget )
 
 MOON_LOCAL void f4l_clock_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -143,13 +161,13 @@ MOON_LOCAL void f4l_clock_setup( lua_State* L ) {
 
   moon_defobject( L, F4L_CLOCK_OUTPUT_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_CLOCK_OUTPUT_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Clock_Output, Fl_Widget > );
+                f4l_cast_Fl_Clock_Output_Fl_Widget );
 
   moon_defobject( L, F4L_CLOCK_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_CLOCK_NAME, F4L_CLOCK_OUTPUT_NAME,
-                f4l_cast< Fl_Clock, Fl_Clock_Output > );
+                f4l_cast_Fl_Clock_Fl_Clock_Output );
   moon_defcast( L, F4L_CLOCK_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Clock, Fl_Widget > );
+                f4l_cast_Fl_Clock_Fl_Widget );
 
   f4l_new_class_table( L, "Clock_Output", new_clock_output );
   f4l_new_class_table( L, "Clock", new_clock );

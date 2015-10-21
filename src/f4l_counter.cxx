@@ -21,6 +21,7 @@ namespace {
     return static_cast< Fl_Counter* >( p );
   }
 
+
   int counter_index_( lua_State* L, Fl_Counter* c,
                       char const* key, size_t n ) {
     using namespace std;
@@ -52,6 +53,7 @@ namespace {
     }
     return 0;
   }
+
 
   int counter_newindex_( lua_State* L, Fl_Counter* c,
                          char const* key, size_t n ) {
@@ -91,42 +93,55 @@ namespace {
     return 0;
   }
 
-  int counter_index( lua_State* L ) {
-    Fl_Counter* c = check_counter( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !counter_index_( L, c, key, n ) &&
-          !f4l_valuator_index_( L, c, key, n ) &&
-          !f4l_widget_index_( L, c, key, n ) &&
-          !f4l_bad_property( L, F4L_COUNTER_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int counter_newindex( lua_State* L ) {
-    Fl_Counter* c = check_counter( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(counter_newindex_( L, c, key, n ) ||
-             f4l_valuator_newindex_( L, c, key, n ) ||
-             f4l_widget_newindex_( L, c, key, n ) ||
-             f4l_bad_property( L, F4L_COUNTER_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_counter( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Counter >( L, F4L_COUNTER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
 
+
+F4L_LUA_LLINKAGE_BEGIN
+static int counter_index( lua_State* L ) {
+  Fl_Counter* c = check_counter( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !counter_index_( L, c, key, n ) &&
+        !f4l_valuator_index_( L, c, key, n ) &&
+        !f4l_widget_index_( L, c, key, n ) &&
+        !f4l_bad_property( L, F4L_COUNTER_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int counter_newindex( lua_State* L ) {
+  Fl_Counter* c = check_counter( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(counter_newindex_( L, c, key, n ) ||
+           f4l_valuator_newindex_( L, c, key, n ) ||
+           f4l_widget_newindex_( L, c, key, n ) ||
+           f4l_bad_property( L, F4L_COUNTER_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Counter )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_counter( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Counter >( L, F4L_COUNTER_NAME,
+                                  f4l_delete_Fl_Counter );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_CAST( Fl_Counter, Fl_Valuator )
+F4L_DEF_CAST( Fl_Counter, Fl_Widget )
 
 MOON_LOCAL void f4l_counter_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -138,9 +153,9 @@ MOON_LOCAL void f4l_counter_setup( lua_State* L ) {
   };
   moon_defobject( L, F4L_COUNTER_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_COUNTER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Counter, Fl_Valuator > );
+                f4l_cast_Fl_Counter_Fl_Valuator );
   moon_defcast( L, F4L_COUNTER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Counter, Fl_Widget > );
+                f4l_cast_Fl_Counter_Fl_Widget );
   f4l_new_class_table( L, "Counter", new_counter );
 }
 

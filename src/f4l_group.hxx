@@ -11,6 +11,7 @@ MOON_LOCAL int f4l_group_index_( lua_State* L, Fl_Group* g,
 MOON_LOCAL int f4l_group_newindex_( lua_State* L, Fl_Group* g,
                                     char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_group_add( lua_State* L );
 MOON_LOCAL int f4l_group_add_resizable( lua_State* L );
 MOON_LOCAL int f4l_group_begin( lua_State* L );
@@ -20,6 +21,7 @@ MOON_LOCAL int f4l_group_end( lua_State* L );
 MOON_LOCAL int f4l_group_find( lua_State* L );
 MOON_LOCAL int f4l_group_insert( lua_State* L );
 MOON_LOCAL int f4l_group_remove( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_GROUP_METHODS \

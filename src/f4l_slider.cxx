@@ -35,32 +35,6 @@ namespace {
     return static_cast< Fl_Value_Slider* >( p );
   }
 
-  int slider_index( lua_State* L ) {
-    Fl_Slider* s = check_slider( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !f4l_slider_index_( L, s, key, n ) &&
-          !f4l_valuator_index_( L, s, key, n ) &&
-          !f4l_widget_index_( L, s, key, n ) &&
-          !f4l_bad_property( L, F4L_SLIDER_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int slider_newindex( lua_State* L ) {
-    Fl_Slider* s = check_slider( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(f4l_slider_newindex_( L, s, key, n ) ||
-             f4l_valuator_newindex_( L, s, key, n ) ||
-             f4l_widget_newindex_( L, s, key, n ) ||
-             f4l_bad_property( L, F4L_SLIDER_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
 
   int scrollbar_index_( lua_State* L, Fl_Scrollbar* s,
                         char const* key, size_t n ) {
@@ -82,6 +56,7 @@ namespace {
     return 0;
   }
 
+
   int scrollbar_newindex_( lua_State* L, Fl_Scrollbar* s,
                            char const* key, size_t n ) {
     using namespace std;
@@ -102,46 +77,6 @@ namespace {
     return 0;
   }
 
-  int scrollbar_index( lua_State* L ) {
-    Fl_Scrollbar* s = check_scrollbar( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !scrollbar_index_( L, s, key, n ) &&
-          !f4l_slider_index_( L, s, key, n ) &&
-          !f4l_valuator_index_( L, s, key, n ) &&
-          !f4l_widget_index_( L, s, key, n ) &&
-          !f4l_bad_property( L, F4L_SCROLLBAR_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int scrollbar_newindex( lua_State* L ) {
-    Fl_Scrollbar* s = check_scrollbar( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(scrollbar_newindex_( L, s, key, n ) ||
-             f4l_slider_newindex_( L, s, key, n ) ||
-             f4l_valuator_newindex_( L, s, key, n ) ||
-             f4l_widget_newindex_( L, s, key, n ) ||
-             f4l_bad_property( L, F4L_SCROLLBAR_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int scrollbar_setvalue( lua_State* L ) {
-    Fl_Scrollbar* s = check_scrollbar( L, 1 );
-    int pos = moon_checkint( L, 2, 0, INT_MAX );
-    int ws = moon_checkint( L, 3, 0, INT_MAX );
-    int f = moon_checkint( L, 4, 0, INT_MAX );
-    int t = moon_checkint( L, 5, 0, INT_MAX );
-    F4L_TRY {
-      s->value( pos, ws, f, t );
-    } F4L_CATCH( L );
-    return 0;
-  }
 
   int value_slider_index_( lua_State* L, Fl_Value_Slider* vs,
                            char const* key, size_t n ) {
@@ -166,6 +101,7 @@ namespace {
     return 0;
   }
 
+
   int value_slider_newindex_( lua_State* L, Fl_Value_Slider* vs,
                               char const* key, size_t n ) {
     using namespace std;
@@ -189,57 +125,144 @@ namespace {
     return 0;
   }
 
-  int value_slider_index( lua_State* L ) {
-    Fl_Value_Slider* vs = check_value_slider( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !value_slider_index_( L, vs, key, n ) &&
-          !f4l_slider_index_( L, vs, key, n ) &&
-          !f4l_valuator_index_( L, vs, key, n ) &&
-          !f4l_widget_index_( L, vs, key, n ) &&
-          !f4l_bad_property( L, F4L_VALUE_SLIDER_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int value_slider_newindex( lua_State* L ) {
-    Fl_Value_Slider* vs = check_value_slider( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(value_slider_newindex_( L, vs, key, n ) ||
-             f4l_slider_newindex_( L, vs, key, n ) ||
-             f4l_valuator_newindex_( L, vs, key, n ) ||
-             f4l_widget_newindex_( L, vs, key, n ) ||
-             f4l_bad_property( L, F4L_VALUE_SLIDER_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Slider >( L, F4L_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_scrollbar( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_value_slider( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Value_Slider >( L, F4L_VALUE_SLIDER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
+
+
+F4L_LUA_LLINKAGE_BEGIN
+static int slider_index( lua_State* L ) {
+  Fl_Slider* s = check_slider( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !f4l_slider_index_( L, s, key, n ) &&
+        !f4l_valuator_index_( L, s, key, n ) &&
+        !f4l_widget_index_( L, s, key, n ) &&
+        !f4l_bad_property( L, F4L_SLIDER_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int slider_newindex( lua_State* L ) {
+  Fl_Slider* s = check_slider( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(f4l_slider_newindex_( L, s, key, n ) ||
+           f4l_valuator_newindex_( L, s, key, n ) ||
+           f4l_widget_newindex_( L, s, key, n ) ||
+           f4l_bad_property( L, F4L_SLIDER_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int scrollbar_index( lua_State* L ) {
+  Fl_Scrollbar* s = check_scrollbar( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !scrollbar_index_( L, s, key, n ) &&
+        !f4l_slider_index_( L, s, key, n ) &&
+        !f4l_valuator_index_( L, s, key, n ) &&
+        !f4l_widget_index_( L, s, key, n ) &&
+        !f4l_bad_property( L, F4L_SCROLLBAR_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int scrollbar_newindex( lua_State* L ) {
+  Fl_Scrollbar* s = check_scrollbar( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(scrollbar_newindex_( L, s, key, n ) ||
+           f4l_slider_newindex_( L, s, key, n ) ||
+           f4l_valuator_newindex_( L, s, key, n ) ||
+           f4l_widget_newindex_( L, s, key, n ) ||
+           f4l_bad_property( L, F4L_SCROLLBAR_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int scrollbar_setvalue( lua_State* L ) {
+  Fl_Scrollbar* s = check_scrollbar( L, 1 );
+  int pos = moon_checkint( L, 2, 0, INT_MAX );
+  int ws = moon_checkint( L, 3, 0, INT_MAX );
+  int f = moon_checkint( L, 4, 0, INT_MAX );
+  int t = moon_checkint( L, 5, 0, INT_MAX );
+  F4L_TRY {
+    s->value( pos, ws, f, t );
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int value_slider_index( lua_State* L ) {
+  Fl_Value_Slider* vs = check_value_slider( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !value_slider_index_( L, vs, key, n ) &&
+        !f4l_slider_index_( L, vs, key, n ) &&
+        !f4l_valuator_index_( L, vs, key, n ) &&
+        !f4l_widget_index_( L, vs, key, n ) &&
+        !f4l_bad_property( L, F4L_VALUE_SLIDER_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int value_slider_newindex( lua_State* L ) {
+  Fl_Value_Slider* vs = check_value_slider( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(value_slider_newindex_( L, vs, key, n ) ||
+           f4l_slider_newindex_( L, vs, key, n ) ||
+           f4l_valuator_newindex_( L, vs, key, n ) ||
+           f4l_widget_newindex_( L, vs, key, n ) ||
+           f4l_bad_property( L, F4L_VALUE_SLIDER_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Slider )
+F4L_DEF_DELETE( Fl_Scrollbar )
+F4L_DEF_DELETE( Fl_Value_Slider )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_slider( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Slider >( L, F4L_SLIDER_NAME,
+                                 f4l_delete_Fl_Slider );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+static int new_scrollbar( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
+                                    f4l_delete_Fl_Scrollbar );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+static int new_value_slider( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Value_Slider >( L, F4L_VALUE_SLIDER_NAME,
+                                       f4l_delete_Fl_Value_Slider );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL int f4l_slider_index_( lua_State* L, Fl_Slider* s,
@@ -268,6 +291,7 @@ MOON_LOCAL int f4l_slider_index_( lua_State* L, Fl_Slider* s,
   return 0;
 }
 
+
 MOON_LOCAL int f4l_slider_newindex_( lua_State* L, Fl_Slider* s,
                                      char const* key, size_t n ) {
   using namespace std;
@@ -295,6 +319,7 @@ MOON_LOCAL int f4l_slider_newindex_( lua_State* L, Fl_Slider* s,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_slider_bounds( lua_State* L ) {
   Fl_Slider* s = check_slider( L, 1 );
   double a = luaL_checknumber( L, 2 );
@@ -317,7 +342,17 @@ MOON_LOCAL int f4l_slider_scrollvalue( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+F4L_LUA_LLINKAGE_END
 
+
+F4L_DEF_CAST( Fl_Slider, Fl_Valuator )
+F4L_DEF_CAST( Fl_Slider, Fl_Widget )
+F4L_DEF_CAST( Fl_Scrollbar, Fl_Slider )
+F4L_DEF_CAST( Fl_Scrollbar, Fl_Valuator )
+F4L_DEF_CAST( Fl_Scrollbar, Fl_Widget )
+F4L_DEF_CAST( Fl_Value_Slider, Fl_Slider )
+F4L_DEF_CAST( Fl_Value_Slider, Fl_Valuator )
+F4L_DEF_CAST( Fl_Value_Slider, Fl_Widget )
 
 MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -348,25 +383,25 @@ MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
 
   moon_defobject( L, F4L_SLIDER_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Slider, Fl_Valuator > );
+                f4l_cast_Fl_Slider_Fl_Valuator );
   moon_defcast( L, F4L_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Slider, Fl_Widget > );
+                f4l_cast_Fl_Slider_Fl_Widget );
 
   moon_defobject( L, F4L_SCROLLBAR_NAME, 0, sb_methods, 0 );
   moon_defcast( L, F4L_SCROLLBAR_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Scrollbar, Fl_Slider > );
+                f4l_cast_Fl_Scrollbar_Fl_Slider );
   moon_defcast( L, F4L_SCROLLBAR_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Scrollbar, Fl_Valuator > );
+                f4l_cast_Fl_Scrollbar_Fl_Valuator );
   moon_defcast( L, F4L_SCROLLBAR_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Scrollbar, Fl_Widget > );
+                f4l_cast_Fl_Scrollbar_Fl_Widget );
 
   moon_defobject( L, F4L_VALUE_SLIDER_NAME, 0, vs_methods, 0 );
   moon_defcast( L, F4L_VALUE_SLIDER_NAME, F4L_SLIDER_NAME,
-                f4l_cast< Fl_Value_Slider, Fl_Slider > );
+                f4l_cast_Fl_Value_Slider_Fl_Slider );
   moon_defcast( L, F4L_VALUE_SLIDER_NAME, F4L_VALUATOR_NAME,
-                f4l_cast< Fl_Value_Slider, Fl_Valuator > );
+                f4l_cast_Fl_Value_Slider_Fl_Valuator );
   moon_defcast( L, F4L_VALUE_SLIDER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Value_Slider, Fl_Widget > );
+                f4l_cast_Fl_Value_Slider_Fl_Widget );
 
   f4l_new_class_table( L, "Slider", new_slider );
   f4l_new_class_table( L, "Scrollbar", new_scrollbar );

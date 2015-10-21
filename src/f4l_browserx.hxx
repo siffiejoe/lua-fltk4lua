@@ -10,10 +10,12 @@ MOON_LOCAL int f4l_browserx_index_( lua_State* L, Fl_Browser_* b,
 MOON_LOCAL int f4l_browserx_newindex_( lua_State* L, Fl_Browser_* b,
                                        char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_browserx_deselect( lua_State* L );
 MOON_LOCAL int f4l_browserx_scrollbar_left( lua_State* L );
 MOON_LOCAL int f4l_browserx_scrollbar_right( lua_State* L );
 MOON_LOCAL int f4l_browserx_sort( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_BROWSERX_METHODS \

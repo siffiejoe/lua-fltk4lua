@@ -48,16 +48,18 @@ namespace {
     }
   }
 
-
-  int widget_label_shortcut( lua_State* L ) {
-    char const* t = luaL_checkstring( L, 1 );
-    F4L_TRY {
-      lua_pushinteger( L, Fl_Widget::label_shortcut( t ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
+
+
+F4L_LUA_LLINKAGE_BEGIN
+static int widget_label_shortcut( lua_State* L ) {
+  char const* t = luaL_checkstring( L, 1 );
+  F4L_TRY {
+    lua_pushinteger( L, Fl_Widget::label_shortcut( t ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w,
@@ -260,6 +262,7 @@ MOON_LOCAL int f4l_widget_index_( lua_State* L, Fl_Widget* w,
   return 0;
 }
 
+
 MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
                                      char const* key, size_t n ) {
   using namespace std;
@@ -363,6 +366,7 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_widget_activate( lua_State* L ) {
   Fl_Widget* widget = check_widget( L, 1 );
   F4L_TRY {
@@ -572,6 +576,7 @@ MOON_LOCAL int f4l_widget_take_focus( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL void f4l_widget_setup( lua_State* L ) {

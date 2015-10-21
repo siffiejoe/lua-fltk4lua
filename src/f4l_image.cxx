@@ -3,6 +3,7 @@
 #include "f4l_enums.hxx"
 #include <cstring>
 
+
 namespace {
 
   inline Fl_Image* check_image( lua_State* L, int idx ) {
@@ -32,6 +33,7 @@ MOON_LOCAL int f4l_image_index_( lua_State* L, Fl_Image* i,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_image_color_average( lua_State* L ) {
   Fl_Image* i = check_image( L, 1 );
   Fl_Color c = f4l_check_color( L, 2 );
@@ -68,4 +70,5 @@ MOON_LOCAL int f4l_image_uncache( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
+F4L_LUA_LLINKAGE_END
 

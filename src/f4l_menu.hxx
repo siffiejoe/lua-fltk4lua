@@ -21,6 +21,7 @@ MOON_LOCAL int f4l_menu_index_( lua_State* L, Fl_Menu_* m,
 MOON_LOCAL int f4l_menu_newindex_( lua_State* L, Fl_Menu_* m,
                                    char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_menu_add( lua_State* L );
 MOON_LOCAL int f4l_menu_clear( lua_State* L );
 MOON_LOCAL int f4l_menu_clear_submenu( lua_State* L );
@@ -44,6 +45,7 @@ MOON_LOCAL int f4l_menu_menuitem_show( lua_State* L );
 MOON_LOCAL int f4l_menu_menuitem_submenu( lua_State* L );
 MOON_LOCAL int f4l_menu_menuitem_value( lua_State* L );
 MOON_LOCAL int f4l_menu_menuitem_visible( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_MENU_METHODS \

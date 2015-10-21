@@ -43,6 +43,7 @@ namespace {
     return m;
   }
 
+
   void f4l_menu_callback( Fl_Widget* w, void* ) {
     Fl_Menu_* menu = static_cast< Fl_Menu_* >( w );
     int v = menu->value();
@@ -80,6 +81,7 @@ namespace {
     }
   }
 
+
   // helper function for table_rotate
   void table_reverse( lua_State* L, int idx, int a, int b ) {
     idx = lua_absindex( L, idx );
@@ -90,6 +92,7 @@ namespace {
       lua_rawseti( L, idx, b );
     }
   }
+
 
   // similar to lua_rotate, but on table contents instead of stack!
   void table_rotate( lua_State* L, int idx, int i, int n ) {
@@ -104,6 +107,7 @@ namespace {
     }
   }
 
+
   void table_remove( lua_State* L, int idx, int i, int n ) {
     idx = lua_absindex( L, idx );
     int oldn = luaL_len( L, idx );
@@ -113,6 +117,7 @@ namespace {
       ++i;
     }
   }
+
 
   void table_shrink( lua_State* L, int idx, int newn ) {
     idx = lua_absindex( L, idx );
@@ -292,6 +297,7 @@ MOON_LOCAL int f4l_menu_index_( lua_State* L, Fl_Menu_* m,
   return 0;
 }
 
+
 MOON_LOCAL int f4l_menu_newindex_( lua_State* L, Fl_Menu_* m,
                                    char const* key, size_t n ) {
   using namespace std;
@@ -328,6 +334,7 @@ MOON_LOCAL int f4l_menu_newindex_( lua_State* L, Fl_Menu_* m,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_menu_add( lua_State* L ) {
   F4L_TRY {
     Fl_Menu_* m = check_rw_menu( L, 1 );
@@ -835,6 +842,7 @@ MOON_LOCAL int f4l_menu_menuitem_visible( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL void f4l_menu_setup( lua_State* L ) {

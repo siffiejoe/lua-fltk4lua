@@ -33,30 +33,6 @@ namespace {
     return static_cast< Fl_File_Input* >( p );
   }
 
-  int input_index( lua_State* L ) {
-    Fl_Input* i = check_input( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !f4l_input_index_( L, i, key, n ) &&
-          !f4l_widget_index_( L, i, key, n ) &&
-          !f4l_bad_property( L, F4L_INPUT_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int input_newindex( lua_State* L ) {
-    Fl_Input* i = check_input( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(f4l_input_newindex_( L, i, key, n ) ||
-             f4l_widget_newindex_( L, i, key, n ) ||
-             f4l_bad_property( L, F4L_INPUT_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
 
   int file_input_index_( lua_State* L, Fl_File_Input* fi,
                          char const* key, size_t n ) {
@@ -83,6 +59,7 @@ namespace {
     }
     return 0;
   }
+
 
   int file_input_newindex_( lua_State* L, Fl_File_Input* fi,
                             char const* key, size_t n ) {
@@ -112,48 +89,87 @@ namespace {
     return 0;
   }
 
-  int file_input_index( lua_State* L ) {
-    Fl_File_Input* fi = check_file_input( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !file_input_index_( L, fi, key, n ) &&
-          !f4l_input_index_( L, fi, key, n ) &&
-          !f4l_widget_index_( L, fi, key, n ) &&
-          !f4l_bad_property( L, F4L_FILE_INPUT_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int file_input_newindex( lua_State* L ) {
-    Fl_File_Input* fi = check_file_input( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(file_input_newindex_( L, fi, key, n ) ||
-             f4l_input_newindex_( L, fi, key, n ) ||
-             f4l_widget_newindex_( L, fi, key, n ) ||
-             f4l_bad_property( L, F4L_FILE_INPUT_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_input( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Input >( L, F4L_INPUT_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int new_file_input( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_File_Input >( L, F4L_FILE_INPUT_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
+
+
+F4L_LUA_LLINKAGE_BEGIN
+static int input_index( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !f4l_input_index_( L, i, key, n ) &&
+        !f4l_widget_index_( L, i, key, n ) &&
+        !f4l_bad_property( L, F4L_INPUT_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int input_newindex( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(f4l_input_newindex_( L, i, key, n ) ||
+           f4l_widget_newindex_( L, i, key, n ) ||
+           f4l_bad_property( L, F4L_INPUT_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int file_input_index( lua_State* L ) {
+  Fl_File_Input* fi = check_file_input( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !file_input_index_( L, fi, key, n ) &&
+        !f4l_input_index_( L, fi, key, n ) &&
+        !f4l_widget_index_( L, fi, key, n ) &&
+        !f4l_bad_property( L, F4L_FILE_INPUT_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int file_input_newindex( lua_State* L ) {
+  Fl_File_Input* fi = check_file_input( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(file_input_newindex_( L, fi, key, n ) ||
+           f4l_input_newindex_( L, fi, key, n ) ||
+           f4l_widget_newindex_( L, fi, key, n ) ||
+           f4l_bad_property( L, F4L_FILE_INPUT_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Input )
+F4L_DEF_DELETE( Fl_File_Input )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_input( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Input >( L, F4L_INPUT_NAME,
+                                f4l_delete_Fl_Input );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+static int new_file_input( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_File_Input >( L, F4L_FILE_INPUT_NAME,
+                                     f4l_delete_Fl_File_Input );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL int f4l_input_index_( lua_State* L, Fl_Input* i,
@@ -227,6 +243,7 @@ MOON_LOCAL int f4l_input_index_( lua_State* L, Fl_Input* i,
   return 0;
 }
 
+
 MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* i,
                                     char const* key, size_t n ) {
   using namespace std;
@@ -295,6 +312,7 @@ MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* i,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_input_copy( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   int cl = moon_checkint( L, 2, 0, 1 );
@@ -394,7 +412,12 @@ MOON_LOCAL int f4l_input_undo( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+F4L_LUA_LLINKAGE_END
 
+
+F4L_DEF_CAST( Fl_Input, Fl_Widget )
+F4L_DEF_CAST( Fl_File_Input, Fl_Input )
+F4L_DEF_CAST( Fl_File_Input, Fl_Widget )
 
 MOON_LOCAL void f4l_input_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -414,13 +437,13 @@ MOON_LOCAL void f4l_input_setup( lua_State* L ) {
 
   moon_defobject( L, F4L_INPUT_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_INPUT_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Input, Fl_Widget > );
+                f4l_cast_Fl_Input_Fl_Widget );
 
   moon_defobject( L, F4L_FILE_INPUT_NAME, 0, fi_methods, 0 );
   moon_defcast( L, F4L_FILE_INPUT_NAME, F4L_INPUT_NAME,
-                f4l_cast< Fl_File_Input, Fl_Input > );
+                f4l_cast_Fl_File_Input_Fl_Input );
   moon_defcast( L, F4L_FILE_INPUT_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_File_Input, Fl_Widget > );
+                f4l_cast_Fl_File_Input_Fl_Widget );
 
   f4l_new_class_table( L, "Input", new_input );
   f4l_new_class_table( L, "File_Input", new_file_input );

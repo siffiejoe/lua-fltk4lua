@@ -1,5 +1,4 @@
 #include "fltk4lua.hxx"
-#include "f4l_group.hxx"
 #include "f4l_menu.hxx"
 #include "f4l_widget.hxx"
 #include "f4l_enums.hxx"
@@ -7,12 +6,14 @@
 #include <cstring>
 #include <climits>
 
+
 namespace {
 
   inline Fl_Input_Choice* check_input_choice( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_INPUT_CHOICE_NAME );
     return static_cast< Fl_Input_Choice* >( p );
   }
+
 
   int input_choice_index_( lua_State* L, Fl_Input_Choice* ic,
                            char const* key, size_t n ) {
@@ -75,6 +76,7 @@ namespace {
     return 0;
   }
 
+
   int input_choice_newindex_( lua_State* L, Fl_Input_Choice* ic,
                               char const* key, size_t n ) {
     using namespace std;
@@ -118,104 +120,107 @@ namespace {
     return 0;
   }
 
-  int input_choice_index( lua_State* L ) {
-    Fl_Input_Choice* ic = check_input_choice( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !input_choice_index_( L, ic, key, n ) &&
-#if 0
-          !f4l_group_index_( L, ic, key, n ) &&
-#endif
-          !f4l_widget_index_( L, ic, key, n ) &&
-          !f4l_bad_property( L, F4L_INPUT_CHOICE_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int input_choice_newindex( lua_State* L ) {
-    Fl_Input_Choice* ic = check_input_choice( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(input_choice_newindex_( L, ic, key, n ) ||
-#if 0
-             f4l_group_newindex_( L, ic, key, n ) ||
-#endif
-             f4l_widget_newindex_( L, ic, key, n ) ||
-             f4l_bad_property( L, F4L_INPUT_CHOICE_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_input_choice( lua_State* L ) {
-    F4L_TRY {
-      Fl_Input_Choice* ic = NULL;
-      ic = f4l_new_widget< Fl_Input_Choice >( L, F4L_INPUT_CHOICE_NAME );
-      /* The input userdata can be created on demand in the __index
-       * metamethod, but we need the menubutton registered as a widget
-       * in the implementation of add() and clear(). */
-      f4l_new_member< Fl_Menu_Button >( L, F4L_MENU_BUTTON_NAME,
-                                        ic->menubutton(), -1 );
-      moon_setuvfield( L, -2, "menubutton" );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-
-  int input_choice_add( lua_State* L ) {
-    Fl_Input_Choice* ic = check_input_choice( L, 1 );
-    luaL_checkstring( L, 2 );
-    lua_settop( L, 2 );
-    f4l_push_widget( L, ic->menubutton() );
-    lua_replace( L, 1 );
-    /* Forward to f4l_menu_add(). A similar thing happens in
-     * Fl_Input_Choice::add() anyway, but this way we don't have
-     * to duplicate the book keeping code. */
-    f4l_menu_add( L );
-    return 0;
-  }
-
-
-  int input_choice_clear( lua_State* L ) {
-    Fl_Input_Choice* ic = check_input_choice( L, 1 );
-    lua_settop( L, 1 );
-    f4l_push_widget( L, ic->menubutton() );
-    lua_replace( L, 1 );
-    /* Forward to f4l_menu_clear(). A similar thing happens in
-     * Fl_Input_Choice::clear() anyway, but this way we don't have
-     * to duplicate the book keeping code. */
-    return f4l_menu_clear( L );
-  }
-
-
-  int input_choice_clear_changed( lua_State* L ) {
-    Fl_Input_Choice* ic = check_input_choice( L, 1 );
-    F4L_TRY {
-      ic->clear_changed();
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-
-  int input_choice_set_changed( lua_State* L ) {
-    Fl_Input_Choice* ic = check_input_choice( L, 1 );
-    F4L_TRY {
-      ic->set_changed();
-    } F4L_CATCH( L );
-    return 0;
-  }
-
 } // anonymous namespace
 
+
+F4L_LUA_LLINKAGE_BEGIN
+static int input_choice_index( lua_State* L ) {
+  Fl_Input_Choice* ic = check_input_choice( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !input_choice_index_( L, ic, key, n ) &&
+        !f4l_widget_index_( L, ic, key, n ) &&
+        !f4l_bad_property( L, F4L_INPUT_CHOICE_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int input_choice_newindex( lua_State* L ) {
+  Fl_Input_Choice* ic = check_input_choice( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(input_choice_newindex_( L, ic, key, n ) ||
+           f4l_widget_newindex_( L, ic, key, n ) ||
+           f4l_bad_property( L, F4L_INPUT_CHOICE_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int input_choice_add( lua_State* L ) {
+  Fl_Input_Choice* ic = check_input_choice( L, 1 );
+  luaL_checkstring( L, 2 );
+  lua_settop( L, 2 );
+  f4l_push_widget( L, ic->menubutton() );
+  lua_replace( L, 1 );
+  /* Forward to f4l_menu_add(). A similar thing happens in
+   * Fl_Input_Choice::add() anyway, but this way we don't have
+   * to duplicate the book keeping code. */
+  f4l_menu_add( L );
+  return 0;
+}
+
+
+static int input_choice_clear( lua_State* L ) {
+  Fl_Input_Choice* ic = check_input_choice( L, 1 );
+  lua_settop( L, 1 );
+  f4l_push_widget( L, ic->menubutton() );
+  lua_replace( L, 1 );
+  /* Forward to f4l_menu_clear(). A similar thing happens in
+   * Fl_Input_Choice::clear() anyway, but this way we don't have
+   * to duplicate the book keeping code. */
+  return f4l_menu_clear( L );
+}
+
+
+static int input_choice_clear_changed( lua_State* L ) {
+  Fl_Input_Choice* ic = check_input_choice( L, 1 );
+  F4L_TRY {
+    ic->clear_changed();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int input_choice_set_changed( lua_State* L ) {
+  Fl_Input_Choice* ic = check_input_choice( L, 1 );
+  F4L_TRY {
+    ic->set_changed();
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Input_Choice )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_input_choice( lua_State* L ) {
+  F4L_TRY {
+    Fl_Input_Choice* ic = NULL;
+    ic = f4l_new_widget< Fl_Input_Choice >( L, F4L_INPUT_CHOICE_NAME,
+                                            f4l_delete_Fl_Input_Choice );
+    /* The input userdata can be created on demand in the __index
+     * metamethod, but we need the menubutton registered as a widget
+     * in the implementation of add() and clear(). */
+    f4l_new_member< Fl_Menu_Button >( L, F4L_MENU_BUTTON_NAME,
+                                      ic->menubutton(), -1 );
+    moon_setuvfield( L, -2, "menubutton" );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_CAST( Fl_Input_Choice, Fl_Widget )
 
 MOON_LOCAL void f4l_input_choice_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
-#if 0
-    F4L_GROUP_METHODS,
-#endif
     { "add", input_choice_add },
     { "clear", input_choice_clear },
     { "clear_changed", input_choice_clear_changed },
@@ -225,12 +230,8 @@ MOON_LOCAL void f4l_input_choice_setup( lua_State* L ) {
     { NULL, NULL }
   };
   moon_defobject( L, F4L_INPUT_CHOICE_NAME, 0, methods, 0 );
-#if 0
-  moon_defcast( L, F4L_INPUT_CHOICE_NAME, F4L_GROUP_NAME,
-                f4l_cast< Fl_Input_Choice, Fl_Group > );
-#endif
   moon_defcast( L, F4L_INPUT_CHOICE_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Input_Choice, Fl_Widget > );
+                f4l_cast_Fl_Input_Choice_Fl_Widget );
   f4l_new_class_table( L, "Input_Choice", new_input_choice );
 }
 

@@ -13,12 +13,14 @@ MOON_LOCAL int f4l_valuator_index_( lua_State* L, Fl_Valuator* v,
 MOON_LOCAL int f4l_valuator_newindex_( lua_State* L, Fl_Valuator* v,
                                        char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_valuator_bounds( lua_State* L );
 MOON_LOCAL int f4l_valuator_clamp( lua_State* L );
 MOON_LOCAL int f4l_valuator_format( lua_State* L );
 MOON_LOCAL int f4l_valuator_increment( lua_State* L );
 MOON_LOCAL int f4l_valuator_range( lua_State* L );
 MOON_LOCAL int f4l_valuator_round( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_VALUATOR_METHODS \

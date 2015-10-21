@@ -13,8 +13,10 @@ MOON_LOCAL int f4l_slider_index_( lua_State* L, Fl_Slider* s,
 MOON_LOCAL int f4l_slider_newindex_( lua_State* L, Fl_Slider* s,
                                      char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_slider_bounds( lua_State* L );
 MOON_LOCAL int f4l_slider_scrollvalue( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_SLIDER_METHODS \

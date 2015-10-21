@@ -16,9 +16,11 @@ MOON_LOCAL int f4l_button_index_( lua_State* L, Fl_Button* b,
 MOON_LOCAL int f4l_button_newindex_( lua_State* L, Fl_Button* b,
                                      char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_button_clear( lua_State* L );
 MOON_LOCAL int f4l_button_set( lua_State* L );
 MOON_LOCAL int f4l_button_setonly( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_BUTTON_METHODS \

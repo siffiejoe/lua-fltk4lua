@@ -8,8 +8,8 @@
 
 /* Custom flag to use in moon_object_headers to indicate that the
  * widget is running a callback (this is used by the menu code,
- * which prevents you from modifying the menu items when during
- * the callback). */
+ * which prevents you from modifying the menu items during the
+ * callback). */
 #define F4L_CALLBACK_ACTIVE (0x80u)
 
 
@@ -28,7 +28,8 @@ MOON_LOCAL int f4l_our_widget( lua_State* L, Fl_Widget* w );
  * it makes sense to refactor creation of the widget userdata into
  * a helper function: */
 template< typename T >
-MOON_LOCAL T* f4l_new_widget( lua_State* L, char const* tname ) {
+MOON_LOCAL T* f4l_new_widget( lua_State* L, char const* tname,
+                              moon_object_destructor destructor ) {
   int has_properties = 0;
   if( lua_gettop( L ) == 2 && lua_istable( L, 2 ) ) {
     has_properties = 1;
@@ -43,7 +44,7 @@ MOON_LOCAL T* f4l_new_widget( lua_State* L, char const* tname ) {
   int w = moon_checkint( L, 3, 0, INT_MAX );
   int h = moon_checkint( L, 4, 0, INT_MAX );
   char const* label = luaL_optstring( L, 5, NULL );
-  void** p = moon_newpointer( L, tname, f4l_delete< T > );
+  void** p = moon_newpointer( L, tname, destructor );
   /* widgets need a uservalue table to store the callback function
    * and for keeping references to child widgets */
   lua_newtable( L );
@@ -57,7 +58,7 @@ MOON_LOCAL T* f4l_new_widget( lua_State* L, char const* tname ) {
   T* widget = new T( x, y, w, h, label );
   *p = static_cast< void* >( widget );
   /* add the new widget to the lightuserdata -> full userdata mapping
-   * in the registry, set the Lua thread pointer as (FLTK) user value
+   * in the registry, set the Lua thread pointer as (FLTK) user data
    * for the callbacks, and put a reference to this widget into the
    * (Lua) uservalue table of the parent group widget (if any) */
   f4l_register_widget( L, widget );
@@ -90,6 +91,7 @@ MOON_LOCAL int f4l_widget_index_( lua_State* L, Fl_Widget* w,
 MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
                                      char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_widget_activate( lua_State* L );
 MOON_LOCAL int f4l_widget_clear_changed( lua_State* L );
 MOON_LOCAL int f4l_widget_clear_damage( lua_State* L );
@@ -112,6 +114,7 @@ MOON_LOCAL int f4l_widget_set_visible_focus( lua_State* L );
 MOON_LOCAL int f4l_widget_show( lua_State* L );
 MOON_LOCAL int f4l_widget_size( lua_State* L );
 MOON_LOCAL int f4l_widget_take_focus( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_WIDGET_METHODS \

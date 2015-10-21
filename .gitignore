@@ -1,3 +1,7 @@
+# data files for some example scripts
+examples/blast.xpm
+examples/browser.cxx
+
 # docco output directory
 #docs/
 

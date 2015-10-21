@@ -1,7 +1,6 @@
 #include "fltk4lua.hxx"
 #include "f4l_browser.hxx"
 #include "f4l_browserx.hxx"
-#include "f4l_group.hxx"
 #include "f4l_widget.hxx"
 #include "f4l_enums.hxx"
 #include <cstring>
@@ -24,47 +23,51 @@ namespace {
     return static_cast< Fl_Browser* >( p );
   }
 
-  int browser_index( lua_State* L ) {
-    Fl_Browser* b = check_browser( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !f4l_browser_index_( L, b, key, n ) &&
-          !f4l_browserx_index_( L, b, key, n ) &&
-#if 0
-          !f4l_group_index_( L, b, key, n ) &&
-#endif
-          !f4l_widget_index_( L, b, key, n ) &&
-          !f4l_bad_property( L, F4L_BROWSER_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int browser_newindex( lua_State* L ) {
-    Fl_Browser* b = check_browser( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(f4l_browser_newindex_( L, b, key, n ) ||
-             f4l_browserx_newindex_( L, b, key, n ) ||
-#if 0
-             f4l_group_newindex_( L, b, key, n ) ||
-#endif
-             f4l_widget_newindex_( L, b, key, n ) ||
-             f4l_bad_property( L, F4L_BROWSER_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_browser( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Browser >( L, F4L_BROWSER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
+
+
+F4L_LUA_LLINKAGE_BEGIN
+static int browser_index( lua_State* L ) {
+  Fl_Browser* b = check_browser( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !f4l_browser_index_( L, b, key, n ) &&
+        !f4l_browserx_index_( L, b, key, n ) &&
+        !f4l_widget_index_( L, b, key, n ) &&
+        !f4l_bad_property( L, F4L_BROWSER_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int browser_newindex( lua_State* L ) {
+  Fl_Browser* b = check_browser( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(f4l_browser_newindex_( L, b, key, n ) ||
+           f4l_browserx_newindex_( L, b, key, n ) ||
+           f4l_widget_newindex_( L, b, key, n ) ||
+           f4l_bad_property( L, F4L_BROWSER_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Browser )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_browser( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Browser >( L, F4L_BROWSER_NAME,
+                                  f4l_delete_Fl_Browser );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL int f4l_browser_index_( lua_State* L, Fl_Browser* b,
@@ -120,6 +123,7 @@ MOON_LOCAL int f4l_browser_index_( lua_State* L, Fl_Browser* b,
   }
   return 0;
 }
+
 
 MOON_LOCAL int f4l_browser_newindex_( lua_State* L, Fl_Browser* b,
                                       char const* key, size_t n ) {
@@ -192,6 +196,7 @@ MOON_LOCAL int f4l_browser_newindex_( lua_State* L, Fl_Browser* b,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_browser_add( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   char const* s = luaL_optstring( L, 2, NULL );
@@ -382,14 +387,15 @@ MOON_LOCAL int f4l_browser_visible( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+F4L_LUA_LLINKAGE_END
 
+
+F4L_DEF_CAST( Fl_Browser, Fl_Browser_ )
+F4L_DEF_CAST( Fl_Browser, Fl_Widget )
 
 MOON_LOCAL void f4l_browser_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
-#if 0
-    F4L_GROUP_METHODS,
-#endif
     F4L_BROWSERX_METHODS,
     F4L_BROWSER_METHODS,
     { "__index", browser_index },
@@ -398,13 +404,9 @@ MOON_LOCAL void f4l_browser_setup( lua_State* L ) {
   };
   moon_defobject( L, F4L_BROWSER_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_BROWSER_NAME, F4L_BROWSERX_NAME,
-                f4l_cast< Fl_Browser, Fl_Browser_ > );
-#if 0
-  moon_defcast( L, F4L_BROWSER_NAME, F4L_GROUP_NAME,
-                f4l_cast< Fl_Browser, Fl_Group > );
-#endif
+                f4l_cast_Fl_Browser_Fl_Browser_ );
   moon_defcast( L, F4L_BROWSER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Browser, Fl_Widget > );
+                f4l_cast_Fl_Browser_Fl_Widget );
   f4l_new_class_table( L, "Browser", new_browser );
 }
 

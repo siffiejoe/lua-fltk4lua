@@ -1,5 +1,4 @@
 #include "fltk4lua.hxx"
-#include "f4l_group.hxx"
 #include "f4l_widget.hxx"
 #include "f4l_enums.hxx"
 #include <FL/Fl_Spinner.H>
@@ -20,6 +19,7 @@ namespace {
     void* p = moon_checkobject( L, idx, F4L_SPINNER_NAME );
     return static_cast< Fl_Spinner* >( p );
   }
+
 
   int spinner_index_( lua_State* L, Fl_Spinner* sp,
                       char const* key, size_t n ) {
@@ -77,6 +77,7 @@ namespace {
     return 0;
   }
 
+
   int spinner_newindex_( lua_State* L, Fl_Spinner* sp,
                          char const* key, size_t n ) {
     using namespace std;
@@ -133,76 +134,75 @@ namespace {
     return 0;
   }
 
-  int spinner_index( lua_State* L ) {
-    Fl_Spinner* sp = check_spinner( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !spinner_index_( L, sp, key, n ) &&
-#if 0
-          !f4l_group_index_( L, sp, key, n ) &&
-#endif
-          !f4l_widget_index_( L, sp, key, n ) &&
-          !f4l_bad_property( L, F4L_SPINNER_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int spinner_newindex( lua_State* L ) {
-    Fl_Spinner* sp = check_spinner( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(spinner_newindex_( L, sp, key, n ) ||
-#if 0
-             f4l_group_newindex_( L, sp, key, n ) ||
-#endif
-             f4l_widget_newindex_( L, sp, key, n ) ||
-             f4l_bad_property( L, F4L_SPINNER_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_spinner( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Spinner >( L, F4L_SPINNER_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-
-  int spinner_range( lua_State* L ) {
-    Fl_Spinner* sp = check_spinner( L, 1 );
-    double a = luaL_checknumber( L, 2 );
-    double b = luaL_checknumber( L, 3 );
-    F4L_TRY {
-      sp->range( a, b );
-    } F4L_CATCH( L );
-    return 0;
-  }
-
 } // anonymous namespace
 
+
+F4L_LUA_LLINKAGE_BEGIN
+static int spinner_index( lua_State* L ) {
+  Fl_Spinner* sp = check_spinner( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !spinner_index_( L, sp, key, n ) &&
+        !f4l_widget_index_( L, sp, key, n ) &&
+        !f4l_bad_property( L, F4L_SPINNER_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int spinner_newindex( lua_State* L ) {
+  Fl_Spinner* sp = check_spinner( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(spinner_newindex_( L, sp, key, n ) ||
+           f4l_widget_newindex_( L, sp, key, n ) ||
+           f4l_bad_property( L, F4L_SPINNER_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int spinner_range( lua_State* L ) {
+  Fl_Spinner* sp = check_spinner( L, 1 );
+  double a = luaL_checknumber( L, 2 );
+  double b = luaL_checknumber( L, 3 );
+  F4L_TRY {
+    sp->range( a, b );
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Spinner )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_spinner( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Spinner >( L, F4L_SPINNER_NAME,
+                                  f4l_delete_Fl_Spinner );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_CAST( Fl_Spinner, Fl_Widget )
 
 MOON_LOCAL void f4l_spinner_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
     F4L_WIDGET_METHODS,
-#if 0
-    F4L_GROUP_METHODS,
-#endif
     { "range", spinner_range },
     { "__index", spinner_index },
     { "__newindex", spinner_newindex },
     { NULL, NULL }
   };
   moon_defobject( L, F4L_SPINNER_NAME, 0, methods, 0 );
-#if 0
-  moon_defcast( L, F4L_SPINNER_NAME, F4L_GROUP_NAME,
-                f4l_cast< Fl_Spinner, Fl_Group > );
-#endif
   moon_defcast( L, F4L_SPINNER_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Spinner, Fl_Widget > );
+                f4l_cast_Fl_Spinner_Fl_Widget );
   f4l_new_class_table( L, "Spinner", new_spinner );
 }
 

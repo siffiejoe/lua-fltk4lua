@@ -6,7 +6,7 @@ local b = fl.Box( 10, 10, 300, 300, [[
 MINIMUM UPDATE TEST
 
 The slider on the right purposely
-draws outside ids boundaries.
+draws outside its boundaries.
 Moving it should leave old copies
 of the label.  These copies should
 *not* be erased by any actions

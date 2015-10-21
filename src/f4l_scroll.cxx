@@ -24,6 +24,7 @@ namespace {
     return static_cast< Fl_Scroll* >( p );
   }
 
+
   int scroll_index_( lua_State* L, Fl_Scroll* s,
                      char const* key, size_t n ) {
     using namespace std;
@@ -72,6 +73,7 @@ namespace {
     return 0;
   }
 
+
   int scroll_newindex_( lua_State* L, Fl_Scroll* s,
                         char const* key, size_t n ) {
     using namespace std;
@@ -92,83 +94,96 @@ namespace {
     return 0;
   }
 
-  int scroll_index( lua_State* L ) {
-    Fl_Scroll* s = check_scroll( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !scroll_index_( L, s, key, n ) &&
-          !f4l_group_index_( L, s, key, n ) &&
-          !f4l_widget_index_( L, s, key, n ) &&
-          !f4l_bad_property( L, F4L_SCROLL_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int scroll_newindex( lua_State* L ) {
-    Fl_Scroll* s = check_scroll( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(scroll_newindex_( L, s, key, n ) ||
-             f4l_group_newindex_( L, s, key, n ) ||
-             f4l_widget_newindex_( L, s, key, n ) ||
-             f4l_bad_property( L, F4L_SCROLL_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_scroll( lua_State* L ) {
-    F4L_TRY {
-      Fl_Scroll* s = f4l_new_widget< Fl_Scroll >( L, F4L_SCROLL_NAME );
-      /* The __index handler would create those objects on demand,
-       * but the scrollbars are stored in the group's children, so an
-       * error could be thrown if they are encountered there before
-       * having a corresponding userdata registered! */
-      f4l_new_member< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
-                                      &s->hscrollbar, -1 );
-      moon_setuvfield( L, -2, "hscrollbar" );
-      f4l_new_member< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
-                                      &s->scrollbar, -1 );
-      moon_setuvfield( L, -2, "scrollbar" );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-
-  int scroll_clear( lua_State* L ) {
-    Fl_Scroll* s = check_scroll( L, 1 );
-    lua_getuservalue( L, 1 );
-    F4L_TRY {
-      int n = s->children();
-      for( int i = n; i > 0; --i ) {
-        Fl_Widget* w = s->child( i-1 );
-        s->remove( i-1 );
-        lua_pushlightuserdata( L, static_cast< void* >( w ) );
-        lua_pushnil( L );
-        lua_rawset( L, -3 );
-      }
-      s->add( s->hscrollbar );
-      s->add( s->scrollbar );
-    } F4L_CATCH( L );
-    lua_pop( L, 1 );
-    return 0;
-  }
-
-
-  int scroll_scroll_to( lua_State* L ) {
-    Fl_Scroll* s = check_scroll( L, 1 );
-    int w = moon_checkint( L, 2, 0, INT_MAX );
-    int h = moon_checkint( L, 3, 0, INT_MAX );
-    F4L_TRY {
-      s->scroll_to( w, h );
-    } F4L_CATCH( L );
-    return 0;
-  }
-
 } // anonymous namespace
 
+
+F4L_LUA_LLINKAGE_BEGIN
+static int scroll_index( lua_State* L ) {
+  Fl_Scroll* s = check_scroll( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !scroll_index_( L, s, key, n ) &&
+        !f4l_group_index_( L, s, key, n ) &&
+        !f4l_widget_index_( L, s, key, n ) &&
+        !f4l_bad_property( L, F4L_SCROLL_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int scroll_newindex( lua_State* L ) {
+  Fl_Scroll* s = check_scroll( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(scroll_newindex_( L, s, key, n ) ||
+           f4l_group_newindex_( L, s, key, n ) ||
+           f4l_widget_newindex_( L, s, key, n ) ||
+           f4l_bad_property( L, F4L_SCROLL_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int scroll_clear( lua_State* L ) {
+  Fl_Scroll* s = check_scroll( L, 1 );
+  lua_getuservalue( L, 1 );
+  F4L_TRY {
+    int n = s->children();
+    for( int i = n; i > 0; --i ) {
+      Fl_Widget* w = s->child( i-1 );
+      s->remove( i-1 );
+      lua_pushlightuserdata( L, static_cast< void* >( w ) );
+      lua_pushnil( L );
+      lua_rawset( L, -3 );
+    }
+    s->add( s->hscrollbar );
+    s->add( s->scrollbar );
+  } F4L_CATCH( L );
+  lua_pop( L, 1 );
+  return 0;
+}
+
+
+static int scroll_scroll_to( lua_State* L ) {
+  Fl_Scroll* s = check_scroll( L, 1 );
+  int w = moon_checkint( L, 2, 0, INT_MAX );
+  int h = moon_checkint( L, 3, 0, INT_MAX );
+  F4L_TRY {
+    s->scroll_to( w, h );
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Scroll )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_scroll( lua_State* L ) {
+  F4L_TRY {
+    Fl_Scroll* s = f4l_new_widget< Fl_Scroll >( L, F4L_SCROLL_NAME,
+                                                f4l_delete_Fl_Scroll );
+    /* The __index handler would create those objects on demand,
+     * but the scrollbars are stored in the group's children, so an
+     * error could be thrown if they are encountered there before
+     * having a corresponding userdata registered! */
+    f4l_new_member< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
+                                    &s->hscrollbar, -1 );
+    moon_setuvfield( L, -2, "hscrollbar" );
+    f4l_new_member< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
+                                    &s->scrollbar, -1 );
+    moon_setuvfield( L, -2, "scrollbar" );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_CAST( Fl_Scroll, Fl_Group )
+F4L_DEF_CAST( Fl_Scroll, Fl_Widget )
 
 MOON_LOCAL void f4l_scroll_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -182,9 +197,9 @@ MOON_LOCAL void f4l_scroll_setup( lua_State* L ) {
   };
   moon_defobject( L, F4L_SCROLL_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_SCROLL_NAME, F4L_GROUP_NAME,
-                f4l_cast< Fl_Scroll, Fl_Group > );
+                f4l_cast_Fl_Scroll_Fl_Group );
   moon_defcast( L, F4L_SCROLL_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Scroll, Fl_Widget > );
+                f4l_cast_Fl_Scroll_Fl_Widget );
   f4l_new_class_table( L, "Scroll", new_scroll );
 }
 

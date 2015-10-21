@@ -10,6 +10,7 @@ MOON_LOCAL int f4l_browser_index_( lua_State* L, Fl_Browser* b,
 MOON_LOCAL int f4l_browser_newindex_( lua_State* L, Fl_Browser* b,
                                       char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_browser_add( lua_State* L );
 MOON_LOCAL int f4l_browser_clear( lua_State* L );
 MOON_LOCAL int f4l_browser_displayed( lua_State* L );
@@ -26,6 +27,7 @@ MOON_LOCAL int f4l_browser_size( lua_State* L );
 MOON_LOCAL int f4l_browser_swap( lua_State* L );
 MOON_LOCAL int f4l_browser_text( lua_State* L );
 MOON_LOCAL int f4l_browser_visible( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_BROWSER_METHODS \

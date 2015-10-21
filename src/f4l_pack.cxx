@@ -19,6 +19,7 @@ namespace {
     return static_cast< Fl_Pack* >( p );
   }
 
+
   int pack_index_( lua_State* L, Fl_Pack* p,
                    char const* key, size_t n ) {
     using namespace std;
@@ -45,6 +46,7 @@ namespace {
     return 0;
   }
 
+
   int pack_newindex_( lua_State* L, Fl_Pack* p,
                       char const* key, size_t n ) {
     using namespace std;
@@ -65,42 +67,55 @@ namespace {
     return 0;
   }
 
-  int pack_index( lua_State* L ) {
-    Fl_Pack* p = check_pack( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !pack_index_( L, p, key, n ) &&
-          !f4l_group_index_( L, p, key, n ) &&
-          !f4l_widget_index_( L, p, key, n ) &&
-          !f4l_bad_property( L, F4L_PACK_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int pack_newindex( lua_State* L ) {
-    Fl_Pack* p = check_pack( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(pack_newindex_( L, p, key, n ) ||
-             f4l_group_newindex_( L, p, key, n ) ||
-             f4l_widget_newindex_( L, p, key, n ) ||
-             f4l_bad_property( L, F4L_PACK_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_pack( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Pack >( L, F4L_PACK_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
 
+
+F4L_LUA_LLINKAGE_BEGIN
+static int pack_index( lua_State* L ) {
+  Fl_Pack* p = check_pack( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !pack_index_( L, p, key, n ) &&
+        !f4l_group_index_( L, p, key, n ) &&
+        !f4l_widget_index_( L, p, key, n ) &&
+        !f4l_bad_property( L, F4L_PACK_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int pack_newindex( lua_State* L ) {
+  Fl_Pack* p = check_pack( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(pack_newindex_( L, p, key, n ) ||
+           f4l_group_newindex_( L, p, key, n ) ||
+           f4l_widget_newindex_( L, p, key, n ) ||
+           f4l_bad_property( L, F4L_PACK_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Pack )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_pack( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Pack >( L, F4L_PACK_NAME,
+                               f4l_delete_Fl_Pack );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_CAST( Fl_Pack, Fl_Group )
+F4L_DEF_CAST( Fl_Pack, Fl_Widget )
 
 MOON_LOCAL void f4l_pack_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
@@ -112,9 +127,9 @@ MOON_LOCAL void f4l_pack_setup( lua_State* L ) {
   };
   moon_defobject( L, F4L_PACK_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_PACK_NAME, F4L_GROUP_NAME,
-                f4l_cast< Fl_Pack, Fl_Group > );
+                f4l_cast_Fl_Pack_Fl_Group );
   moon_defcast( L, F4L_PACK_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Pack, Fl_Widget > );
+                f4l_cast_Fl_Pack_Fl_Widget );
   f4l_new_class_table( L, "Pack", new_pack );
 }
 

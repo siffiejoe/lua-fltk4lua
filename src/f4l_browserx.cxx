@@ -23,17 +23,19 @@ namespace {
     return static_cast< Fl_Browser_* >( p );
   }
 
-
-  int browserx_deselect_( lua_State* L ) {
-    Fl_Browser_* b = check_browserx( L, 1 );
-    int cb = lua_toboolean( L, 2 );
-    F4L_TRY {
-      lua_pushboolean( L, b->deselect( cb ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
 } // anonymous namespace
+
+
+F4L_LUA_LLINKAGE_BEGIN
+static int browserx_deselect_( lua_State* L ) {
+  Fl_Browser_* b = check_browserx( L, 1 );
+  int cb = lua_toboolean( L, 2 );
+  F4L_TRY {
+    lua_pushboolean( L, b->deselect( cb ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL int f4l_browserx_index_( lua_State* L, Fl_Browser_* b,
@@ -83,6 +85,7 @@ MOON_LOCAL int f4l_browserx_index_( lua_State* L, Fl_Browser_* b,
   return 0;
 }
 
+
 MOON_LOCAL int f4l_browserx_newindex_( lua_State* L, Fl_Browser_* b,
                                        char const* key, size_t n ) {
   using namespace std;
@@ -131,6 +134,7 @@ MOON_LOCAL int f4l_browserx_newindex_( lua_State* L, Fl_Browser_* b,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_browserx_deselect( lua_State* L ) {
   F4L_CALL_PROTECTED( L, browserx_deselect_, 1 );
   return 1;
@@ -172,4 +176,5 @@ MOON_LOCAL int f4l_browserx_sort( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
+F4L_LUA_LLINKAGE_END
 

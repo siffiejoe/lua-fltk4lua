@@ -4,6 +4,7 @@
 #include <cstring>
 #include <climits>
 
+
 namespace {
 
   inline Fl_Group* check_group( lua_State* L, int idx ) {
@@ -16,52 +17,63 @@ namespace {
     return static_cast< Fl_Widget* >( p );
   }
 
-  int group_index( lua_State* L ) {
-    Fl_Group* g = check_group( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      if( !f4l_group_index_( L, g, key, n ) &&
-          !f4l_widget_index_( L, g, key, n ) &&
-          !f4l_bad_property( L, F4L_GROUP_NAME, key ) )
-        lua_pushnil( L );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int group_newindex( lua_State* L ) {
-    Fl_Group* g = check_group( L, 1 );
-    size_t n = 0;
-    char const* key = luaL_checklstring( L, 2, &n );
-    F4L_TRY {
-      (void)(f4l_group_newindex_( L, g, key, n ) ||
-             f4l_widget_newindex_( L, g, key, n ) ||
-             f4l_bad_property( L, F4L_GROUP_NAME, key ));
-    } F4L_CATCH( L );
-    return 0;
-  }
-
-  int new_group( lua_State* L ) {
-    F4L_TRY {
-      f4l_new_widget< Fl_Group >( L, F4L_GROUP_NAME );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int group_current( lua_State* L ) {
-    F4L_TRY {
-      if( lua_gettop( L ) > 0 ) {
-        Fl_Group* g = luaL_opt( L, check_group, 1, NULL );
-        Fl_Group::current( g );
-        return 0;
-      } else {
-        f4l_push_widget( L, Fl_Group::current() );
-        return 1;
-      }
-    } F4L_CATCH( L );
-  }
-
 } // anonymous namespace
+
+
+F4L_LUA_LLINKAGE_BEGIN
+static int group_index( lua_State* L ) {
+  Fl_Group* g = check_group( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    if( !f4l_group_index_( L, g, key, n ) &&
+        !f4l_widget_index_( L, g, key, n ) &&
+        !f4l_bad_property( L, F4L_GROUP_NAME, key ) )
+      lua_pushnil( L );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int group_newindex( lua_State* L ) {
+  Fl_Group* g = check_group( L, 1 );
+  size_t n = 0;
+  char const* key = luaL_checklstring( L, 2, &n );
+  F4L_TRY {
+    (void)(f4l_group_newindex_( L, g, key, n ) ||
+           f4l_widget_newindex_( L, g, key, n ) ||
+           f4l_bad_property( L, F4L_GROUP_NAME, key ));
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int group_current( lua_State* L ) {
+  F4L_TRY {
+    if( lua_gettop( L ) > 0 ) {
+      Fl_Group* g = luaL_opt( L, check_group, 1, NULL );
+      Fl_Group::current( g );
+      return 0;
+    } else {
+      f4l_push_widget( L, Fl_Group::current() );
+      return 1;
+    }
+  } F4L_CATCH( L );
+}
+F4L_LUA_LLINKAGE_END
+
+
+F4L_DEF_DELETE( Fl_Group )
+
+F4L_LUA_LLINKAGE_BEGIN
+static int new_group( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Group >( L, F4L_GROUP_NAME,
+                                f4l_delete_Fl_Group );
+  } F4L_CATCH( L );
+  return 1;
+}
+F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL int f4l_group_index_( lua_State* L, Fl_Group* g,
@@ -90,6 +102,7 @@ MOON_LOCAL int f4l_group_index_( lua_State* L, Fl_Group* g,
   return 0;
 }
 
+
 MOON_LOCAL int f4l_group_newindex_( lua_State* L, Fl_Group* g,
                                     char const* key, size_t n ) {
   using namespace std;
@@ -117,6 +130,7 @@ MOON_LOCAL int f4l_group_newindex_( lua_State* L, Fl_Group* g,
 }
 
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_group_add( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
   Fl_Widget* widget = check_widget( L, 2 );
@@ -285,7 +299,10 @@ MOON_LOCAL int f4l_group_remove( lua_State* L ) {
   }
   return 0;
 }
+F4L_LUA_LLINKAGE_END
 
+
+F4L_DEF_CAST( Fl_Group, Fl_Widget )
 
 MOON_LOCAL void f4l_group_setup( lua_State* L ) {
   luaL_Reg const classmethods[] = {
@@ -301,7 +318,7 @@ MOON_LOCAL void f4l_group_setup( lua_State* L ) {
   };
   moon_defobject( L, F4L_GROUP_NAME, 0, methods, 0 );
   moon_defcast( L, F4L_GROUP_NAME, F4L_WIDGET_NAME,
-                f4l_cast< Fl_Group, Fl_Widget > );
+                f4l_cast_Fl_Group_Fl_Widget );
   f4l_new_class_table( L, "Group", new_group, classmethods );
 }
 

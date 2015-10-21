@@ -13,6 +13,7 @@ MOON_LOCAL int f4l_input_index_( lua_State* L, Fl_Input* g,
 MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* g,
                                     char const* key, size_t n );
 
+F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_input_copy( lua_State* L );
 MOON_LOCAL int f4l_input_copy_cuts( lua_State* L );
 MOON_LOCAL int f4l_input_cut( lua_State* L );
@@ -21,6 +22,7 @@ MOON_LOCAL int f4l_input_insert( lua_State* L );
 MOON_LOCAL int f4l_input_replace( lua_State* L );
 MOON_LOCAL int f4l_input_size( lua_State* L );
 MOON_LOCAL int f4l_input_undo( lua_State* L );
+F4L_LUA_LLINKAGE_END
 
 
 #define F4L_INPUT_METHODS \

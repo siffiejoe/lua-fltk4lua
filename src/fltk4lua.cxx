@@ -3,132 +3,145 @@
 #include <FL/filename.H>
 
 
-namespace {
+F4L_LUA_LLINKAGE_BEGIN
+static int f4l_run_( lua_State* L ) {
+  F4L_TRY {
+    lua_pushinteger( L, Fl::run() );
+  } F4L_CATCH( L );
+  return 1;
+}
 
-  int f4l_run_( lua_State* L ) {
-    F4L_TRY {
-      lua_pushinteger( L, Fl::run() );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int f4l_run( lua_State* L ) {
-    F4L_CALL_PROTECTED( L, f4l_run_, 1 );
-    return 1;
-  }
-
-
-  int f4l_wait_( lua_State* L ) {
-    lua_Number timeout = luaL_optnumber( L, 1, 0 );
-    luaL_argcheck( L, timeout >= 0, 1, "timeout must be positive" );
-    F4L_TRY {
-      lua_pushboolean( L, Fl::wait( timeout ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-  int f4l_wait( lua_State* L ) {
-    F4L_CALL_PROTECTED( L, f4l_wait_, 1 );
-    return 1;
-  }
+static int f4l_run( lua_State* L ) {
+  F4L_CALL_PROTECTED( L, f4l_run_, 1 );
+  return 1;
+}
 
 
-  int f4l_check_( lua_State* L ) {
-    F4L_TRY {
-      lua_pushboolean( L, Fl::check() );
-    } F4L_CATCH( L );
-    return 1;
-  }
+static int f4l_wait_( lua_State* L ) {
+  lua_Number timeout = luaL_optnumber( L, 1, 0 );
+  luaL_argcheck( L, timeout >= 0, 1, "timeout must be positive" );
+  F4L_TRY {
+    lua_pushboolean( L, Fl::wait( timeout ) );
+  } F4L_CATCH( L );
+  return 1;
+}
 
-  int f4l_check( lua_State* L ) {
-    F4L_CALL_PROTECTED( L, f4l_check_, 1 );
-    return 1;
-  }
-
-
-  int f4l_args( lua_State* L ) {
-    int argc = 0;
-    luaL_checktype( L, 1, LUA_TTABLE );
-    char** argv = f4l_push_argv( L, 1, &argc );
-    F4L_TRY {
-      Fl::args( argc, argv );
-    } F4L_CATCH( L );
-    return 0;
-  }
+static int f4l_wait( lua_State* L ) {
+  F4L_CALL_PROTECTED( L, f4l_wait_, 1 );
+  return 1;
+}
 
 
-  int f4l_get_system_colors( lua_State* L ) {
-    F4L_TRY {
-      Fl::get_system_colors();
-    } F4L_CATCH( L );
-    return 0;
-  }
+static int f4l_check_( lua_State* L ) {
+  F4L_TRY {
+    lua_pushboolean( L, Fl::check() );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+static int f4l_check( lua_State* L ) {
+  F4L_CALL_PROTECTED( L, f4l_check_, 1 );
+  return 1;
+}
 
 
-  int f4l_scheme( lua_State* L ) {
-    F4L_TRY {
-      if( lua_gettop( L ) > 0 ) {
-        size_t len = 0;
-        char const* s = luaL_optlstring( L, 1, NULL, &len );
-        luaL_argcheck( L, len < 1024, 1, "scheme name too long" );
-        Fl::scheme( s );
-        return 0;
-      } else {
-        char const* s = Fl::scheme();
-        if( s != NULL )
-          lua_pushstring( L, s );
-        else
-          lua_pushnil( L );
-        return 1;
-      }
-    } F4L_CATCH( L );
-  }
+static int f4l_args( lua_State* L ) {
+  int argc = 0;
+  luaL_checktype( L, 1, LUA_TTABLE );
+  char** argv = f4l_push_argv( L, 1, &argc );
+  F4L_TRY {
+    Fl::args( argc, argv );
+  } F4L_CATCH( L );
+  return 0;
+}
 
 
-  int f4l_redraw( lua_State* L ) {
-    F4L_TRY {
-      Fl::redraw();
-    } F4L_CATCH( L );
-    return 0;
-  }
+static int f4l_get_system_colors( lua_State* L ) {
+  F4L_TRY {
+    Fl::get_system_colors();
+  } F4L_CATCH( L );
+  return 0;
+}
 
 
-  int f4l_option( lua_State* L ) {
-    Fl::Fl_Option o = f4l_check_option( L, 1 );
-    F4L_TRY {
-      if( lua_gettop( L ) > 1 ) {
-        Fl::option( o, lua_toboolean( L, 2 ) );
-        return 0;
-      } else {
-        lua_pushboolean( L, Fl::option( o ) );
-        return 1;
-      }
-    } F4L_CATCH( L );
-  }
-
-
-  int f4l_open_uri( lua_State* L ) {
-    char const* uri = luaL_checkstring( L, 1 );
-    F4L_TRY {
-      lua_pushboolean( L, fl_open_uri( uri, NULL, 0 ) );
-    } F4L_CATCH( L );
-    return 1;
-  }
-
-
-  /* registered via moon_atexit to make sure that all widgets
-   * are deleted, even those collected during a callback */
-  int delete_remaining_widgets( lua_State* L ) {
-    int* v = static_cast< int* >( lua_touserdata( L, 1 ) );
-    if( *v > 0 ) {
-      F4L_TRY {
-        Fl::check();
-      } F4L_CATCH( L );
+static int f4l_scheme( lua_State* L ) {
+  F4L_TRY {
+    if( lua_gettop( L ) > 0 ) {
+      size_t len = 0;
+      char const* s = luaL_optlstring( L, 1, NULL, &len );
+      luaL_argcheck( L, len < 1024, 1, "scheme name too long" );
+      Fl::scheme( s );
+      return 0;
+    } else {
+      char const* s = Fl::scheme();
+      if( s != NULL )
+        lua_pushstring( L, s );
+      else
+        lua_pushnil( L );
+      return 1;
     }
-    return 0;
-  }
+  } F4L_CATCH( L );
+}
 
-} // anonymous namespace
+
+static int f4l_redraw( lua_State* L ) {
+  F4L_TRY {
+    Fl::redraw();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int f4l_option( lua_State* L ) {
+  Fl::Fl_Option o = f4l_check_option( L, 1 );
+  F4L_TRY {
+    if( lua_gettop( L ) > 1 ) {
+      Fl::option( o, lua_toboolean( L, 2 ) );
+      return 0;
+    } else {
+      lua_pushboolean( L, Fl::option( o ) );
+      return 1;
+    }
+  } F4L_CATCH( L );
+}
+
+
+static int f4l_open_uri( lua_State* L ) {
+  char const* uri = luaL_checkstring( L, 1 );
+  F4L_TRY {
+    lua_pushboolean( L, fl_open_uri( uri, NULL, 0 ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+/* registered via moon_atexit to make sure that all widgets
+ * are deleted, even those collected during a callback */
+static int delete_remaining_widgets( lua_State* L ) {
+  int* v = static_cast< int* >( lua_touserdata( L, 1 ) );
+  if( *v > 0 ) {
+    F4L_TRY {
+      Fl::check();
+    } F4L_CATCH( L );
+  }
+  return 0;
+}
+F4L_LUA_LLINKAGE_END
+
+
+MOON_LOCAL void f4l_delete_widget( Fl_Widget* w ) {
+  f4l_active_L* ud = static_cast< f4l_active_L* >( w->user_data() );
+  if( ud != NULL && ud->cb_L != NULL )
+    Fl::delete_widget( w );
+  else
+    delete w;
+}
+
+MOON_LOCAL void f4l_delete_widget( Fl_Group* g ) {
+  for( int i = g->children(); i > 0; --i )
+    g->remove( i-1 );
+  f4l_delete_widget( static_cast< Fl_Widget* >( g ) );
+}
 
 
 MOON_LOCAL char f4l_check_char( lua_State* L, int idx ) {
