@@ -90,6 +90,7 @@ MOON_LOCAL int f4l_valuator_newindex_( lua_State* L, Fl_Valuator* v,
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 MOON_LOCAL int f4l_valuator_bounds( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   double a = luaL_checknumber( L, 2 );
@@ -151,5 +152,6 @@ MOON_LOCAL int f4l_valuator_round( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+
 F4L_LUA_LLINKAGE_END
 

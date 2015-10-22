@@ -52,6 +52,7 @@ namespace {
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 static int widget_label_shortcut( lua_State* L ) {
   char const* t = luaL_checkstring( L, 1 );
   F4L_TRY {
@@ -59,6 +60,218 @@ static int widget_label_shortcut( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+
+
+MOON_LOCAL int f4l_widget_activate( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->activate();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_clear_changed( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->clear_changed();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_clear_damage( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->clear_damage();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_clear_output( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->clear_output();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_clear_visible( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->clear_visible();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_clear_visible_focus( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->clear_visible_focus();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_contains( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  Fl_Widget* widget2 = check_widget( L, 2 );
+  F4L_TRY {
+    lua_pushboolean( L, widget->contains( widget2 ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+MOON_LOCAL int f4l_widget_deactivate( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->deactivate();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_hide( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->hide();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_inside( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  Fl_Widget* widget2 = luaL_opt( L, check_widget, 2, NULL );
+  F4L_TRY {
+    lua_pushboolean( L, widget->inside( widget2 ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+MOON_LOCAL int f4l_widget_measure_label( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  int x = 0, y = 0;
+  F4L_TRY {
+    widget->measure_label( x, y );
+  } F4L_CATCH( L );
+  lua_pushinteger( L, x );
+  lua_pushinteger( L, y );
+  return 2;
+}
+
+
+MOON_LOCAL int f4l_widget_position( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  int x = moon_checkint( L, 2, 0, INT_MAX );
+  int y = moon_checkint( L, 3, 0, INT_MAX );
+  F4L_TRY {
+    widget->position( x, y );
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_redraw( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->redraw();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_redraw_label( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->redraw_label();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_resize( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  int x = moon_checkint( L, 2, 0, INT_MAX );
+  int y = moon_checkint( L, 3, 0, INT_MAX );
+  int w = moon_checkint( L, 4, 0, INT_MAX );
+  int h = moon_checkint( L, 5, 0, INT_MAX );
+  F4L_TRY {
+    widget->resize( x, y, w, h );
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_set_changed( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->set_changed();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_set_output( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->set_output();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_set_visible( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->set_visible();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_set_visible_focus( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->set_visible_focus();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_show( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    widget->show();
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_size( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  int w = moon_checkint( L, 2, 0, INT_MAX );
+  int h = moon_checkint( L, 3, 0, INT_MAX );
+  F4L_TRY {
+    widget->size( w, h );
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_widget_take_focus( lua_State* L ) {
+  Fl_Widget* widget = check_widget( L, 1 );
+  F4L_TRY {
+    lua_pushboolean( L, widget->take_focus() );
+  } F4L_CATCH( L );
+  return 1;
+}
+
 F4L_LUA_LLINKAGE_END
 
 
@@ -364,219 +577,6 @@ MOON_LOCAL int f4l_widget_newindex_( lua_State* L, Fl_Widget* w,
   }
   return 0;
 }
-
-
-F4L_LUA_LLINKAGE_BEGIN
-MOON_LOCAL int f4l_widget_activate( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->activate();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_clear_changed( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->clear_changed();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_clear_damage( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->clear_damage();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_clear_output( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->clear_output();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_clear_visible( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->clear_visible();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_clear_visible_focus( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->clear_visible_focus();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_contains( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  Fl_Widget* widget2 = check_widget( L, 2 );
-  F4L_TRY {
-    lua_pushboolean( L, widget->contains( widget2 ) );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_widget_deactivate( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->deactivate();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_hide( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->hide();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_inside( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  Fl_Widget* widget2 = luaL_opt( L, check_widget, 2, NULL );
-  F4L_TRY {
-    lua_pushboolean( L, widget->inside( widget2 ) );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_widget_measure_label( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  int x = 0, y = 0;
-  F4L_TRY {
-    widget->measure_label( x, y );
-  } F4L_CATCH( L );
-  lua_pushinteger( L, x );
-  lua_pushinteger( L, y );
-  return 2;
-}
-
-
-MOON_LOCAL int f4l_widget_position( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  int x = moon_checkint( L, 2, 0, INT_MAX );
-  int y = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
-    widget->position( x, y );
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_redraw( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->redraw();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_redraw_label( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->redraw_label();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_resize( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  int x = moon_checkint( L, 2, 0, INT_MAX );
-  int y = moon_checkint( L, 3, 0, INT_MAX );
-  int w = moon_checkint( L, 4, 0, INT_MAX );
-  int h = moon_checkint( L, 5, 0, INT_MAX );
-  F4L_TRY {
-    widget->resize( x, y, w, h );
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_set_changed( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->set_changed();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_set_output( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->set_output();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_set_visible( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->set_visible();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_set_visible_focus( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->set_visible_focus();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_show( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    widget->show();
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_size( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  int w = moon_checkint( L, 2, 0, INT_MAX );
-  int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
-    widget->size( w, h );
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_widget_take_focus( lua_State* L ) {
-  Fl_Widget* widget = check_widget( L, 1 );
-  F4L_TRY {
-    lua_pushboolean( L, widget->take_focus() );
-  } F4L_CATCH( L );
-  return 1;
-}
-F4L_LUA_LLINKAGE_END
 
 
 MOON_LOCAL void f4l_widget_setup( lua_State* L ) {

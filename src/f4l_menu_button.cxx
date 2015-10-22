@@ -50,7 +50,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Menu_Button )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_menu_button( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Menu_Button >( L, F4L_MENU_BUTTON_NAME,
+                                      f4l_delete_Fl_Menu_Button );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int menu_button_index( lua_State* L ) {
   Fl_Menu_Button* mb = check_menu_button( L, 1 );
   size_t n = 0;
@@ -78,24 +91,13 @@ static int menu_button_newindex( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Menu_Button )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_menu_button( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Menu_Button >( L, F4L_MENU_BUTTON_NAME,
-                                      f4l_delete_Fl_Menu_Button );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Menu_Button, Fl_Menu_ )
 F4L_DEF_CAST( Fl_Menu_Button, Fl_Widget )
+
 
 MOON_LOCAL void f4l_menu_button_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

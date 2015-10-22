@@ -43,7 +43,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Check_Browser )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_check_browser( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Check_Browser >( L, F4L_CHECK_BROWSER_NAME,
+                                        f4l_delete_Fl_Check_Browser );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int check_browser_index( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   size_t n = 0;
@@ -164,24 +177,13 @@ static int check_browser_text( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Check_Browser )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_check_browser( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Check_Browser >( L, F4L_CHECK_BROWSER_NAME,
-                                        f4l_delete_Fl_Check_Browser );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Check_Browser, Fl_Browser_ )
 F4L_DEF_CAST( Fl_Check_Browser, Fl_Widget )
+
 
 MOON_LOCAL void f4l_check_browser_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

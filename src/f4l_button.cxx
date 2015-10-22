@@ -28,7 +28,70 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Button )
+F4L_DEF_DELETE( Fl_Check_Button )
+F4L_DEF_DELETE( Fl_Light_Button )
+F4L_DEF_DELETE( Fl_Repeat_Button )
+F4L_DEF_DELETE( Fl_Return_Button )
+F4L_DEF_DELETE( Fl_Round_Button )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_button( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Button >( L, F4L_BUTTON_NAME,
+                                 f4l_delete_Fl_Button );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_check_button( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Check_Button >( L, F4L_CHECK_BUTTON_NAME,
+                                       f4l_delete_Fl_Check_Button );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_light_button( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Light_Button >( L, F4L_LIGHT_BUTTON_NAME,
+                                       f4l_delete_Fl_Light_Button );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_repeat_button( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Repeat_Button >( L, F4L_REPEAT_BUTTON_NAME,
+                                        f4l_delete_Fl_Repeat_Button );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_return_button( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Return_Button >( L, F4L_RETURN_BUTTON_NAME,
+                                        f4l_delete_Fl_Return_Button );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_round_button( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Round_Button >( L, F4L_ROUND_BUTTON_NAME,
+                                       f4l_delete_Fl_Round_Button );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int button_index( lua_State* L ) {
   Fl_Button* b = check_button( L, 1 );
   size_t n = 0;
@@ -65,64 +128,34 @@ static int repeat_button_deactivate( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
 
-F4L_DEF_DELETE( Fl_Button )
-F4L_DEF_DELETE( Fl_Check_Button )
-F4L_DEF_DELETE( Fl_Light_Button )
-F4L_DEF_DELETE( Fl_Repeat_Button )
-F4L_DEF_DELETE( Fl_Return_Button )
-F4L_DEF_DELETE( Fl_Round_Button )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_button( lua_State* L ) {
+MOON_LOCAL int f4l_button_clear( lua_State* L ) {
+  Fl_Button* b = check_button( L, 1 );
   F4L_TRY {
-    f4l_new_widget< Fl_Button >( L, F4L_BUTTON_NAME,
-                                 f4l_delete_Fl_Button );
+    lua_pushboolean( L, b->clear() );
   } F4L_CATCH( L );
   return 1;
 }
 
-static int new_check_button( lua_State* L ) {
+
+MOON_LOCAL int f4l_button_set( lua_State* L ) {
+  Fl_Button* b = check_button( L, 1 );
   F4L_TRY {
-    f4l_new_widget< Fl_Check_Button >( L, F4L_CHECK_BUTTON_NAME,
-                                       f4l_delete_Fl_Check_Button );
+    lua_pushboolean( L, b->set() );
   } F4L_CATCH( L );
   return 1;
 }
 
-static int new_light_button( lua_State* L ) {
+
+MOON_LOCAL int f4l_button_setonly( lua_State* L ) {
+  Fl_Button* b = check_button( L, 1 );
   F4L_TRY {
-    f4l_new_widget< Fl_Light_Button >( L, F4L_LIGHT_BUTTON_NAME,
-                                       f4l_delete_Fl_Light_Button );
+    b->setonly();
   } F4L_CATCH( L );
-  return 1;
+  return 0;
 }
 
-static int new_repeat_button( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Repeat_Button >( L, F4L_REPEAT_BUTTON_NAME,
-                                        f4l_delete_Fl_Repeat_Button );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-static int new_return_button( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Return_Button >( L, F4L_RETURN_BUTTON_NAME,
-                                        f4l_delete_Fl_Return_Button );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-static int new_round_button( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Round_Button >( L, F4L_ROUND_BUTTON_NAME,
-                                       f4l_delete_Fl_Round_Button );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
@@ -198,35 +231,6 @@ MOON_LOCAL int f4l_button_newindex_( lua_State* L, Fl_Button* b,
 }
 
 
-F4L_LUA_LLINKAGE_BEGIN
-MOON_LOCAL int f4l_button_clear( lua_State* L ) {
-  Fl_Button* b = check_button( L, 1 );
-  F4L_TRY {
-    lua_pushboolean( L, b->clear() );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_button_set( lua_State* L ) {
-  Fl_Button* b = check_button( L, 1 );
-  F4L_TRY {
-    lua_pushboolean( L, b->set() );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_button_setonly( lua_State* L ) {
-  Fl_Button* b = check_button( L, 1 );
-  F4L_TRY {
-    b->setonly();
-  } F4L_CATCH( L );
-  return 0;
-}
-F4L_LUA_LLINKAGE_END
-
-
 F4L_DEF_CAST( Fl_Button, Fl_Widget )
 F4L_DEF_CAST( Fl_Check_Button, Fl_Button )
 F4L_DEF_CAST( Fl_Check_Button, Fl_Widget )
@@ -238,6 +242,7 @@ F4L_DEF_CAST( Fl_Return_Button, Fl_Button )
 F4L_DEF_CAST( Fl_Return_Button, Fl_Widget )
 F4L_DEF_CAST( Fl_Round_Button, Fl_Button )
 F4L_DEF_CAST( Fl_Round_Button, Fl_Widget )
+
 
 MOON_LOCAL void f4l_button_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

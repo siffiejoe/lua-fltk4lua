@@ -2,6 +2,7 @@
 #include "f4l_widget.hxx"
 #include <FL/Fl_Box.H>
 
+
 namespace {
 
   inline Fl_Box* check_box( lua_State* L, int idx ) {
@@ -12,7 +13,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Box )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_box( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Box >( L, F4L_BOX_NAME,
+                              f4l_delete_Fl_Box );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int box_index( lua_State* L ) {
   Fl_Box* b = check_box( L, 1 );
   size_t n = 0;
@@ -36,23 +50,12 @@ static int box_newindex( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Box )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_box( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Box >( L, F4L_BOX_NAME,
-                              f4l_delete_Fl_Box );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Box, Fl_Widget )
+
 
 MOON_LOCAL void f4l_box_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

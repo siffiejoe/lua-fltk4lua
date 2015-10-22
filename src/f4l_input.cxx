@@ -92,7 +92,30 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Input )
+F4L_DEF_DELETE( Fl_File_Input )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_input( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Input >( L, F4L_INPUT_NAME,
+                                f4l_delete_Fl_Input );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_file_input( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_File_Input >( L, F4L_FILE_INPUT_NAME,
+                                     f4l_delete_Fl_File_Input );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int input_index( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   size_t n = 0;
@@ -147,28 +170,108 @@ static int file_input_newindex( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
 
-F4L_DEF_DELETE( Fl_Input )
-F4L_DEF_DELETE( Fl_File_Input )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_input( lua_State* L ) {
+MOON_LOCAL int f4l_input_copy( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  int cl = moon_checkint( L, 2, 0, 1 );
   F4L_TRY {
-    f4l_new_widget< Fl_Input >( L, F4L_INPUT_NAME,
-                                f4l_delete_Fl_Input );
+    lua_pushboolean( L, i->copy( cl ) );
   } F4L_CATCH( L );
   return 1;
 }
 
-static int new_file_input( lua_State* L ) {
+
+MOON_LOCAL int f4l_input_copy_cuts( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
   F4L_TRY {
-    f4l_new_widget< Fl_File_Input >( L, F4L_FILE_INPUT_NAME,
-                                     f4l_delete_Fl_File_Input );
+    lua_pushboolean( L, i->copy_cuts() );
   } F4L_CATCH( L );
   return 1;
 }
+
+
+MOON_LOCAL int f4l_input_cut( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  F4L_TRY {
+    switch( lua_gettop( L ) ) {
+      case 1:
+        lua_pushboolean( L, i->cut() );
+        break;
+      case 2: {
+        int x = moon_checkint( L, 2, INT_MIN, INT_MAX );
+        lua_pushboolean( L, i->cut( x ) );
+        break;
+      }
+      default: {
+        int a = moon_checkint( L, 2, 0, INT_MAX );
+        int b = moon_checkint( L, 3, 0, INT_MAX );
+        lua_pushboolean( L, i->cut( a, b ) );
+        break;
+      }
+    }
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+MOON_LOCAL int f4l_input_idx( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  int x = moon_checkint( L, 2, 0, INT_MAX );
+  F4L_TRY {
+    lua_pushinteger( L, i->index( x ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+MOON_LOCAL int f4l_input_insert( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  size_t len = 0;
+  char const* s = luaL_checklstring( L, 2, &len );
+  F4L_TRY {
+    int n = static_cast< int >( len );
+    lua_pushboolean( L, i->insert( s, n ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+MOON_LOCAL int f4l_input_replace( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  int b = moon_checkint( L, 2, 0, INT_MAX );
+  int e = moon_checkint( L, 3, 0, INT_MAX );
+  size_t len = 0;
+  char const* s = NULL;
+  if( !lua_isnoneornil( L, 4 ) )
+    s = luaL_checklstring( L, 4, &len );
+  F4L_TRY {
+    int n = static_cast< int >( len );
+    lua_pushboolean( L, i->replace( b, e, s, n ) );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+MOON_LOCAL int f4l_input_size( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  int w = moon_checkint( L, 2, 0, INT_MAX );
+  int h = moon_checkint( L, 3, 0, INT_MAX );
+  F4L_TRY {
+    i->size( w, h );
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_input_undo( lua_State* L ) {
+  Fl_Input* i = check_input( L, 1 );
+  F4L_TRY {
+    lua_pushboolean( L, i->undo() );
+  } F4L_CATCH( L );
+  return 1;
+}
+
 F4L_LUA_LLINKAGE_END
 
 
@@ -312,112 +415,10 @@ MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* i,
 }
 
 
-F4L_LUA_LLINKAGE_BEGIN
-MOON_LOCAL int f4l_input_copy( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  int cl = moon_checkint( L, 2, 0, 1 );
-  F4L_TRY {
-    lua_pushboolean( L, i->copy( cl ) );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_input_copy_cuts( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  F4L_TRY {
-    lua_pushboolean( L, i->copy_cuts() );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_input_cut( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  F4L_TRY {
-    switch( lua_gettop( L ) ) {
-      case 1:
-        lua_pushboolean( L, i->cut() );
-        break;
-      case 2: {
-        int x = moon_checkint( L, 2, INT_MIN, INT_MAX );
-        lua_pushboolean( L, i->cut( x ) );
-        break;
-      }
-      default: {
-        int a = moon_checkint( L, 2, 0, INT_MAX );
-        int b = moon_checkint( L, 3, 0, INT_MAX );
-        lua_pushboolean( L, i->cut( a, b ) );
-        break;
-      }
-    }
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_input_idx( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  int x = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
-    lua_pushinteger( L, i->index( x ) );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_input_insert( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  size_t len = 0;
-  char const* s = luaL_checklstring( L, 2, &len );
-  F4L_TRY {
-    int n = static_cast< int >( len );
-    lua_pushboolean( L, i->insert( s, n ) );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_input_replace( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  int b = moon_checkint( L, 2, 0, INT_MAX );
-  int e = moon_checkint( L, 3, 0, INT_MAX );
-  size_t len = 0;
-  char const* s = NULL;
-  if( !lua_isnoneornil( L, 4 ) )
-    s = luaL_checklstring( L, 4, &len );
-  F4L_TRY {
-    int n = static_cast< int >( len );
-    lua_pushboolean( L, i->replace( b, e, s, n ) );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-
-MOON_LOCAL int f4l_input_size( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  int w = moon_checkint( L, 2, 0, INT_MAX );
-  int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
-    i->size( w, h );
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_input_undo( lua_State* L ) {
-  Fl_Input* i = check_input( L, 1 );
-  F4L_TRY {
-    lua_pushboolean( L, i->undo() );
-  } F4L_CATCH( L );
-  return 1;
-}
-F4L_LUA_LLINKAGE_END
-
-
 F4L_DEF_CAST( Fl_Input, Fl_Widget )
 F4L_DEF_CAST( Fl_File_Input, Fl_Input )
 F4L_DEF_CAST( Fl_File_Input, Fl_Widget )
+
 
 MOON_LOCAL void f4l_input_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

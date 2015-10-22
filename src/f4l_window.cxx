@@ -17,7 +17,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Window )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_window( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_window< Fl_Window >( L, F4L_WINDOW_NAME,
+                                 f4l_delete_Fl_Window );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int window_index( lua_State* L ) {
   Fl_Window* w = check_window( L, 1 );
   size_t n = 0;
@@ -45,149 +58,8 @@ static int window_newindex( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
 
-F4L_DEF_DELETE( Fl_Window )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_window( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_window< Fl_Window >( L, F4L_WINDOW_NAME,
-                                 f4l_delete_Fl_Window );
-  } F4L_CATCH( L );
-  return 1;
-}
-F4L_LUA_LLINKAGE_END
-
-
-MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
-                                  char const* key, size_t n ) {
-  using namespace std;
-  switch( n ) {
-    case 5:
-      if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
-        char const* label = w->label();
-        if( label != NULL )
-          lua_pushstring( L, label );
-        else
-          lua_pushliteral( L, "" );
-        return 1;
-      } else if( F4L_MEMCMP( key, "modal", 5 ) == 0 ) {
-        lua_pushboolean( L, w->modal() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "shown", 5 ) == 0 ) {
-        lua_pushboolean( L, w->shown() );
-        return 1;
-      }
-      break;
-    case 6:
-      if( F4L_MEMCMP( key, "border", 6 ) == 0 ) {
-        lua_pushboolean( L, w->border() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "x_root", 6 ) == 0 ) {
-        lua_pushinteger( L, w->x_root() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "y_root", 6 ) == 0 ) {
-        lua_pushinteger( L, w->y_root() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "xclass", 6 ) == 0 ) {
-        char const* c = w->xclass();
-        if( c != NULL )
-          lua_pushstring( L, c );
-        else
-          lua_pushliteral( L, "" );
-        return 1;
-      }
-      break;
-    case 8:
-      if( F4L_MEMCMP( key, "override", 8 ) == 0 ) {
-        lua_pushboolean( L, w->override() );
-        return 1;
-      }
-      break;
-    case 9:
-      if( F4L_MEMCMP( key, "iconlabel", 9 ) == 0 ) {
-        char const* label = w->iconlabel();
-        if( label != NULL )
-          lua_pushstring( L, label );
-        else
-          lua_pushliteral( L, "" );
-        return 1;
-      } else if( F4L_MEMCMP( key, "non_modal", 9 ) == 0 ) {
-        lua_pushboolean( L, w->non_modal() );
-        return 1;
-      }
-      break;
-    case 11:
-      if( F4L_MEMCMP( key, "decorated_h", 11 ) == 0 ) {
-        lua_pushinteger( L, w->decorated_h() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "decorated_w", 11 ) == 0 ) {
-        lua_pushinteger( L, w->decorated_w() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "menu_window", 11 ) == 0 ) {
-        lua_pushboolean( L, w->menu_window() );
-        return 1;
-      }
-      break;
-    case 14:
-      if( F4L_MEMCMP( key, "tooltip_window", 14 ) == 0 ) {
-        lua_pushboolean( L, w->tooltip_window() );
-        return 1;
-      }
-      break;
-    case 17:
-      if( F4L_MEMCMP( key, "fullscreen_active", 17 ) == 0 ) {
-        lua_pushboolean( L, w->fullscreen_active() );
-        return 1;
-      }
-      break;
-  }
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_window_newindex_( lua_State* L, Fl_Window* w,
-                                     char const* key, size_t n ) {
-  using namespace std;
-  switch( n ) {
-    case 5:
-      if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
-        char const* s = luaL_checkstring( L, 3 );
-        lua_pushvalue( L, 3 );
-        moon_setuvfield( L, 1, "label" );
-        w->label( s );
-        return 1;
-      }
-      break;
-    case 6:
-      if( F4L_MEMCMP( key, "border", 6 ) == 0 ) {
-        w->border( lua_toboolean( L, 3 ) );
-        return 1;
-      } else if( F4L_MEMCMP( key, "xclass", 6 ) == 0 ) {
-        char const* c = luaL_checkstring( L, 3 );
-        lua_pushvalue( L, 3 );
-        moon_setuvfield( L, 1, "xclass" );
-        w->xclass( c );
-        return 1;
-      }
-      break;
-    case 9:
-      if( F4L_MEMCMP( key, "iconlabel", 9 ) == 0 ) {
-        char const* label = luaL_checkstring( L, 3 );
-        lua_pushvalue( L, 3 );
-        moon_setuvfield( L, 1, "iconlabel" );
-        w->iconlabel( label );
-        return 1;
-      }
-      break;
-  }
-  return 0;
-}
-
-
-F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_window_clear_border( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
   F4L_TRY {
@@ -321,11 +193,139 @@ MOON_LOCAL int f4l_window_size_range( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
+
 F4L_LUA_LLINKAGE_END
+
+
+MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
+                                  char const* key, size_t n ) {
+  using namespace std;
+  switch( n ) {
+    case 5:
+      if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
+        char const* label = w->label();
+        if( label != NULL )
+          lua_pushstring( L, label );
+        else
+          lua_pushliteral( L, "" );
+        return 1;
+      } else if( F4L_MEMCMP( key, "modal", 5 ) == 0 ) {
+        lua_pushboolean( L, w->modal() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "shown", 5 ) == 0 ) {
+        lua_pushboolean( L, w->shown() );
+        return 1;
+      }
+      break;
+    case 6:
+      if( F4L_MEMCMP( key, "border", 6 ) == 0 ) {
+        lua_pushboolean( L, w->border() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "x_root", 6 ) == 0 ) {
+        lua_pushinteger( L, w->x_root() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "y_root", 6 ) == 0 ) {
+        lua_pushinteger( L, w->y_root() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "xclass", 6 ) == 0 ) {
+        char const* c = w->xclass();
+        if( c != NULL )
+          lua_pushstring( L, c );
+        else
+          lua_pushliteral( L, "" );
+        return 1;
+      }
+      break;
+    case 8:
+      if( F4L_MEMCMP( key, "override", 8 ) == 0 ) {
+        lua_pushboolean( L, w->override() );
+        return 1;
+      }
+      break;
+    case 9:
+      if( F4L_MEMCMP( key, "iconlabel", 9 ) == 0 ) {
+        char const* label = w->iconlabel();
+        if( label != NULL )
+          lua_pushstring( L, label );
+        else
+          lua_pushliteral( L, "" );
+        return 1;
+      } else if( F4L_MEMCMP( key, "non_modal", 9 ) == 0 ) {
+        lua_pushboolean( L, w->non_modal() );
+        return 1;
+      }
+      break;
+    case 11:
+      if( F4L_MEMCMP( key, "decorated_h", 11 ) == 0 ) {
+        lua_pushinteger( L, w->decorated_h() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "decorated_w", 11 ) == 0 ) {
+        lua_pushinteger( L, w->decorated_w() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "menu_window", 11 ) == 0 ) {
+        lua_pushboolean( L, w->menu_window() );
+        return 1;
+      }
+      break;
+    case 14:
+      if( F4L_MEMCMP( key, "tooltip_window", 14 ) == 0 ) {
+        lua_pushboolean( L, w->tooltip_window() );
+        return 1;
+      }
+      break;
+    case 17:
+      if( F4L_MEMCMP( key, "fullscreen_active", 17 ) == 0 ) {
+        lua_pushboolean( L, w->fullscreen_active() );
+        return 1;
+      }
+      break;
+  }
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_window_newindex_( lua_State* L, Fl_Window* w,
+                                     char const* key, size_t n ) {
+  using namespace std;
+  switch( n ) {
+    case 5:
+      if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
+        char const* s = luaL_checkstring( L, 3 );
+        lua_pushvalue( L, 3 );
+        moon_setuvfield( L, 1, "label" );
+        w->label( s );
+        return 1;
+      }
+      break;
+    case 6:
+      if( F4L_MEMCMP( key, "border", 6 ) == 0 ) {
+        w->border( lua_toboolean( L, 3 ) );
+        return 1;
+      } else if( F4L_MEMCMP( key, "xclass", 6 ) == 0 ) {
+        char const* c = luaL_checkstring( L, 3 );
+        lua_pushvalue( L, 3 );
+        moon_setuvfield( L, 1, "xclass" );
+        w->xclass( c );
+        return 1;
+      }
+      break;
+    case 9:
+      if( F4L_MEMCMP( key, "iconlabel", 9 ) == 0 ) {
+        char const* label = luaL_checkstring( L, 3 );
+        lua_pushvalue( L, 3 );
+        moon_setuvfield( L, 1, "iconlabel" );
+        w->iconlabel( label );
+        return 1;
+      }
+      break;
+  }
+  return 0;
+}
 
 
 F4L_DEF_CAST( Fl_Window, Fl_Group )
 F4L_DEF_CAST( Fl_Window, Fl_Widget )
+
 
 MOON_LOCAL void f4l_window_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

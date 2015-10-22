@@ -4,6 +4,7 @@
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 static int f4l_run_( lua_State* L ) {
   F4L_TRY {
     lua_pushinteger( L, Fl::run() );
@@ -126,6 +127,7 @@ static int delete_remaining_widgets( lua_State* L ) {
   }
   return 0;
 }
+
 F4L_LUA_LLINKAGE_END
 
 

@@ -42,14 +42,17 @@ namespace {
 
 
 F4L_MOON_LLINKAGE_BEGIN
+
 static void shared_image_delete( void* p ) {
   Fl_Shared_Image* si = static_cast< Fl_Shared_Image* >( p );
   si->release();
 }
+
 F4L_MOON_LLINKAGE_END
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 static int shared_image_index( lua_State* L ) {
   Fl_Shared_Image* si = check_shared_image( L, 1 );
   size_t n = 0;
@@ -118,10 +121,12 @@ static int shared_image_find( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Shared_Image, Fl_Image )
+
 
 MOON_LOCAL void f4l_shared_image_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

@@ -83,7 +83,30 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Clock_Output )
+F4L_DEF_DELETE( Fl_Clock )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_clock_output( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Clock_Output >( L, F4L_CLOCK_OUTPUT_NAME,
+                                       f4l_delete_Fl_Clock_Output );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_clock( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Clock >( L, F4L_CLOCK_NAME,
+                                f4l_delete_Fl_Clock );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int clock_index( lua_State* L ) {
   Fl_Clock_Output* c = check_clock( L, 1 );
   size_t n = 0;
@@ -121,34 +144,14 @@ static int clock_setvalue( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Clock_Output )
-F4L_DEF_DELETE( Fl_Clock )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_clock_output( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Clock_Output >( L, F4L_CLOCK_OUTPUT_NAME,
-                                       f4l_delete_Fl_Clock_Output );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-static int new_clock( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Clock >( L, F4L_CLOCK_NAME,
-                                f4l_delete_Fl_Clock );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Clock_Output, Fl_Widget )
 F4L_DEF_CAST( Fl_Clock, Fl_Clock_Output )
 F4L_DEF_CAST( Fl_Clock, Fl_Widget )
+
 
 MOON_LOCAL void f4l_clock_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

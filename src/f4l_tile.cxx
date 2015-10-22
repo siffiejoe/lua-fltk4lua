@@ -14,7 +14,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Tile )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_tile( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Tile >( L, F4L_TILE_NAME,
+                               f4l_delete_Fl_Tile );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int tile_index( lua_State* L ) {
   Fl_Tile* t = check_tile( L, 1 );
   size_t n = 0;
@@ -53,24 +66,13 @@ static int tile_position( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Tile )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_tile( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Tile >( L, F4L_TILE_NAME,
-                               f4l_delete_Fl_Tile );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Tile, Fl_Group )
 F4L_DEF_CAST( Fl_Tile, Fl_Widget )
+
 
 MOON_LOCAL void f4l_tile_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

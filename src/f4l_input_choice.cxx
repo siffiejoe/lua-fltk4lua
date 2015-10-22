@@ -123,7 +123,27 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Input_Choice )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_input_choice( lua_State* L ) {
+  F4L_TRY {
+    Fl_Input_Choice* ic = NULL;
+    ic = f4l_new_widget< Fl_Input_Choice >( L, F4L_INPUT_CHOICE_NAME,
+                                            f4l_delete_Fl_Input_Choice );
+    /* The input userdata can be created on demand in the __index
+     * metamethod, but we need the menubutton registered as a widget
+     * in the implementation of add() and clear(). */
+    f4l_new_member< Fl_Menu_Button >( L, F4L_MENU_BUTTON_NAME,
+                                      ic->menubutton(), -1 );
+    moon_setuvfield( L, -2, "menubutton" );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int input_choice_index( lua_State* L ) {
   Fl_Input_Choice* ic = check_input_choice( L, 1 );
   size_t n = 0;
@@ -193,30 +213,12 @@ static int input_choice_set_changed( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Input_Choice )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_input_choice( lua_State* L ) {
-  F4L_TRY {
-    Fl_Input_Choice* ic = NULL;
-    ic = f4l_new_widget< Fl_Input_Choice >( L, F4L_INPUT_CHOICE_NAME,
-                                            f4l_delete_Fl_Input_Choice );
-    /* The input userdata can be created on demand in the __index
-     * metamethod, but we need the menubutton registered as a widget
-     * in the implementation of add() and clear(). */
-    f4l_new_member< Fl_Menu_Button >( L, F4L_MENU_BUTTON_NAME,
-                                      ic->menubutton(), -1 );
-    moon_setuvfield( L, -2, "menubutton" );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Input_Choice, Fl_Widget )
+
 
 MOON_LOCAL void f4l_input_choice_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

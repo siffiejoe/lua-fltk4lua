@@ -137,6 +137,7 @@ MOON_LOCAL void f4l_push_shortcut( lua_State* L, Fl_Shortcut s ) {
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 static int shortcut_add( lua_State* L ) {
   int t1 = lua_type( L, 1 ), t2 = lua_type( L, 2 );
   Fl_Shortcut s1 = 0, s2 = 0;
@@ -155,6 +156,7 @@ static int shortcut_add( lua_State* L ) {
   moon_flag_new_shortcut( L, s1+s2 );
   return 1;
 }
+
 F4L_LUA_LLINKAGE_END
 
 
@@ -626,6 +628,7 @@ MOON_LOCAL Fl::Fl_Option f4l_check_option( lua_State* L, int idx ) {
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 static int f4l_inactive( lua_State* L ) {
   Fl_Color c = f4l_check_color( L, 1 );
   F4L_TRY {
@@ -733,10 +736,8 @@ static int f4l_shortcut_label( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+
 F4L_LUA_LLINKAGE_END
-
-
-
 
 
 MOON_LOCAL void f4l_enums_setup( lua_State* L ) {

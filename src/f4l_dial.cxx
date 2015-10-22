@@ -73,7 +73,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Dial )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_dial( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Dial>( L, F4L_DIAL_NAME,
+                              f4l_delete_Fl_Dial );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int dial_index( lua_State* L ) {
   Fl_Dial* d = check_dial( L, 1 );
   size_t n = 0;
@@ -112,24 +125,13 @@ static int dial_angles( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Dial )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_dial( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Dial>( L, F4L_DIAL_NAME,
-                              f4l_delete_Fl_Dial );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Dial, Fl_Valuator )
 F4L_DEF_CAST( Fl_Dial, Fl_Widget )
+
 
 MOON_LOCAL void f4l_dial_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

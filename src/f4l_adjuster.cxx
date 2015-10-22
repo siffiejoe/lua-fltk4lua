@@ -3,6 +3,7 @@
 #include "f4l_widget.hxx"
 #include <FL/Fl_Adjuster.H>
 
+
 namespace {
 
   inline Fl_Adjuster* check_adjuster( lua_State* L, int idx ) {
@@ -43,7 +44,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Adjuster )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_adjuster( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Adjuster >( L, F4L_ADJUSTER_NAME,
+                                   f4l_delete_Fl_Adjuster );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int adjuster_index( lua_State* L ) {
   Fl_Adjuster* a = check_adjuster( L, 1 );
   size_t n = 0;
@@ -58,6 +72,7 @@ static int adjuster_index( lua_State* L ) {
   return 1;
 }
 
+
 static int adjuster_newindex( lua_State* L ) {
   Fl_Adjuster* a = check_adjuster( L, 1 );
   size_t n = 0;
@@ -70,24 +85,13 @@ static int adjuster_newindex( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Adjuster )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_adjuster( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Adjuster >( L, F4L_ADJUSTER_NAME,
-                                   f4l_delete_Fl_Adjuster );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Adjuster, Fl_Valuator )
 F4L_DEF_CAST( Fl_Adjuster, Fl_Widget )
+
 
 MOON_LOCAL void f4l_adjuster_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

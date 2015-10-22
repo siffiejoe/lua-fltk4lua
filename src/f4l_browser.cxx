@@ -26,7 +26,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Browser )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_browser( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Browser >( L, F4L_BROWSER_NAME,
+                                  f4l_delete_Fl_Browser );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int browser_index( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   size_t n = 0;
@@ -54,149 +67,8 @@ static int browser_newindex( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
 
-F4L_DEF_DELETE( Fl_Browser )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_browser( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Browser >( L, F4L_BROWSER_NAME,
-                                  f4l_delete_Fl_Browser );
-  } F4L_CATCH( L );
-  return 1;
-}
-F4L_LUA_LLINKAGE_END
-
-
-MOON_LOCAL int f4l_browser_index_( lua_State* L, Fl_Browser* b,
-                                   char const* key, size_t n ) {
-  using namespace std;
-  switch( n ) {
-    case 4:
-      if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
-        f4l_push_type_browser( L, b->type() );
-        return 1;
-      }
-      break;
-    case 5:
-      if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
-        lua_pushinteger( L, b->value() );
-        return 1;
-      }
-      break;
-    case 6:
-      if( F4L_MEMCMP( key, "nitems", 6 ) == 0 ) {
-        lua_pushinteger( L, b->size() );
-        return 1;
-      }
-      break;
-    case 7:
-      if( F4L_MEMCMP( key, "topline", 7 ) == 0 ) {
-        lua_pushinteger( L, b->topline() );
-        return 1;
-      }
-      break;
-    case 11:
-      if( F4L_MEMCMP( key, "column_char", 11 ) == 0 ) {
-        f4l_push_char( L, b->column_char() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "format_char", 11 ) == 0 ) {
-        f4l_push_char( L, b->format_char() );
-        return 1;
-      }
-      break;
-    case 13:
-      if( F4L_MEMCMP( key, "column_widths", 13 ) == 0 ) {
-        int const* wds = b->column_widths();
-        lua_newtable( L );
-        int i = 1;
-        while( *wds != 0 ) {
-          lua_pushinteger( L, *wds );
-          lua_rawseti( L, -2, i );
-          ++wds; ++i;
-        }
-        return 1;
-      }
-      break;
-  }
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_browser_newindex_( lua_State* L, Fl_Browser* b,
-                                      char const* key, size_t n ) {
-  using namespace std;
-  switch( n ) {
-    case 4:
-      if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
-        b->type( f4l_check_type_browser( L, 3 ) );
-        return 1;
-      }
-      break;
-    case 5:
-      if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
-        int line = moon_checkint( L, 3, 1, INT_MAX );
-        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
-        b->value( line );
-        return 1;
-      }
-      break;
-    case 7:
-      if( F4L_MEMCMP( key, "topline", 7 ) == 0 ) {
-        int line = moon_checkint( L, 3, 1, INT_MAX );
-        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
-        b->topline( line );
-        return 1;
-      }
-      break;
-    case 10:
-      if( F4L_MEMCMP( key, "bottomline", 10 ) == 0 ) {
-        int line = moon_checkint( L, 3, 1, INT_MAX );
-        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
-        b->bottomline( line );
-        return 1;
-      } else if( F4L_MEMCMP( key, "middleline", 10 ) == 0 ) {
-        int line = moon_checkint( L, 3, 1, INT_MAX );
-        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
-        b->middleline( line );
-        return 1;
-      }
-      break;
-    case 11:
-      if( F4L_MEMCMP( key, "column_char", 11 ) == 0 ) {
-        b->column_char( f4l_check_char( L, 3 ) );
-        return 1;
-      } else if( F4L_MEMCMP( key, "format_char", 11 ) == 0 ) {
-        b->format_char( f4l_check_char( L, 3 ) );
-        return 1;
-      }
-      break;
-    case 13:
-      if( F4L_MEMCMP( key, "column_widths", 13 ) == 0 ) {
-        luaL_checktype( L, 3, LUA_TTABLE );
-        int len = luaL_len( L, 3 );
-        void* mem = lua_newuserdata( L, (len+1)* sizeof( int ) );
-        int* wds = static_cast< int* >( mem );
-        wds[ len ] = 0;
-        for( int i = 0; i < len; ++i ) {
-          lua_geti( L, 3, i+1 );
-          wds[ i ] = lua_tointeger( L, -1 ); // ignore type errors
-          lua_pop( L, 1 );
-        }
-        lua_pushvalue( L, -1 );
-        moon_setuvfield( L, 1, "column_widths" ); // keep array alive
-        b->column_widths( wds );
-        return 1;
-      }
-      break;
-  }
-  return 0;
-}
-
-
-F4L_LUA_LLINKAGE_BEGIN
 MOON_LOCAL int f4l_browser_add( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   char const* s = luaL_optstring( L, 2, NULL );
@@ -387,11 +259,139 @@ MOON_LOCAL int f4l_browser_visible( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+
 F4L_LUA_LLINKAGE_END
+
+
+MOON_LOCAL int f4l_browser_index_( lua_State* L, Fl_Browser* b,
+                                   char const* key, size_t n ) {
+  using namespace std;
+  switch( n ) {
+    case 4:
+      if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+        f4l_push_type_browser( L, b->type() );
+        return 1;
+      }
+      break;
+    case 5:
+      if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
+        lua_pushinteger( L, b->value() );
+        return 1;
+      }
+      break;
+    case 6:
+      if( F4L_MEMCMP( key, "nitems", 6 ) == 0 ) {
+        lua_pushinteger( L, b->size() );
+        return 1;
+      }
+      break;
+    case 7:
+      if( F4L_MEMCMP( key, "topline", 7 ) == 0 ) {
+        lua_pushinteger( L, b->topline() );
+        return 1;
+      }
+      break;
+    case 11:
+      if( F4L_MEMCMP( key, "column_char", 11 ) == 0 ) {
+        f4l_push_char( L, b->column_char() );
+        return 1;
+      } else if( F4L_MEMCMP( key, "format_char", 11 ) == 0 ) {
+        f4l_push_char( L, b->format_char() );
+        return 1;
+      }
+      break;
+    case 13:
+      if( F4L_MEMCMP( key, "column_widths", 13 ) == 0 ) {
+        int const* wds = b->column_widths();
+        lua_newtable( L );
+        int i = 1;
+        while( *wds != 0 ) {
+          lua_pushinteger( L, *wds );
+          lua_rawseti( L, -2, i );
+          ++wds; ++i;
+        }
+        return 1;
+      }
+      break;
+  }
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_browser_newindex_( lua_State* L, Fl_Browser* b,
+                                      char const* key, size_t n ) {
+  using namespace std;
+  switch( n ) {
+    case 4:
+      if( F4L_MEMCMP( key, "type", 4 ) == 0 ) {
+        b->type( f4l_check_type_browser( L, 3 ) );
+        return 1;
+      }
+      break;
+    case 5:
+      if( F4L_MEMCMP( key, "value", 5 ) == 0 ) {
+        int line = moon_checkint( L, 3, 1, INT_MAX );
+        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
+        b->value( line );
+        return 1;
+      }
+      break;
+    case 7:
+      if( F4L_MEMCMP( key, "topline", 7 ) == 0 ) {
+        int line = moon_checkint( L, 3, 1, INT_MAX );
+        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
+        b->topline( line );
+        return 1;
+      }
+      break;
+    case 10:
+      if( F4L_MEMCMP( key, "bottomline", 10 ) == 0 ) {
+        int line = moon_checkint( L, 3, 1, INT_MAX );
+        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
+        b->bottomline( line );
+        return 1;
+      } else if( F4L_MEMCMP( key, "middleline", 10 ) == 0 ) {
+        int line = moon_checkint( L, 3, 1, INT_MAX );
+        luaL_argcheck( L, line <= b->size(), 3, "index too large" );
+        b->middleline( line );
+        return 1;
+      }
+      break;
+    case 11:
+      if( F4L_MEMCMP( key, "column_char", 11 ) == 0 ) {
+        b->column_char( f4l_check_char( L, 3 ) );
+        return 1;
+      } else if( F4L_MEMCMP( key, "format_char", 11 ) == 0 ) {
+        b->format_char( f4l_check_char( L, 3 ) );
+        return 1;
+      }
+      break;
+    case 13:
+      if( F4L_MEMCMP( key, "column_widths", 13 ) == 0 ) {
+        luaL_checktype( L, 3, LUA_TTABLE );
+        int len = luaL_len( L, 3 );
+        void* mem = lua_newuserdata( L, (len+1)* sizeof( int ) );
+        int* wds = static_cast< int* >( mem );
+        wds[ len ] = 0;
+        for( int i = 0; i < len; ++i ) {
+          lua_geti( L, 3, i+1 );
+          wds[ i ] = lua_tointeger( L, -1 ); // ignore type errors
+          lua_pop( L, 1 );
+        }
+        lua_pushvalue( L, -1 );
+        moon_setuvfield( L, 1, "column_widths" ); // keep array alive
+        b->column_widths( wds );
+        return 1;
+      }
+      break;
+  }
+  return 0;
+}
 
 
 F4L_DEF_CAST( Fl_Browser, Fl_Browser_ )
 F4L_DEF_CAST( Fl_Browser, Fl_Widget )
+
 
 MOON_LOCAL void f4l_browser_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

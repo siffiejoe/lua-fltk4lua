@@ -4,6 +4,7 @@
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_File_Chooser.H>
 
+
 namespace {
 
 #define BEEP_LIST( _ ) \
@@ -34,6 +35,7 @@ namespace {
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 static int f4l_alert_( lua_State* L ) {
   char const* s = luaL_checkstring( L, 1);
   F4L_TRY {
@@ -204,6 +206,7 @@ static int f4l_message_hotspot( lua_State* L ) {
     }
   } F4L_CATCH( L );
 }
+
 F4L_LUA_LLINKAGE_END
 
 

@@ -137,7 +137,20 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Spinner )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_spinner( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Spinner >( L, F4L_SPINNER_NAME,
+                                  f4l_delete_Fl_Spinner );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int spinner_index( lua_State* L ) {
   Fl_Spinner* sp = check_spinner( L, 1 );
   size_t n = 0;
@@ -174,23 +187,12 @@ static int spinner_range( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
-
-F4L_DEF_DELETE( Fl_Spinner )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_spinner( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Spinner >( L, F4L_SPINNER_NAME,
-                                  f4l_delete_Fl_Spinner );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
 F4L_DEF_CAST( Fl_Spinner, Fl_Widget )
+
 
 MOON_LOCAL void f4l_spinner_setup( lua_State* L ) {
   luaL_Reg const methods[] = {

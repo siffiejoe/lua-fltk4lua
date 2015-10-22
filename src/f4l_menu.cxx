@@ -335,6 +335,7 @@ MOON_LOCAL int f4l_menu_newindex_( lua_State* L, Fl_Menu_* m,
 
 
 F4L_LUA_LLINKAGE_BEGIN
+
 MOON_LOCAL int f4l_menu_add( lua_State* L ) {
   F4L_TRY {
     Fl_Menu_* m = check_rw_menu( L, 1 );
@@ -842,6 +843,7 @@ MOON_LOCAL int f4l_menu_menuitem_visible( lua_State* L ) {
   } F4L_CATCH( L );
   return 1;
 }
+
 F4L_LUA_LLINKAGE_END
 
 

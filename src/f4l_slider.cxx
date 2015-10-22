@@ -128,7 +128,40 @@ namespace {
 } // anonymous namespace
 
 
+F4L_DEF_DELETE( Fl_Slider )
+F4L_DEF_DELETE( Fl_Scrollbar )
+F4L_DEF_DELETE( Fl_Value_Slider )
+
+
 F4L_LUA_LLINKAGE_BEGIN
+
+static int new_slider( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Slider >( L, F4L_SLIDER_NAME,
+                                 f4l_delete_Fl_Slider );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_scrollbar( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
+                                    f4l_delete_Fl_Scrollbar );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
+static int new_value_slider( lua_State* L ) {
+  F4L_TRY {
+    f4l_new_widget< Fl_Value_Slider >( L, F4L_VALUE_SLIDER_NAME,
+                                       f4l_delete_Fl_Value_Slider );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+
 static int slider_index( lua_State* L ) {
   Fl_Slider* s = check_slider( L, 1 );
   size_t n = 0;
@@ -231,37 +264,31 @@ static int value_slider_newindex( lua_State* L ) {
   } F4L_CATCH( L );
   return 0;
 }
-F4L_LUA_LLINKAGE_END
 
 
-F4L_DEF_DELETE( Fl_Slider )
-F4L_DEF_DELETE( Fl_Scrollbar )
-F4L_DEF_DELETE( Fl_Value_Slider )
-
-F4L_LUA_LLINKAGE_BEGIN
-static int new_slider( lua_State* L ) {
+MOON_LOCAL int f4l_slider_bounds( lua_State* L ) {
+  Fl_Slider* s = check_slider( L, 1 );
+  double a = luaL_checknumber( L, 2 );
+  double b = luaL_checknumber( L, 3 );
   F4L_TRY {
-    f4l_new_widget< Fl_Slider >( L, F4L_SLIDER_NAME,
-                                 f4l_delete_Fl_Slider );
+    s->bounds( a, b );
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+MOON_LOCAL int f4l_slider_scrollvalue( lua_State* L ) {
+  Fl_Slider* s = check_slider( L, 1 );
+  int p = moon_checkint( L, 2, 0, INT_MAX );
+  int sz = moon_checkint( L, 3, 0, INT_MAX );
+  int f = moon_checkint( L, 4, 0, INT_MAX );
+  int t = moon_checkint( L, 5, 0, INT_MAX );
+  F4L_TRY {
+    lua_pushinteger( L, s->scrollvalue( p, sz, f, t ) );
   } F4L_CATCH( L );
   return 1;
 }
 
-static int new_scrollbar( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Scrollbar >( L, F4L_SCROLLBAR_NAME,
-                                    f4l_delete_Fl_Scrollbar );
-  } F4L_CATCH( L );
-  return 1;
-}
-
-static int new_value_slider( lua_State* L ) {
-  F4L_TRY {
-    f4l_new_widget< Fl_Value_Slider >( L, F4L_VALUE_SLIDER_NAME,
-                                       f4l_delete_Fl_Value_Slider );
-  } F4L_CATCH( L );
-  return 1;
-}
 F4L_LUA_LLINKAGE_END
 
 
@@ -319,32 +346,6 @@ MOON_LOCAL int f4l_slider_newindex_( lua_State* L, Fl_Slider* s,
 }
 
 
-F4L_LUA_LLINKAGE_BEGIN
-MOON_LOCAL int f4l_slider_bounds( lua_State* L ) {
-  Fl_Slider* s = check_slider( L, 1 );
-  double a = luaL_checknumber( L, 2 );
-  double b = luaL_checknumber( L, 3 );
-  F4L_TRY {
-    s->bounds( a, b );
-  } F4L_CATCH( L );
-  return 0;
-}
-
-
-MOON_LOCAL int f4l_slider_scrollvalue( lua_State* L ) {
-  Fl_Slider* s = check_slider( L, 1 );
-  int p = moon_checkint( L, 2, 0, INT_MAX );
-  int sz = moon_checkint( L, 3, 0, INT_MAX );
-  int f = moon_checkint( L, 4, 0, INT_MAX );
-  int t = moon_checkint( L, 5, 0, INT_MAX );
-  F4L_TRY {
-    lua_pushinteger( L, s->scrollvalue( p, sz, f, t ) );
-  } F4L_CATCH( L );
-  return 1;
-}
-F4L_LUA_LLINKAGE_END
-
-
 F4L_DEF_CAST( Fl_Slider, Fl_Valuator )
 F4L_DEF_CAST( Fl_Slider, Fl_Widget )
 F4L_DEF_CAST( Fl_Scrollbar, Fl_Slider )
@@ -353,6 +354,7 @@ F4L_DEF_CAST( Fl_Scrollbar, Fl_Widget )
 F4L_DEF_CAST( Fl_Value_Slider, Fl_Slider )
 F4L_DEF_CAST( Fl_Value_Slider, Fl_Valuator )
 F4L_DEF_CAST( Fl_Value_Slider, Fl_Widget )
+
 
 MOON_LOCAL void f4l_slider_setup( lua_State* L ) {
   luaL_Reg const methods[] = {
