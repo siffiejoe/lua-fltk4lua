@@ -82,6 +82,7 @@ static int f4l_scheme( lua_State* L ) {
       return 1;
     }
   } F4L_CATCH( L );
+  return 0;
 }
 
 
@@ -104,6 +105,7 @@ static int f4l_option( lua_State* L ) {
       return 1;
     }
   } F4L_CATCH( L );
+  return 0;
 }
 
 

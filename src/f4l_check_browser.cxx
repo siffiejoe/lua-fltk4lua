@@ -127,6 +127,7 @@ static int check_browser_checked( lua_State* L ) {
       return 1;
     }
   } F4L_CATCH( L );
+  return 0;
 }
 
 

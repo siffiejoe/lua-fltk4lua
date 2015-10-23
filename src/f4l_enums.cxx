@@ -126,7 +126,11 @@ MOON_LOCAL Fl_Shortcut f4l_check_shortcut( lua_State* L, int idx ) {
       valid = 0;
     if( !valid )
       luaL_argerror( L, idx, "invalid shortcut string" );
-    return fl_old_shortcut( sc );
+    Fl_Shortcut sh = 0;
+    F4L_TRY {
+      sh = fl_old_shortcut( sc );
+    } F4L_CATCH( L );
+    return sh;
   } else
     return moon_flag_get_shortcut( L, idx );
 }

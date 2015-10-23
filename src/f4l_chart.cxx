@@ -179,6 +179,7 @@ static int chart_bounds( lua_State* L ) {
       return 0;
     }
   } F4L_CATCH( L );
+  return 0;
 }
 
 

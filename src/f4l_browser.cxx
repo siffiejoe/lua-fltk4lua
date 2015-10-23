@@ -96,7 +96,6 @@ MOON_LOCAL int f4l_browser_displayed( lua_State* L ) {
     lua_pushboolean( L, b->displayed( line ) );
   } F4L_CATCH( L );
   return 1;
-
 }
 
 
@@ -131,6 +130,7 @@ MOON_LOCAL int f4l_browser_load( lua_State* L ) {
   F4L_TRY {
     return luaL_fileresult( L, b->load( fname ), fname );
   } F4L_CATCH( L );
+  return 0;
 }
 
 
@@ -247,6 +247,7 @@ MOON_LOCAL int f4l_browser_text( lua_State* L ) {
       return 1;
     }
   } F4L_CATCH( L );
+  return 0;
 }
 
 

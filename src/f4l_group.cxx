@@ -72,6 +72,7 @@ static int group_current( lua_State* L ) {
       return 1;
     }
   } F4L_CATCH( L );
+  return 0;
 }
 
 

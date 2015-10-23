@@ -205,6 +205,7 @@ static int f4l_message_hotspot( lua_State* L ) {
       return 1;
     }
   } F4L_CATCH( L );
+  return 0;
 }
 
 F4L_LUA_LLINKAGE_END

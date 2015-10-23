@@ -39,11 +39,16 @@ extern "C" {
 
 /* transform standard C++ exceptions to Lua errors */
 #define F4L_TRY \
-  do { try
+  do { int _f4l_exception_thrown = 0; try
 #define F4L_CATCH( L ) \
-  catch( std::exception const& e ) { \
-    return luaL_error( L, "%s", e.what() ); \
-  } } while( 0 )
+    catch( std::exception const& e ) { \
+      _f4l_exception_thrown = 1; \
+    } \
+    if( _f4l_exception_thrown ) { \
+      lua_pushliteral( L, "C++ exception in FLTK code" ); \
+      lua_error( L ); \
+    } \
+  } while( 0 )
 
 
 /* macro that raises an error if _n doesn't match the length of the

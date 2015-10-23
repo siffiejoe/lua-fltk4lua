@@ -141,6 +141,7 @@ static int fbrowser_load( lua_State* L ) {
   F4L_TRY {
     return luaL_fileresult( L, b->load( dname, f ), dname );
   } F4L_CATCH( L );
+  return 0;
 }
 
 F4L_LUA_LLINKAGE_END
