@@ -90,7 +90,7 @@ F4L_DEF_DELETE( Fl_Clock )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_clock_output( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Clock_Output >( L, F4L_CLOCK_OUTPUT_NAME,
                                        f4l_delete_Fl_Clock_Output );
   } F4L_CATCH( L );
@@ -99,7 +99,7 @@ static int new_clock_output( lua_State* L ) {
 
 
 static int new_clock( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Clock >( L, F4L_CLOCK_NAME,
                                 f4l_delete_Fl_Clock );
   } F4L_CATCH( L );
@@ -111,7 +111,7 @@ static int clock_index( lua_State* L ) {
   Fl_Clock_Output* c = check_clock( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !clock_index_( L, c, key, n ) &&
         !f4l_widget_index_( L, c, key, n ) &&
         !f4l_bad_property( L, F4L_CLOCK_OUTPUT_NAME, key ) )
@@ -125,7 +125,7 @@ static int clock_newindex( lua_State* L ) {
   Fl_Clock_Output* c = check_clock( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(clock_newindex_( L, c, key, n ) ||
            f4l_widget_newindex_( L, c, key, n ) ||
            f4l_bad_property( L, F4L_CLOCK_OUTPUT_NAME, key ));
@@ -139,7 +139,7 @@ static int clock_setvalue( lua_State* L ) {
   int h = moon_checkint( L, 2, 0, 23 );
   int m = moon_checkint( L, 3, 0, 59 );
   int s = moon_checkint( L, 4, 0, 60 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     c->value( h, m, s );
   } F4L_CATCH( L );
   return 0;

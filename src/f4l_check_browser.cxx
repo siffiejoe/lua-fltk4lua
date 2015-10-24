@@ -49,7 +49,7 @@ F4L_DEF_DELETE( Fl_Check_Browser )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_check_browser( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Check_Browser >( L, F4L_CHECK_BROWSER_NAME,
                                         f4l_delete_Fl_Check_Browser );
   } F4L_CATCH( L );
@@ -61,7 +61,7 @@ static int check_browser_index( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !check_browser_index_( L, b, key, n ) &&
         !f4l_browserx_index_( L, b, key, n ) &&
         !f4l_widget_index_( L, b, key, n ) &&
@@ -76,7 +76,7 @@ static int check_browser_newindex( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_browserx_newindex_( L, b, key, n ) ||
            f4l_widget_newindex_( L, b, key, n ) ||
            f4l_bad_property( L, F4L_CHECK_BROWSER_NAME, key ));
@@ -88,7 +88,7 @@ static int check_browser_newindex( lua_State* L ) {
 static int check_browser_add( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   char const* s = luaL_optstring( L, 2, NULL );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushinteger( L, b->add( s, lua_toboolean( L, 3 ) ) );
   } F4L_CATCH( L );
   return 1;
@@ -97,7 +97,7 @@ static int check_browser_add( lua_State* L ) {
 
 static int check_browser_check_all( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->check_all();
   } F4L_CATCH( L );
   return 0;
@@ -106,7 +106,7 @@ static int check_browser_check_all( lua_State* L ) {
 
 static int check_browser_check_none( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->check_none();
   } F4L_CATCH( L );
   return 0;
@@ -116,7 +116,7 @@ static int check_browser_check_none( lua_State* L ) {
 static int check_browser_checked( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   int i = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int nitems = b->nitems();
     luaL_argcheck( L, i <= nitems, 2, "index too large" );
     if( lua_gettop( L ) > 2 ) {
@@ -133,7 +133,7 @@ static int check_browser_checked( lua_State* L ) {
 
 static int check_browser_clear( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->clear();
   } F4L_CATCH( L );
   return 0;
@@ -143,7 +143,7 @@ static int check_browser_clear( lua_State* L ) {
 static int check_browser_remove( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   int i = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int nitems = b->nitems();
     luaL_argcheck( L, i <= nitems, 2, "index too large" );
     lua_pushinteger( L, b->remove( i ) );
@@ -155,7 +155,7 @@ static int check_browser_remove( lua_State* L ) {
 static int check_browser_set_checked( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   int i = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int nitems = b->nitems();
     luaL_argcheck( L, i <= nitems, 2, "index too large" );
     b->set_checked( i );
@@ -167,7 +167,7 @@ static int check_browser_set_checked( lua_State* L ) {
 static int check_browser_text( lua_State* L ) {
   Fl_Check_Browser* b = check_check_browser( L, 1 );
   int i = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int nitems = b->nitems();
     luaL_argcheck( L, i <= nitems, 2, "index too large" );
     char const* t = b->text( i );

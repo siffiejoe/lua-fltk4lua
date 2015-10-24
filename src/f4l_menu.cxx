@@ -337,7 +337,7 @@ MOON_LOCAL int f4l_menu_newindex_( lua_State* L, Fl_Menu_* m,
 F4L_LUA_LLINKAGE_BEGIN
 
 MOON_LOCAL int f4l_menu_add( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     Fl_Menu_* m = check_rw_menu( L, 1 );
     size_t n = 0;
     char const* label = luaL_checklstring( L, 2, &n );
@@ -371,7 +371,7 @@ MOON_LOCAL int f4l_menu_add( lua_State* L ) {
 
 MOON_LOCAL int f4l_menu_clear( lua_State* L ) {
   Fl_Menu_* m = check_rw_menu( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     m->clear();
   } F4L_CATCH( L );
   lua_pushnil( L );
@@ -383,7 +383,7 @@ MOON_LOCAL int f4l_menu_clear( lua_State* L ) {
 MOON_LOCAL int f4l_menu_clear_submenu( lua_State* L ) {
   Fl_Menu_* m = check_rw_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int oldsize = m->size();
     luaL_argcheck( L, idx < oldsize, 2, "index too large" );
     menu_array_sync( L, 1, m, oldsize ); // pushes mirror table
@@ -401,7 +401,7 @@ MOON_LOCAL int f4l_menu_clear_submenu( lua_State* L ) {
 MOON_LOCAL int f4l_menu_find_index( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   char const* name = luaL_checkstring( L, 2 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int v = m->find_index( name );
     if( v >= 0 )
       lua_pushinteger( L, v );
@@ -413,7 +413,7 @@ MOON_LOCAL int f4l_menu_find_index( lua_State* L ) {
 
 
 MOON_LOCAL int f4l_menu_insert( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     Fl_Menu_* m = check_rw_menu( L, 1 );
     int msize = m->size();
     int idx = moon_checkint( L, 2, -1, INT_MAX );
@@ -450,7 +450,7 @@ MOON_LOCAL int f4l_menu_insert( lua_State* L ) {
 MOON_LOCAL int f4l_menu_remove( lua_State* L ) {
   Fl_Menu_* m = check_rw_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int oldsize = m->size();
     luaL_argcheck( L, idx < oldsize, 2, "index too large" );
     if( m->text( idx ) != NULL ) { // don't remove terminators
@@ -468,7 +468,7 @@ MOON_LOCAL int f4l_menu_size( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int w = moon_checkint( L, 2, 0, INT_MAX );
   int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     m->size( w, h );
   } F4L_CATCH( L );
   return 0;
@@ -478,7 +478,7 @@ MOON_LOCAL int f4l_menu_size( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_getp( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     size_t n = 0;
@@ -558,7 +558,7 @@ MOON_LOCAL int f4l_menu_menuitem_getp( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_setp( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     luaL_argcheck( L, m->menu()[ idx ].label() != NULL, 2,
@@ -659,7 +659,7 @@ MOON_LOCAL int f4l_menu_menuitem_setp( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_activate( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -672,7 +672,7 @@ MOON_LOCAL int f4l_menu_menuitem_activate( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_active( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     int v = const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -686,7 +686,7 @@ MOON_LOCAL int f4l_menu_menuitem_active( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_activevisible( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     int v = const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -700,7 +700,7 @@ MOON_LOCAL int f4l_menu_menuitem_activevisible( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_checkbox( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     int v = const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -714,7 +714,7 @@ MOON_LOCAL int f4l_menu_menuitem_checkbox( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_clear( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -727,7 +727,7 @@ MOON_LOCAL int f4l_menu_menuitem_clear( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_deactivate( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -740,7 +740,7 @@ MOON_LOCAL int f4l_menu_menuitem_deactivate( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_hide( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -753,7 +753,7 @@ MOON_LOCAL int f4l_menu_menuitem_hide( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_radio( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     int v = const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -767,7 +767,7 @@ MOON_LOCAL int f4l_menu_menuitem_radio( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_set( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -780,7 +780,7 @@ MOON_LOCAL int f4l_menu_menuitem_set( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_setonly( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -793,7 +793,7 @@ MOON_LOCAL int f4l_menu_menuitem_setonly( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_show( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -806,7 +806,7 @@ MOON_LOCAL int f4l_menu_menuitem_show( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_submenu( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     int v = const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -820,7 +820,7 @@ MOON_LOCAL int f4l_menu_menuitem_submenu( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_value( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     int v = const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]
@@ -834,7 +834,7 @@ MOON_LOCAL int f4l_menu_menuitem_value( lua_State* L ) {
 MOON_LOCAL int f4l_menu_menuitem_visible( lua_State* L ) {
   Fl_Menu_* m = check_menu( L, 1 );
   int idx = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int size = m->size();
     luaL_argcheck( L, idx < size, 2, "index too large" );
     int v = const_cast< Fl_Menu_Item* >( m->menu() )[ idx ]

@@ -102,7 +102,7 @@ F4L_DEF_DELETE( Fl_Counter )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_counter( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Counter >( L, F4L_COUNTER_NAME,
                                   f4l_delete_Fl_Counter );
   } F4L_CATCH( L );
@@ -114,7 +114,7 @@ static int counter_index( lua_State* L ) {
   Fl_Counter* c = check_counter( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !counter_index_( L, c, key, n ) &&
         !f4l_valuator_index_( L, c, key, n ) &&
         !f4l_widget_index_( L, c, key, n ) &&
@@ -129,7 +129,7 @@ static int counter_newindex( lua_State* L ) {
   Fl_Counter* c = check_counter( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(counter_newindex_( L, c, key, n ) ||
            f4l_valuator_newindex_( L, c, key, n ) ||
            f4l_widget_newindex_( L, c, key, n ) ||

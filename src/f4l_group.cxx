@@ -26,7 +26,7 @@ F4L_DEF_DELETE( Fl_Group )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_group( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Group >( L, F4L_GROUP_NAME,
                                 f4l_delete_Fl_Group );
   } F4L_CATCH( L );
@@ -38,7 +38,7 @@ static int group_index( lua_State* L ) {
   Fl_Group* g = check_group( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !f4l_group_index_( L, g, key, n ) &&
         !f4l_widget_index_( L, g, key, n ) &&
         !f4l_bad_property( L, F4L_GROUP_NAME, key ) )
@@ -52,7 +52,7 @@ static int group_newindex( lua_State* L ) {
   Fl_Group* g = check_group( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_group_newindex_( L, g, key, n ) ||
            f4l_widget_newindex_( L, g, key, n ) ||
            f4l_bad_property( L, F4L_GROUP_NAME, key ));
@@ -62,7 +62,7 @@ static int group_newindex( lua_State* L ) {
 
 
 static int group_current( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) > 0 ) {
       Fl_Group* g = luaL_opt( L, check_group, 1, NULL );
       Fl_Group::current( g );
@@ -80,7 +80,7 @@ MOON_LOCAL int f4l_group_add( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
   Fl_Widget* widget = check_widget( L, 2 );
   Fl_Widget* parent = NULL;
-  F4L_TRY {
+  F4L_TRY( L ) {
     parent = widget->parent();
   } F4L_CATCH( L );
   int has_parent = parent != NULL && parent != group;
@@ -94,7 +94,7 @@ MOON_LOCAL int f4l_group_add( lua_State* L ) {
   lua_pushvalue( L, 2 );
   lua_rawset( L, -3 );
   lua_pop( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     group->add( widget );
   } F4L_CATCH( L );
   if( has_parent ) {
@@ -111,7 +111,7 @@ MOON_LOCAL int f4l_group_add_resizable( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
   Fl_Widget* widget = check_widget( L, 2 );
   Fl_Widget* parent = NULL;
-  F4L_TRY {
+  F4L_TRY( L ) {
     parent= widget->parent();
   } F4L_CATCH( L );
   int has_parent = parent != NULL && parent != group;
@@ -125,7 +125,7 @@ MOON_LOCAL int f4l_group_add_resizable( lua_State* L ) {
   lua_pushvalue( L, 2 );
   lua_rawset( L, -3 );
   lua_pop( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     group->add_resizable( *widget );
   } F4L_CATCH( L );
   if( has_parent ) {
@@ -140,7 +140,7 @@ MOON_LOCAL int f4l_group_add_resizable( lua_State* L ) {
 
 MOON_LOCAL int f4l_group_begin( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     group->begin();
   } F4L_CATCH( L );
   return 0;
@@ -149,7 +149,7 @@ MOON_LOCAL int f4l_group_begin( lua_State* L ) {
 
 MOON_LOCAL int f4l_group_child( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int i = moon_checkint( L, 2, 0, group->children()-1 );
     f4l_push_widget( L, group->child( i ) );
   } F4L_CATCH( L );
@@ -160,7 +160,7 @@ MOON_LOCAL int f4l_group_child( lua_State* L ) {
 MOON_LOCAL int f4l_group_clear( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
   lua_getuservalue( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int n = group->children();
     for( int i = n; i > 0; --i ) {
       Fl_Widget* w = group->child( i-1 );
@@ -177,7 +177,7 @@ MOON_LOCAL int f4l_group_clear( lua_State* L ) {
 
 MOON_LOCAL int f4l_group_end( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     group->end();
   } F4L_CATCH( L );
   return 0;
@@ -187,7 +187,7 @@ MOON_LOCAL int f4l_group_end( lua_State* L ) {
 MOON_LOCAL int f4l_group_find( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
   Fl_Widget* widget = check_widget( L, 2 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushinteger( L, group->find( widget ) );
   } F4L_CATCH( L );
   return 1;
@@ -199,7 +199,7 @@ MOON_LOCAL int f4l_group_insert( lua_State* L ) {
   Fl_Widget* widget = check_widget( L, 2 );
   int index = moon_checkint( L, 3, 0, INT_MAX );
   Fl_Widget* parent = NULL;
-  F4L_TRY {
+  F4L_TRY( L ) {
     parent= widget->parent();
   } F4L_CATCH( L );
   int has_parent = parent != NULL && parent != group;
@@ -213,7 +213,7 @@ MOON_LOCAL int f4l_group_insert( lua_State* L ) {
   lua_pushvalue( L, 2 );
   lua_rawset( L, -3 );
   lua_pop( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     group->insert( *widget, index );
   } F4L_CATCH( L );
   if( has_parent ) {
@@ -230,7 +230,7 @@ MOON_LOCAL int f4l_group_remove( lua_State* L ) {
   Fl_Group* group = check_group( L, 1 );
   int index = moon_checkint( L, 2, 0, INT_MAX );
   Fl_Widget* w = NULL;
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( index < group->children() )
       w = group->child( index );
     group->remove( index );

@@ -111,7 +111,7 @@ F4L_DEF_DELETE( Fl_Value_Input )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_value_input( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Value_Input >( L, F4L_VALUE_INPUT_NAME,
                                       f4l_delete_Fl_Value_Input );
   } F4L_CATCH( L );
@@ -123,7 +123,7 @@ static int value_input_index( lua_State* L ) {
   Fl_Value_Input* v = check_value_input( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !value_input_index_( L, v, key, n ) &&
         !f4l_valuator_index_( L, v, key, n ) &&
         !f4l_widget_index_( L, v, key, n ) &&
@@ -138,7 +138,7 @@ static int value_input_newindex( lua_State* L ) {
   Fl_Value_Input* v = check_value_input( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(value_input_newindex_( L, v, key, n ) ||
            f4l_valuator_newindex_( L, v, key, n ) ||
            f4l_widget_newindex_( L, v, key, n ) ||

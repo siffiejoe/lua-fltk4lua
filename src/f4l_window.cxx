@@ -23,7 +23,7 @@ F4L_DEF_DELETE( Fl_Window )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_window( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_window< Fl_Window >( L, F4L_WINDOW_NAME,
                                  f4l_delete_Fl_Window );
   } F4L_CATCH( L );
@@ -35,7 +35,7 @@ static int window_index( lua_State* L ) {
   Fl_Window* w = check_window( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !f4l_window_index_( L, w, key, n ) &&
         !f4l_group_index_( L, w, key, n ) &&
         !f4l_widget_index_( L, w, key, n ) &&
@@ -50,7 +50,7 @@ static int window_newindex( lua_State* L ) {
   Fl_Window* w = check_window( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_window_newindex_( L, w, key, n ) ||
            f4l_group_newindex_( L, w, key, n ) ||
            f4l_widget_newindex_( L, w, key, n ) ||
@@ -62,7 +62,7 @@ static int window_newindex( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_clear_border( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->clear_border();
   } F4L_CATCH( L );
   return 0;
@@ -74,7 +74,7 @@ MOON_LOCAL int f4l_window_cursor( lua_State* L ) {
   Fl_Cursor cursor = f4l_check_cursor( L, 2 );
   Fl_Color fg = luaL_opt( L, f4l_check_color, 3, FL_BLACK );
   Fl_Color bg = luaL_opt( L, f4l_check_color, 4, FL_WHITE );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->cursor( cursor, fg, bg );
   } F4L_CATCH( L );
   return 0;
@@ -86,7 +86,7 @@ MOON_LOCAL int f4l_window_default_cursor( lua_State* L ) {
   Fl_Cursor cursor = f4l_check_cursor( L, 2 );
   Fl_Color fg = luaL_opt( L, f4l_check_color, 3, FL_BLACK );
   Fl_Color bg = luaL_opt( L, f4l_check_color, 4, FL_WHITE );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->default_cursor( cursor, fg, bg );
   } F4L_CATCH( L );
   return 0;
@@ -95,7 +95,7 @@ MOON_LOCAL int f4l_window_default_cursor( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_fullscreen( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->fullscreen();
   } F4L_CATCH( L );
   return 0;
@@ -104,7 +104,7 @@ MOON_LOCAL int f4l_window_fullscreen( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_fullscreen_off( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) > 1 ) {
       int x = moon_checkint( L, 2, 0, INT_MAX );
       int y = moon_checkint( L, 3, 0, INT_MAX );
@@ -120,7 +120,7 @@ MOON_LOCAL int f4l_window_fullscreen_off( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_iconize( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->iconize();
   } F4L_CATCH( L );
   return 0;
@@ -129,7 +129,7 @@ MOON_LOCAL int f4l_window_iconize( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_make_current( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->make_current();
   } F4L_CATCH( L );
   return 0;
@@ -138,7 +138,7 @@ MOON_LOCAL int f4l_window_make_current( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_set_modal( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->set_modal();
   } F4L_CATCH( L );
   return 0;
@@ -147,7 +147,7 @@ MOON_LOCAL int f4l_window_set_modal( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_set_non_modal( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->set_non_modal();
   } F4L_CATCH( L );
   return 0;
@@ -156,7 +156,7 @@ MOON_LOCAL int f4l_window_set_non_modal( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_set_override( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->set_override();
   } F4L_CATCH( L );
   return 0;
@@ -165,7 +165,7 @@ MOON_LOCAL int f4l_window_set_override( lua_State* L ) {
 
 MOON_LOCAL int f4l_window_show( lua_State* L ) {
   Fl_Window* window = check_window( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_isnoneornil( L, 2 ) ) {
       window->show();
     } else {
@@ -188,7 +188,7 @@ MOON_LOCAL int f4l_window_size_range( lua_State* L ) {
   int dw = moon_optint( L, 6, 0, INT_MAX, 0 );
   int dh = moon_optint( L, 7, 0, INT_MAX, 0 );
   int aspect = lua_toboolean( L, 8 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     window->size_range( minw, minh, maxw, maxh, dw, dh, aspect );
   } F4L_CATCH( L );
   return 0;

@@ -76,7 +76,7 @@ F4L_DEF_DELETE( Fl_Pack )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_pack( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Pack >( L, F4L_PACK_NAME,
                                f4l_delete_Fl_Pack );
   } F4L_CATCH( L );
@@ -88,7 +88,7 @@ static int pack_index( lua_State* L ) {
   Fl_Pack* p = check_pack( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !pack_index_( L, p, key, n ) &&
         !f4l_group_index_( L, p, key, n ) &&
         !f4l_widget_index_( L, p, key, n ) &&
@@ -103,7 +103,7 @@ static int pack_newindex( lua_State* L ) {
   Fl_Pack* p = check_pack( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(pack_newindex_( L, p, key, n ) ||
            f4l_group_newindex_( L, p, key, n ) ||
            f4l_widget_newindex_( L, p, key, n ) ||

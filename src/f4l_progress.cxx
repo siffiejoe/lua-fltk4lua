@@ -67,7 +67,7 @@ F4L_DEF_DELETE( Fl_Progress )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_progress( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Progress >( L, F4L_PROGRESS_NAME,
                                    f4l_delete_Fl_Progress );
   } F4L_CATCH( L );
@@ -79,7 +79,7 @@ static int progress_index( lua_State* L ) {
   Fl_Progress* p = check_progress( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !progress_index_( L, p, key, n ) &&
         !f4l_widget_index_( L, p, key, n ) &&
         !f4l_bad_property( L, F4L_PROGRESS_NAME, key ) )
@@ -93,7 +93,7 @@ static int progress_newindex( lua_State* L ) {
   Fl_Progress* p = check_progress( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(progress_newindex_( L, p, key, n ) ||
            f4l_widget_newindex_( L, p, key, n ) ||
            f4l_bad_property( L, F4L_PROGRESS_NAME, key ));

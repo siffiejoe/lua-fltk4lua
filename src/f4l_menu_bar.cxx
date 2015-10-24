@@ -20,7 +20,7 @@ F4L_DEF_DELETE( Fl_Menu_Bar )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_menu_bar( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Menu_Bar >( L, F4L_MENU_BAR_NAME,
                                    f4l_delete_Fl_Menu_Bar );
   } F4L_CATCH( L );
@@ -32,7 +32,7 @@ static int menu_bar_index( lua_State* L ) {
   Fl_Menu_Bar* mb = check_menu_bar( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !f4l_menu_index_( L, mb, key, n ) &&
         !f4l_widget_index_( L, mb, key, n ) &&
         !f4l_bad_property( L, F4L_MENU_BAR_NAME, key ) )
@@ -46,7 +46,7 @@ static int menu_bar_newindex( lua_State* L ) {
   Fl_Menu_Bar* mb = check_menu_bar( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_menu_newindex_( L, mb, key, n ) ||
            f4l_widget_newindex_( L, mb, key, n ) ||
            f4l_bad_property( L, F4L_MENU_BAR_NAME, key ));

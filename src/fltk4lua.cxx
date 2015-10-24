@@ -6,7 +6,7 @@
 F4L_LUA_LLINKAGE_BEGIN
 
 static int f4l_run_( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushinteger( L, Fl::run() );
   } F4L_CATCH( L );
   return 1;
@@ -21,7 +21,7 @@ static int f4l_run( lua_State* L ) {
 static int f4l_wait_( lua_State* L ) {
   lua_Number timeout = luaL_optnumber( L, 1, 0 );
   luaL_argcheck( L, timeout >= 0, 1, "timeout must be positive" );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, Fl::wait( timeout ) );
   } F4L_CATCH( L );
   return 1;
@@ -34,7 +34,7 @@ static int f4l_wait( lua_State* L ) {
 
 
 static int f4l_check_( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, Fl::check() );
   } F4L_CATCH( L );
   return 1;
@@ -50,7 +50,7 @@ static int f4l_args( lua_State* L ) {
   int argc = 0;
   luaL_checktype( L, 1, LUA_TTABLE );
   char** argv = f4l_push_argv( L, 1, &argc );
-  F4L_TRY {
+  F4L_TRY( L ) {
     Fl::args( argc, argv );
   } F4L_CATCH( L );
   return 0;
@@ -58,7 +58,7 @@ static int f4l_args( lua_State* L ) {
 
 
 static int f4l_get_system_colors( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     Fl::get_system_colors();
   } F4L_CATCH( L );
   return 0;
@@ -66,7 +66,7 @@ static int f4l_get_system_colors( lua_State* L ) {
 
 
 static int f4l_scheme( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) > 0 ) {
       size_t len = 0;
       char const* s = luaL_optlstring( L, 1, NULL, &len );
@@ -87,7 +87,7 @@ static int f4l_scheme( lua_State* L ) {
 
 
 static int f4l_redraw( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     Fl::redraw();
   } F4L_CATCH( L );
   return 0;
@@ -96,7 +96,7 @@ static int f4l_redraw( lua_State* L ) {
 
 static int f4l_option( lua_State* L ) {
   Fl::Fl_Option o = f4l_check_option( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) > 1 ) {
       Fl::option( o, lua_toboolean( L, 2 ) );
       return 0;
@@ -111,7 +111,7 @@ static int f4l_option( lua_State* L ) {
 
 static int f4l_open_uri( lua_State* L ) {
   char const* uri = luaL_checkstring( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, fl_open_uri( uri, NULL, 0 ) );
   } F4L_CATCH( L );
   return 1;
@@ -123,7 +123,7 @@ static int f4l_open_uri( lua_State* L ) {
 static int delete_remaining_widgets( lua_State* L ) {
   int* v = static_cast< int* >( lua_touserdata( L, 1 ) );
   if( *v > 0 ) {
-    F4L_TRY {
+    F4L_TRY( L ) {
       Fl::check();
     } F4L_CATCH( L );
   }

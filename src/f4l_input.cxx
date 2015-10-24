@@ -99,7 +99,7 @@ F4L_DEF_DELETE( Fl_File_Input )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_input( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Input >( L, F4L_INPUT_NAME,
                                 f4l_delete_Fl_Input );
   } F4L_CATCH( L );
@@ -108,7 +108,7 @@ static int new_input( lua_State* L ) {
 
 
 static int new_file_input( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_File_Input >( L, F4L_FILE_INPUT_NAME,
                                      f4l_delete_Fl_File_Input );
   } F4L_CATCH( L );
@@ -120,7 +120,7 @@ static int input_index( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !f4l_input_index_( L, i, key, n ) &&
         !f4l_widget_index_( L, i, key, n ) &&
         !f4l_bad_property( L, F4L_INPUT_NAME, key ) )
@@ -134,7 +134,7 @@ static int input_newindex( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_input_newindex_( L, i, key, n ) ||
            f4l_widget_newindex_( L, i, key, n ) ||
            f4l_bad_property( L, F4L_INPUT_NAME, key ));
@@ -147,7 +147,7 @@ static int file_input_index( lua_State* L ) {
   Fl_File_Input* fi = check_file_input( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !file_input_index_( L, fi, key, n ) &&
         !f4l_input_index_( L, fi, key, n ) &&
         !f4l_widget_index_( L, fi, key, n ) &&
@@ -162,7 +162,7 @@ static int file_input_newindex( lua_State* L ) {
   Fl_File_Input* fi = check_file_input( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(file_input_newindex_( L, fi, key, n ) ||
            f4l_input_newindex_( L, fi, key, n ) ||
            f4l_widget_newindex_( L, fi, key, n ) ||
@@ -175,7 +175,7 @@ static int file_input_newindex( lua_State* L ) {
 MOON_LOCAL int f4l_input_copy( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   int cl = moon_checkint( L, 2, 0, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, i->copy( cl ) );
   } F4L_CATCH( L );
   return 1;
@@ -184,7 +184,7 @@ MOON_LOCAL int f4l_input_copy( lua_State* L ) {
 
 MOON_LOCAL int f4l_input_copy_cuts( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, i->copy_cuts() );
   } F4L_CATCH( L );
   return 1;
@@ -193,7 +193,7 @@ MOON_LOCAL int f4l_input_copy_cuts( lua_State* L ) {
 
 MOON_LOCAL int f4l_input_cut( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     switch( lua_gettop( L ) ) {
       case 1:
         lua_pushboolean( L, i->cut() );
@@ -218,7 +218,7 @@ MOON_LOCAL int f4l_input_cut( lua_State* L ) {
 MOON_LOCAL int f4l_input_idx( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   int x = moon_checkint( L, 2, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushinteger( L, i->index( x ) );
   } F4L_CATCH( L );
   return 1;
@@ -229,7 +229,7 @@ MOON_LOCAL int f4l_input_insert( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   size_t len = 0;
   char const* s = luaL_checklstring( L, 2, &len );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int n = static_cast< int >( len );
     lua_pushboolean( L, i->insert( s, n ) );
   } F4L_CATCH( L );
@@ -245,7 +245,7 @@ MOON_LOCAL int f4l_input_replace( lua_State* L ) {
   char const* s = NULL;
   if( !lua_isnoneornil( L, 4 ) )
     s = luaL_checklstring( L, 4, &len );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int n = static_cast< int >( len );
     lua_pushboolean( L, i->replace( b, e, s, n ) );
   } F4L_CATCH( L );
@@ -257,7 +257,7 @@ MOON_LOCAL int f4l_input_size( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
   int w = moon_checkint( L, 2, 0, INT_MAX );
   int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     i->size( w, h );
   } F4L_CATCH( L );
   return 0;
@@ -266,7 +266,7 @@ MOON_LOCAL int f4l_input_size( lua_State* L ) {
 
 MOON_LOCAL int f4l_input_undo( lua_State* L ) {
   Fl_Input* i = check_input( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, i->undo() );
   } F4L_CATCH( L );
   return 1;

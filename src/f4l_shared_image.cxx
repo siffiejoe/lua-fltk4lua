@@ -42,7 +42,7 @@ static int shared_image_index( lua_State* L ) {
   Fl_Shared_Image* si = check_shared_image( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !shared_image_index_( L, si, key, n ) &&
         !f4l_image_index_( L, si, key, n ) &&
         !f4l_bad_property( L, F4L_SHARED_IMAGE_NAME, key ) )
@@ -56,7 +56,7 @@ static int shared_image_copy( lua_State* L ) {
   Fl_Shared_Image* si = check_shared_image( L, 1 );
   int w = moon_checkint( L, 2, 0, INT_MAX );
   int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     void** p = moon_newpointer( L, F4L_SHARED_IMAGE_NAME,
                                 shared_image_delete );
     Fl_Shared_Image* si2 = NULL;
@@ -69,7 +69,7 @@ static int shared_image_copy( lua_State* L ) {
 
 static int shared_image_reload( lua_State* L ) {
   Fl_Shared_Image* si = check_shared_image( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     si->reload();
   } F4L_CATCH( L );
   return 0;
@@ -80,7 +80,7 @@ static int shared_image_get( lua_State* L ) {
   char const* name = luaL_checkstring( L, 1 );
   int w = moon_optint( L, 2, 0, INT_MAX, 0 );
   int h = moon_optint( L, 3, 0, INT_MAX, 0 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     void** p = moon_newpointer( L, F4L_SHARED_IMAGE_NAME,
                                 shared_image_delete );
     Fl_Shared_Image* si2 = Fl_Shared_Image::get( name, w, h );
@@ -96,7 +96,7 @@ static int shared_image_find( lua_State* L ) {
   char const* name = luaL_checkstring( L, 1 );
   int w = moon_optint( L, 2, 0, INT_MAX, 0 );
   int h = moon_optint( L, 3, 0, INT_MAX, 0 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     void** p = moon_newpointer( L, F4L_SHARED_IMAGE_NAME,
                                 shared_image_delete );
     Fl_Shared_Image* si2 = Fl_Shared_Image::get( name, w, h );
@@ -131,7 +131,7 @@ MOON_LOCAL void f4l_shared_image_setup( lua_State* L ) {
                 f4l_cast_Fl_Shared_Image_Fl_Image );
   f4l_new_class_table( L, "Shared_Image", 0, smethods );
 #if 1
-  F4L_TRY {
+  F4L_TRY( L ) {
     // add support for more image formats (PNG, JPEG)
     // you will need to link to the fltk_images library
     // use `fltk-config --use-images ...` to get appropriate flags

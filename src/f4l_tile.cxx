@@ -20,7 +20,7 @@ F4L_DEF_DELETE( Fl_Tile )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_tile( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Tile >( L, F4L_TILE_NAME,
                                f4l_delete_Fl_Tile );
   } F4L_CATCH( L );
@@ -32,7 +32,7 @@ static int tile_index( lua_State* L ) {
   Fl_Tile* t = check_tile( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !f4l_group_index_( L, t, key, n ) &&
         !f4l_widget_index_( L, t, key, n ) &&
         !f4l_bad_property( L, F4L_TILE_NAME, key ) )
@@ -46,7 +46,7 @@ static int tile_newindex( lua_State* L ) {
   Fl_Tile* t = check_tile( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_group_newindex_( L, t, key, n ) ||
            f4l_widget_newindex_( L, t, key, n ) ||
            f4l_bad_property( L, F4L_TILE_NAME, key ));
@@ -61,7 +61,7 @@ static int tile_position( lua_State* L ) {
   int oiy = moon_checkint( L, 3, 0, INT_MAX );
   int newx = moon_checkint( L, 4, 0, INT_MAX );
   int newy = moon_checkint( L, 5, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     t->position( oix, oiy, newx, newy );
   } F4L_CATCH( L );
   return 0;

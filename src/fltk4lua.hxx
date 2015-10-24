@@ -12,6 +12,7 @@ extern "C" {
 }
 /* common C++ headers */
 #include <exception> // for std::exception
+#include <cstring>   // for std::strncpy and std::memcmp
 /* basic FLTK headers */
 #include <FL/Fl.H>
 #include <FL/Fl_Widget.H>
@@ -38,16 +39,23 @@ extern "C" {
 
 
 /* transform standard C++ exceptions to Lua errors */
-#define F4L_TRY \
-  do { int _f4l_exception_thrown = 0; try
+#define F4L_TRY( L ) \
+  do { \
+    int _f4l_exception_thrown = 0; \
+    char _f4l_exception_buffer[ 128 ]; \
+    /* f4l_set_active_thread( L ); */ \
+    try
+
 #define F4L_CATCH( L ) \
     catch( std::exception const& e ) { \
+      using namespace std; \
+      size_t _sz = sizeof( _f4l_exception_buffer )-1; \
       _f4l_exception_thrown = 1; \
+      strncpy( _f4l_exception_buffer, e.what(), _sz ); \
+      _f4l_exception_buffer[ _sz ] = '\0'; \
     } \
-    if( _f4l_exception_thrown ) { \
-      lua_pushliteral( L, "C++ exception in FLTK code" ); \
-      lua_error( L ); \
-    } \
+    if( _f4l_exception_thrown ) \
+      luaL_error( L, "C++ exception: \"%s\"", _f4l_exception_buffer ); \
   } while( 0 )
 
 

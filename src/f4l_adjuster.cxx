@@ -50,7 +50,7 @@ F4L_DEF_DELETE( Fl_Adjuster )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_adjuster( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Adjuster >( L, F4L_ADJUSTER_NAME,
                                    f4l_delete_Fl_Adjuster );
   } F4L_CATCH( L );
@@ -62,7 +62,7 @@ static int adjuster_index( lua_State* L ) {
   Fl_Adjuster* a = check_adjuster( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !adjuster_index_( L, a, key, n ) &&
         !f4l_valuator_index_( L, a, key, n ) &&
         !f4l_widget_index_( L, a, key, n ) &&
@@ -77,7 +77,7 @@ static int adjuster_newindex( lua_State* L ) {
   Fl_Adjuster* a = check_adjuster( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(adjuster_newindex_( L, a, key, n ) ||
            f4l_valuator_newindex_( L, a, key, n ) ||
            f4l_widget_newindex_( L, a, key, n ) ||

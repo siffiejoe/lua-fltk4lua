@@ -81,7 +81,7 @@ F4L_DEF_DELETE( Fl_Color_Chooser )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_color_chooser( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Color_Chooser >( L, F4L_COLOR_CHOOSER_NAME,
                                         f4l_delete_Fl_Color_Chooser );
   } F4L_CATCH( L );
@@ -93,7 +93,7 @@ static int chooser_index( lua_State* L ) {
   Fl_Color_Chooser* c = check_color_chooser( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !chooser_index_( L, c, key, n ) &&
         !f4l_widget_index_( L, c, key, n ) &&
         !f4l_bad_property( L, F4L_COLOR_CHOOSER_NAME, key ) )
@@ -107,7 +107,7 @@ static int chooser_newindex( lua_State* L ) {
   Fl_Color_Chooser* c = check_color_chooser( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(chooser_newindex_( L, c, key, n ) ||
            f4l_widget_newindex_( L, c, key, n ) ||
            f4l_bad_property( L, F4L_COLOR_CHOOSER_NAME, key ));
@@ -121,7 +121,7 @@ static int chooser_rgb( lua_State* L ) {
   double r = luaL_checknumber( L, 2 );
   double g = luaL_checknumber( L, 3 );
   double b = luaL_checknumber( L, 4 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, c->rgb( r, g, b ) );
   } F4L_CATCH( L );
   return 1;
@@ -133,7 +133,7 @@ static int chooser_hsv( lua_State* L ) {
   double h = luaL_checknumber( L, 2 );
   double s = luaL_checknumber( L, 3 );
   double v = luaL_checknumber( L, 4 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, c->hsv( h, s, v ) );
   } F4L_CATCH( L );
   return 1;

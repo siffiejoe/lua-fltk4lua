@@ -129,7 +129,7 @@ F4L_DEF_DELETE( Fl_Input_Choice )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_input_choice( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     Fl_Input_Choice* ic = NULL;
     ic = f4l_new_widget< Fl_Input_Choice >( L, F4L_INPUT_CHOICE_NAME,
                                             f4l_delete_Fl_Input_Choice );
@@ -148,7 +148,7 @@ static int input_choice_index( lua_State* L ) {
   Fl_Input_Choice* ic = check_input_choice( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !input_choice_index_( L, ic, key, n ) &&
         !f4l_widget_index_( L, ic, key, n ) &&
         !f4l_bad_property( L, F4L_INPUT_CHOICE_NAME, key ) )
@@ -162,7 +162,7 @@ static int input_choice_newindex( lua_State* L ) {
   Fl_Input_Choice* ic = check_input_choice( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(input_choice_newindex_( L, ic, key, n ) ||
            f4l_widget_newindex_( L, ic, key, n ) ||
            f4l_bad_property( L, F4L_INPUT_CHOICE_NAME, key ));
@@ -199,7 +199,7 @@ static int input_choice_clear( lua_State* L ) {
 
 static int input_choice_clear_changed( lua_State* L ) {
   Fl_Input_Choice* ic = check_input_choice( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     ic->clear_changed();
   } F4L_CATCH( L );
   return 0;
@@ -208,7 +208,7 @@ static int input_choice_clear_changed( lua_State* L ) {
 
 static int input_choice_set_changed( lua_State* L ) {
   Fl_Input_Choice* ic = check_input_choice( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     ic->set_changed();
   } F4L_CATCH( L );
   return 0;

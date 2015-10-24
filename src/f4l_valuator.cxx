@@ -95,7 +95,7 @@ MOON_LOCAL int f4l_valuator_bounds( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   double a = luaL_checknumber( L, 2 );
   double b = luaL_checknumber( L, 3 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     v->bounds( a, b );
   } F4L_CATCH( L );
   return 0;
@@ -105,7 +105,7 @@ MOON_LOCAL int f4l_valuator_bounds( lua_State* L ) {
 MOON_LOCAL int f4l_valuator_clamp( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   double a = luaL_checknumber( L, 2 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushnumber( L, v->clamp( a ) );
   } F4L_CATCH( L );
   return 1;
@@ -115,7 +115,7 @@ MOON_LOCAL int f4l_valuator_clamp( lua_State* L ) {
 MOON_LOCAL int f4l_valuator_format( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   char buffer[ 128 ];
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushlstring( L, buffer, v->format( buffer ) );
   } F4L_CATCH( L );
   return 1;
@@ -126,7 +126,7 @@ MOON_LOCAL int f4l_valuator_increment( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   double a = luaL_checknumber( L, 2 );
   int b = moon_checkint( L, 3, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushnumber( L, v->increment( a, b ) );
   } F4L_CATCH( L );
   return 1;
@@ -137,7 +137,7 @@ MOON_LOCAL int f4l_valuator_range( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   double a = luaL_checknumber( L, 2 );
   double b = luaL_checknumber( L, 3 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     v->range( a, b );
   } F4L_CATCH( L );
   return 0;
@@ -147,7 +147,7 @@ MOON_LOCAL int f4l_valuator_range( lua_State* L ) {
 MOON_LOCAL int f4l_valuator_round( lua_State* L ) {
   Fl_Valuator* v = check_valuator( L, 1 );
   double a = luaL_checknumber( L, 2 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushnumber( L, v->round( a ) );
   } F4L_CATCH( L );
   return 1;

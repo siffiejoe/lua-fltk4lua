@@ -32,7 +32,7 @@ F4L_DEF_DELETE( Fl_Browser )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_browser( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Browser >( L, F4L_BROWSER_NAME,
                                   f4l_delete_Fl_Browser );
   } F4L_CATCH( L );
@@ -44,7 +44,7 @@ static int browser_index( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !f4l_browser_index_( L, b, key, n ) &&
         !f4l_browserx_index_( L, b, key, n ) &&
         !f4l_widget_index_( L, b, key, n ) &&
@@ -59,7 +59,7 @@ static int browser_newindex( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_browser_newindex_( L, b, key, n ) ||
            f4l_browserx_newindex_( L, b, key, n ) ||
            f4l_widget_newindex_( L, b, key, n ) ||
@@ -72,7 +72,7 @@ static int browser_newindex( lua_State* L ) {
 MOON_LOCAL int f4l_browser_add( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   char const* s = luaL_optstring( L, 2, NULL );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->add( s );
   } F4L_CATCH( L );
   return 0;
@@ -81,7 +81,7 @@ MOON_LOCAL int f4l_browser_add( lua_State* L ) {
 
 MOON_LOCAL int f4l_browser_clear( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->clear();
   } F4L_CATCH( L );
   return 0;
@@ -91,7 +91,7 @@ MOON_LOCAL int f4l_browser_clear( lua_State* L ) {
 MOON_LOCAL int f4l_browser_displayed( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     luaL_argcheck( L, line <= b->size(), 2, "index too large" );
     lua_pushboolean( L, b->displayed( line ) );
   } F4L_CATCH( L );
@@ -101,7 +101,7 @@ MOON_LOCAL int f4l_browser_displayed( lua_State* L ) {
 
 MOON_LOCAL int f4l_browser_hide( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) > 1 ) {
       int line = moon_checkint( L, 2, 1, INT_MAX );
       luaL_argcheck( L, line <= b->size(), 2, "index too large" );
@@ -117,7 +117,7 @@ MOON_LOCAL int f4l_browser_insert( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, INT_MIN, INT_MAX );
   char const* s = luaL_optstring( L, 2, NULL );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->insert( line, s );
   } F4L_CATCH( L );
   return 0;
@@ -127,7 +127,7 @@ MOON_LOCAL int f4l_browser_insert( lua_State* L ) {
 MOON_LOCAL int f4l_browser_load( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   char const* fname = luaL_checkstring( L, 2 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     return luaL_fileresult( L, b->load( fname ), fname );
   } F4L_CATCH( L );
   return 0;
@@ -137,7 +137,7 @@ MOON_LOCAL int f4l_browser_load( lua_State* L ) {
 MOON_LOCAL int f4l_browser_make_visible( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, INT_MIN, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->make_visible( line );
   } F4L_CATCH( L );
   return 0;
@@ -146,7 +146,7 @@ MOON_LOCAL int f4l_browser_make_visible( lua_State* L ) {
 
 MOON_LOCAL int f4l_browser_move( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int nitems = b->size();
     int line1 = moon_checkint( L, 2, INT_MIN, INT_MAX );
     int line2 = moon_checkint( L, 3, 1, INT_MAX );
@@ -160,7 +160,7 @@ MOON_LOCAL int f4l_browser_move( lua_State* L ) {
 MOON_LOCAL int f4l_browser_remove( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     luaL_argcheck( L, line <= b->size(), 2, "index too large" );
     b->remove( line );
   } F4L_CATCH( L );
@@ -171,7 +171,7 @@ MOON_LOCAL int f4l_browser_remove( lua_State* L ) {
 MOON_LOCAL int f4l_browser_select( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     luaL_argcheck( L, line <= b->size(), 2, "index too large" );
     int v = luaL_opt( L, lua_toboolean, 3, 1 );
     lua_pushboolean( L, b->select( line, v ) );
@@ -183,7 +183,7 @@ MOON_LOCAL int f4l_browser_select( lua_State* L ) {
 MOON_LOCAL int f4l_browser_selected( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     luaL_argcheck( L, line <= b->size(), 2, "index too large" );
     lua_pushboolean( L, b->selected( line ) );
   } F4L_CATCH( L );
@@ -193,7 +193,7 @@ MOON_LOCAL int f4l_browser_selected( lua_State* L ) {
 
 MOON_LOCAL int f4l_browser_show( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) > 1 ) {
       int line = moon_checkint( L, 2, 1, INT_MAX );
       luaL_argcheck( L, line <= b->size(), 2, "index too large" );
@@ -209,7 +209,7 @@ MOON_LOCAL int f4l_browser_size( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int w = moon_checkint( L, 2, 0, INT_MAX );
   int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->size( w, h );
   } F4L_CATCH( L );
   return 0;
@@ -218,7 +218,7 @@ MOON_LOCAL int f4l_browser_size( lua_State* L ) {
 
 MOON_LOCAL int f4l_browser_swap( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int nitems = b->size();
     int line1 = moon_checkint( L, 2, 1, INT_MAX );
     luaL_argcheck( L, line1 <= nitems, 2, "index too large" );
@@ -233,7 +233,7 @@ MOON_LOCAL int f4l_browser_swap( lua_State* L ) {
 MOON_LOCAL int f4l_browser_text( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     luaL_argcheck( L, line <= b->size(), 2, "index too large" );
     if( lua_gettop( L ) > 2 ) {
       b->text( line, luaL_checkstring( L, 3 ) );
@@ -254,7 +254,7 @@ MOON_LOCAL int f4l_browser_text( lua_State* L ) {
 MOON_LOCAL int f4l_browser_visible( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, 1, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     luaL_argcheck( L, line <= b->size(), 2, "index too large" );
     lua_pushboolean( L, b->visible( line ) );
   } F4L_CATCH( L );

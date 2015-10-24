@@ -143,7 +143,7 @@ F4L_DEF_DELETE( Fl_Spinner )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_spinner( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Spinner >( L, F4L_SPINNER_NAME,
                                   f4l_delete_Fl_Spinner );
   } F4L_CATCH( L );
@@ -155,7 +155,7 @@ static int spinner_index( lua_State* L ) {
   Fl_Spinner* sp = check_spinner( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !spinner_index_( L, sp, key, n ) &&
         !f4l_widget_index_( L, sp, key, n ) &&
         !f4l_bad_property( L, F4L_SPINNER_NAME, key ) )
@@ -169,7 +169,7 @@ static int spinner_newindex( lua_State* L ) {
   Fl_Spinner* sp = check_spinner( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(spinner_newindex_( L, sp, key, n ) ||
            f4l_widget_newindex_( L, sp, key, n ) ||
            f4l_bad_property( L, F4L_SPINNER_NAME, key ));
@@ -182,7 +182,7 @@ static int spinner_range( lua_State* L ) {
   Fl_Spinner* sp = check_spinner( L, 1 );
   double a = luaL_checknumber( L, 2 );
   double b = luaL_checknumber( L, 3 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     sp->range( a, b );
   } F4L_CATCH( L );
   return 0;

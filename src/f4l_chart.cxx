@@ -116,7 +116,7 @@ F4L_DEF_DELETE( Fl_Chart )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_chart( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Chart >( L, F4L_CHART_NAME,
                                 f4l_delete_Fl_Chart );
   } F4L_CATCH( L );
@@ -128,7 +128,7 @@ static int chart_index( lua_State* L ) {
   Fl_Chart* c = check_chart( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !chart_index_( L, c, key, n ) &&
         !f4l_widget_index_( L, c, key, n ) &&
         !f4l_bad_property( L, F4L_CHART_NAME, key ) )
@@ -142,7 +142,7 @@ static int chart_newindex( lua_State* L ) {
   Fl_Chart* c = check_chart( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(chart_newindex_( L, c, key, n ) ||
            f4l_widget_newindex_( L, c, key, n ) ||
            f4l_bad_property( L, F4L_CHART_NAME, key ));
@@ -156,7 +156,7 @@ static int chart_add( lua_State* L ) {
   double v = luaL_checknumber( L, 2 );
   char const* l = luaL_optstring( L, 3, NULL );
   Fl_Color co = luaL_opt( L, f4l_check_color, 4, FL_FOREGROUND_COLOR );
-  F4L_TRY {
+  F4L_TRY( L ) {
     c->add( v, l, co );
   } F4L_CATCH( L );
   return 0;
@@ -166,7 +166,7 @@ static int chart_add( lua_State* L ) {
 static int chart_bounds( lua_State* L ) {
   Fl_Chart* c = check_chart( L, 1 );
   double a, b;
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) < 3 ) {
       c->bounds( &a, &b );
       lua_pushnumber( L, a );
@@ -185,7 +185,7 @@ static int chart_bounds( lua_State* L ) {
 
 static int chart_clear( lua_State* L ) {
   Fl_Chart* c = check_chart( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     c->clear();
   } F4L_CATCH( L );
   return 0;
@@ -194,7 +194,7 @@ static int chart_clear( lua_State* L ) {
 
 static int chart_insert( lua_State* L ) {
   Fl_Chart* c = check_chart( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int ind = moon_checkint( L, 2, 1, c->size()+1 );
     double v = luaL_checknumber( L, 3 );
     char const* l = luaL_optstring( L, 4, NULL );
@@ -207,7 +207,7 @@ static int chart_insert( lua_State* L ) {
 
 static int chart_replace( lua_State* L ) {
   Fl_Chart* c = check_chart( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int ind = moon_checkint( L, 2, 1, c->size() );
     double v = luaL_checknumber( L, 3 );
     char const* l = luaL_optstring( L, 4, NULL );
@@ -222,7 +222,7 @@ static int chart_size( lua_State* L ) {
   Fl_Chart* c = check_chart( L, 1 );
   int w = moon_checkint( L, 2, 0, INT_MAX );
   int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     c->size( w, h );
   } F4L_CATCH( L );
   return 0;

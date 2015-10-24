@@ -39,7 +39,7 @@ MOON_LOCAL int f4l_image_color_average( lua_State* L ) {
   Fl_Image* i = check_image( L, 1 );
   Fl_Color c = f4l_check_color( L, 2 );
   float w = static_cast< float >( luaL_checknumber( L, 3 ) );
-  F4L_TRY {
+  F4L_TRY( L ) {
     i->color_average( c, w );
   } F4L_CATCH( L );
   return 0;
@@ -48,7 +48,7 @@ MOON_LOCAL int f4l_image_color_average( lua_State* L ) {
 
 MOON_LOCAL int f4l_image_desaturate( lua_State* L ) {
   Fl_Image* i = check_image( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     i->desaturate();
   } F4L_CATCH( L );
   return 0;
@@ -57,7 +57,7 @@ MOON_LOCAL int f4l_image_desaturate( lua_State* L ) {
 
 MOON_LOCAL int f4l_image_inactive( lua_State* L ) {
   Fl_Image* i = check_image( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     i->inactive();
   } F4L_CATCH( L );
   return 0;
@@ -66,7 +66,7 @@ MOON_LOCAL int f4l_image_inactive( lua_State* L ) {
 
 MOON_LOCAL int f4l_image_uncache( lua_State* L ) {
   Fl_Image* i = check_image( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     i->uncache();
   } F4L_CATCH( L );
   return 0;

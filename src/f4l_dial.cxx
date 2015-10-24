@@ -79,7 +79,7 @@ F4L_DEF_DELETE( Fl_Dial )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_dial( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Dial>( L, F4L_DIAL_NAME,
                               f4l_delete_Fl_Dial );
   } F4L_CATCH( L );
@@ -91,7 +91,7 @@ static int dial_index( lua_State* L ) {
   Fl_Dial* d = check_dial( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !dial_index_( L, d, key, n ) &&
         !f4l_valuator_index_( L, d, key, n ) &&
         !f4l_widget_index_( L, d, key, n ) &&
@@ -106,7 +106,7 @@ static int dial_newindex( lua_State* L ) {
   Fl_Dial* d = check_dial( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(dial_newindex_( L, d, key, n ) ||
            f4l_valuator_newindex_( L, d, key, n ) ||
            f4l_widget_newindex_( L, d, key, n ) ||
@@ -120,7 +120,7 @@ static int dial_angles( lua_State* L ) {
   Fl_Dial* d = check_dial( L, 1 );
   short a = moon_checkint( L, 2, SHRT_MIN, SHRT_MAX );
   short b = moon_checkint( L, 3, SHRT_MIN, SHRT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     d->angles( a, b );
   } F4L_CATCH( L );
   return 0;

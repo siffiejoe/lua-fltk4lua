@@ -55,7 +55,7 @@ F4L_DEF_DELETE( Fl_Wizard )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_wizard( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Wizard >( L, F4L_WIZARD_NAME,
                                  f4l_delete_Fl_Wizard );
   } F4L_CATCH( L );
@@ -67,7 +67,7 @@ static int wizard_index( lua_State* L ) {
   Fl_Wizard* w = check_wizard( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !wizard_index_( L, w, key, n ) &&
         !f4l_group_index_( L, w, key, n ) &&
         !f4l_widget_index_( L, w, key, n ) &&
@@ -82,7 +82,7 @@ static int wizard_newindex( lua_State* L ) {
   Fl_Wizard* w = check_wizard( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(wizard_newindex_( L, w, key, n ) ||
            f4l_group_newindex_( L, w, key, n ) ||
            f4l_widget_newindex_( L, w, key, n ) ||
@@ -94,7 +94,7 @@ static int wizard_newindex( lua_State* L ) {
 
 static int wizard_next( lua_State* L ) {
   Fl_Wizard* w = check_wizard( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     w->next();
   } F4L_CATCH( L );
   return 0;
@@ -103,7 +103,7 @@ static int wizard_next( lua_State* L ) {
 
 static int wizard_prev( lua_State* L ) {
   Fl_Wizard* w = check_wizard( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     w->prev();
   } F4L_CATCH( L );
   return 0;

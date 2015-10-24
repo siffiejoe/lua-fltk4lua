@@ -103,7 +103,7 @@ F4L_DEF_DELETE( Fl_Scroll )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_scroll( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     Fl_Scroll* s = f4l_new_widget< Fl_Scroll >( L, F4L_SCROLL_NAME,
                                                 f4l_delete_Fl_Scroll );
     /* The __index handler would create those objects on demand,
@@ -125,7 +125,7 @@ static int scroll_index( lua_State* L ) {
   Fl_Scroll* s = check_scroll( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !scroll_index_( L, s, key, n ) &&
         !f4l_group_index_( L, s, key, n ) &&
         !f4l_widget_index_( L, s, key, n ) &&
@@ -140,7 +140,7 @@ static int scroll_newindex( lua_State* L ) {
   Fl_Scroll* s = check_scroll( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(scroll_newindex_( L, s, key, n ) ||
            f4l_group_newindex_( L, s, key, n ) ||
            f4l_widget_newindex_( L, s, key, n ) ||
@@ -153,7 +153,7 @@ static int scroll_newindex( lua_State* L ) {
 static int scroll_clear( lua_State* L ) {
   Fl_Scroll* s = check_scroll( L, 1 );
   lua_getuservalue( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     int n = s->children();
     for( int i = n; i > 0; --i ) {
       Fl_Widget* w = s->child( i-1 );
@@ -174,7 +174,7 @@ static int scroll_scroll_to( lua_State* L ) {
   Fl_Scroll* s = check_scroll( L, 1 );
   int w = moon_checkint( L, 2, 0, INT_MAX );
   int h = moon_checkint( L, 3, 0, INT_MAX );
-  F4L_TRY {
+  F4L_TRY( L ) {
     s->scroll_to( w, h );
   } F4L_CATCH( L );
   return 0;

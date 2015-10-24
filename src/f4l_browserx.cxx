@@ -31,7 +31,7 @@ F4L_LUA_LLINKAGE_BEGIN
 static int browserx_deselect_( lua_State* L ) {
   Fl_Browser_* b = check_browserx( L, 1 );
   int cb = lua_toboolean( L, 2 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushboolean( L, b->deselect( cb ) );
   } F4L_CATCH( L );
   return 1;
@@ -45,7 +45,7 @@ MOON_LOCAL int f4l_browserx_deselect( lua_State* L ) {
 
 MOON_LOCAL int f4l_browserx_scrollbar_left( lua_State* L ) {
   Fl_Browser_* b = check_browserx( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->scrollbar_left();
   } F4L_CATCH( L );
   return 0;
@@ -54,7 +54,7 @@ MOON_LOCAL int f4l_browserx_scrollbar_left( lua_State* L ) {
 
 MOON_LOCAL int f4l_browserx_scrollbar_right( lua_State* L ) {
   Fl_Browser_* b = check_browserx( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->scrollbar_right();
   } F4L_CATCH( L );
   return 0;
@@ -73,7 +73,7 @@ MOON_LOCAL int f4l_browserx_sort( lua_State* L ) {
     FL_SORT_DESCENDING
   };
   int flags = values[ luaL_checkoption( L, 2, "FL_SORT_ASCENDING", names ) ];
-  F4L_TRY {
+  F4L_TRY( L ) {
     b->sort( flags );
   } F4L_CATCH( L );
   return 0;

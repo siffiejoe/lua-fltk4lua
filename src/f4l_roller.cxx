@@ -40,7 +40,7 @@ F4L_DEF_DELETE( Fl_Roller )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_roller( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Roller>( L, F4L_ROLLER_NAME,
                                 f4l_delete_Fl_Roller );
   } F4L_CATCH( L );
@@ -52,7 +52,7 @@ static int roller_index( lua_State* L ) {
   Fl_Roller* r = check_roller( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !roller_index_( L, r, key, n ) &&
         !f4l_valuator_index_( L, r, key, n ) &&
         !f4l_widget_index_( L, r, key, n ) &&
@@ -67,7 +67,7 @@ static int roller_newindex( lua_State* L ) {
   Fl_Roller* r = check_roller( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(roller_newindex_( L, r, key, n ) ||
            f4l_valuator_newindex_( L, r, key, n ) ||
            f4l_widget_newindex_( L, r, key, n ) ||

@@ -38,7 +38,7 @@ F4L_LUA_LLINKAGE_BEGIN
 
 static int f4l_alert_( lua_State* L ) {
   char const* s = luaL_checkstring( L, 1);
-  F4L_TRY {
+  F4L_TRY( L ) {
     fl_alert( "%s", s );
   } F4L_CATCH( L );
   return 0;
@@ -52,7 +52,7 @@ static int f4l_alert( lua_State* L ) {
 
 static int f4l_beep( lua_State* L ) {
   int b = luaL_opt( L, check_beep, 1, FL_BEEP_DEFAULT );
-  F4L_TRY {
+  F4L_TRY( L ) {
     fl_beep( b );
   } F4L_CATCH( L );
   return 0;
@@ -65,7 +65,7 @@ static int f4l_choice_( lua_State* L ) {
   char const* b1 = luaL_optstring( L, 3, NULL );
   char const* b2 = luaL_optstring( L, 4, NULL );
   lua_settop( L, 4 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     lua_pushvalue( L, 2+fl_choice( "%s", b0, b1, b2, s ) );
   } F4L_CATCH( L );
   return 1;
@@ -83,7 +83,7 @@ static int f4l_color_chooser_( lua_State* L ) {
   uchar g = moon_optint( L, 3, 0, 255, 0 );
   uchar b = moon_optint( L, 4, 0, 255, 0 );
   int mode = moon_optint( L, 5, -1, 3, -1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( fl_color_chooser( s, r, g, b, mode ) )
       f4l_push_color( L, fl_rgb_color( r, g, b ) );
     else
@@ -102,7 +102,7 @@ static int f4l_dir_chooser_( lua_State* L ) {
   char const* msg = luaL_checkstring( L, 1 );
   char const* fname = luaL_checkstring( L, 2 );
   int relative = lua_toboolean( L, 3 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     char const* p = fl_dir_chooser( msg, fname, relative );
     if( p != NULL )
       lua_pushstring( L, p );
@@ -123,7 +123,7 @@ static int f4l_file_chooser_( lua_State* L ) {
   char const* pat = luaL_checkstring( L, 2 );
   char const* fname = luaL_checkstring( L, 3 );
   int relative = lua_toboolean( L, 4 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     char const* p = fl_file_chooser( msg, pat, fname, relative );
     if( p != NULL )
       lua_pushstring( L, p );
@@ -142,7 +142,7 @@ static int f4l_file_chooser( lua_State* L ) {
 static int f4l_input_( lua_State* L ) {
   char const* msg = luaL_checkstring( L, 1 );
   char const* def = luaL_optstring( L, 2, NULL );
-  F4L_TRY {
+  F4L_TRY( L ) {
     char const* r = fl_input( "%s", def, msg );
     if( r == NULL )
       lua_pushnil( L );
@@ -162,7 +162,7 @@ static int f4l_input( lua_State* L ) {
 
 static int f4l_message_( lua_State* L ) {
   char const* msg = luaL_checkstring( L, 1 );
-  F4L_TRY {
+  F4L_TRY( L ) {
     fl_message( "%s", msg );
   } F4L_CATCH( L );
   return 0;
@@ -177,7 +177,7 @@ static int f4l_message( lua_State* L ) {
 static int f4l_password_( lua_State* L ) {
   char const* msg = luaL_checkstring( L, 1 );
   char const* def = luaL_optstring( L, 2, NULL );
-  F4L_TRY {
+  F4L_TRY( L ) {
     char const* r = fl_password( "%s", def, msg );
     if( r == NULL )
       lua_pushnil( L );
@@ -196,7 +196,7 @@ static int f4l_password( lua_State* L ) {
 
 
 static int f4l_message_hotspot( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( lua_gettop( L ) > 0 ) {
       fl_message_hotspot( lua_toboolean( L, 1 ) );
       return 0;

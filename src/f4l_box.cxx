@@ -19,7 +19,7 @@ F4L_DEF_DELETE( Fl_Box )
 F4L_LUA_LLINKAGE_BEGIN
 
 static int new_box( lua_State* L ) {
-  F4L_TRY {
+  F4L_TRY( L ) {
     f4l_new_widget< Fl_Box >( L, F4L_BOX_NAME,
                               f4l_delete_Fl_Box );
   } F4L_CATCH( L );
@@ -31,7 +31,7 @@ static int box_index( lua_State* L ) {
   Fl_Box* b = check_box( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     if( !f4l_widget_index_( L, b, key, n ) &&
         !f4l_bad_property( L, F4L_BOX_NAME, key ) )
       lua_pushnil( L );
@@ -44,7 +44,7 @@ static int box_newindex( lua_State* L ) {
   Fl_Box* b = check_box( L, 1 );
   size_t n = 0;
   char const* key = luaL_checklstring( L, 2, &n );
-  F4L_TRY {
+  F4L_TRY( L ) {
     (void)(f4l_widget_newindex_( L, b, key, n ) ||
            f4l_bad_property( L, F4L_BOX_NAME, key ));
   } F4L_CATCH( L );
