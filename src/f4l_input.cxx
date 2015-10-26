@@ -304,10 +304,7 @@ MOON_LOCAL int f4l_input_index_( lua_State* L, Fl_Input* i,
       }
       break;
     case 8:
-      if( F4L_MEMCMP( key, "position", 8 ) == 0 ) {
-        lua_pushinteger( L, i->position() );
-        return 1;
-      } else if( F4L_MEMCMP( key, "readonly", 8 ) == 0 ) {
+      if( F4L_MEMCMP( key, "readonly", 8 ) == 0 ) {
         lua_pushboolean( L, i->readonly() );
         return 1;
       } else if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
@@ -339,6 +336,12 @@ MOON_LOCAL int f4l_input_index_( lua_State* L, Fl_Input* i,
         return 1;
       } else if( F4L_MEMCMP( key, "maximum_size", 12 ) == 0 ) {
         lua_pushinteger( L, i->maximum_size() );
+        return 1;
+      }
+      break;
+    case 15:
+      if( F4L_MEMCMP( key, "cursor_position", 15 ) == 0 ) {
+        lua_pushinteger( L, i->position() );
         return 1;
       }
       break;
@@ -378,10 +381,7 @@ MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* i,
       }
       break;
     case 8:
-      if( F4L_MEMCMP( key, "position", 8 ) == 0 ) {
-        i->position( moon_checkint( L, 3, 0, INT_MAX ) );
-        return 1;
-      } else if( F4L_MEMCMP( key, "readonly", 8 ) == 0 ) {
+      if( F4L_MEMCMP( key, "readonly", 8 ) == 0 ) {
         i->readonly( lua_toboolean( L, 3 ) );
         return 1;
       } else if( F4L_MEMCMP( key, "shortcut", 8 ) == 0 ) {
@@ -407,6 +407,12 @@ MOON_LOCAL int f4l_input_newindex_( lua_State* L, Fl_Input* i,
         return 1;
       } else if( F4L_MEMCMP( key, "maximum_size", 12 ) == 0 ) {
         i->maximum_size( moon_checkint( L, 3, 0, INT_MAX ) );
+        return 1;
+      }
+      break;
+    case 15:
+      if( F4L_MEMCMP( key, "cursor_position", 15 ) == 0 ) {
+        i->position( moon_checkint( L, 3, 0, INT_MAX ) );
         return 1;
       }
       break;

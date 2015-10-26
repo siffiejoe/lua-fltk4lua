@@ -296,7 +296,7 @@ MOON_LOCAL int f4l_group_newindex_( lua_State* L, Fl_Group* g,
         g->clip_children( lua_toboolean( L, 3 ) );
         return 1;
       }
-    break;
+      break;
   }
   return 0;
 }

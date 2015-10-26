@@ -251,7 +251,7 @@ MOON_LOCAL int f4l_browser_text( lua_State* L ) {
 }
 
 
-MOON_LOCAL int f4l_browser_visible( lua_State* L ) {
+MOON_LOCAL int f4l_browser_line_visible( lua_State* L ) {
   Fl_Browser* b = check_browser( L, 1 );
   int line = moon_checkint( L, 2, 1, INT_MAX );
   F4L_TRY( L ) {

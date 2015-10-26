@@ -160,6 +160,7 @@ MOON_LOCAL int f4l_browserx_newindex_( lua_State* L, Fl_Browser_* b,
         b->has_scrollbar( f4l_check_type_bscroll( L, 3 ) );
         return 1;
       }
+      break;
     case 14:
       if( F4L_MEMCMP( key, "scrollbar_size", 14 ) == 0 ) {
         b->scrollbar_size( moon_checkint( L, 3, 0, INT_MAX ) );
@@ -172,7 +173,6 @@ MOON_LOCAL int f4l_browserx_newindex_( lua_State* L, Fl_Browser_* b,
         return 1;
       }
       break;
-    break;
   }
   return 0;
 }
