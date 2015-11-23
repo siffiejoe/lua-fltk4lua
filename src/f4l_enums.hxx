@@ -54,6 +54,8 @@ MOON_LOCAL void f4l_push_mode( lua_State* L, Fl_Mode m );
 MOON_LOCAL Fl_When f4l_check_when( lua_State* L, int idx );
 MOON_LOCAL void f4l_push_when( lua_State* L, Fl_When w );
 
+MOON_LOCAL int f4l_check_fd_when( lua_State* L, int idx );
+
 MOON_LOCAL Fl_Cursor f4l_check_cursor( lua_State* L, int idx );
 MOON_LOCAL void f4l_push_cursor( lua_State* L, Fl_Cursor c );
 

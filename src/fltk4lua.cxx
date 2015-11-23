@@ -218,6 +218,144 @@ MOON_LOCAL void f4l_set_active_thread( lua_State* L ) {
   lua_pop( L, 1 );
 }
 
+static void get_fd_cache( lua_State * L ) {
+  static int xyz = 0;
+  moon_getcache( L, LUA_REGISTRYINDEX );
+  lua_pushlightuserdata( L, static_cast< void* >( &xyz ) );
+  lua_rawget( L, -2 );
+  if( lua_isnil( L, -1 )) {
+    lua_pop( L, 1 );
+    lua_newtable( L );
+    lua_pushlightuserdata( L, static_cast< void* >( &xyz ) );
+    lua_pushvalue( L, -2 );
+    lua_rawset( L, -4 );
+  }
+  lua_remove( L, -2 );
+}
+
+static void f4l_fd_cb( FL_SOCKET fd, void* ud, int when ) {
+  f4l_active_L* th = static_cast< f4l_active_L* >( ud );
+  if( th != NULL && th->cb_L != NULL ) {
+    lua_State* L = th->cb_L;
+    luaL_checkstack( L, 4, "f4l_fd_cb" );
+    int top = lua_gettop( L );
+    lua_pushcfunction( L, f4l_backtrace ); // top+1: f4l_backtrace
+    get_fd_cache( L ); // top+2: cache
+    lua_pushinteger( L, fd ); // top+3: fd
+    lua_rawget( L, -2 ); // top+3: fd callbacks table
+    lua_remove( L, -2 ); // remove cache, top+1: f4l_backtrace, fd callbacks table
+    lua_pushinteger( L, when ); // top+3: when
+    lua_rawget( L, -2 ); // top+3: lua callback
+    lua_remove( L, -2 ); // remove fd callbacks table, top+1: f4l_backtrace, lua callback
+
+    lua_pushinteger( L, fd ); // top+3: fd
+    lua_pushinteger( L, when ); // top+4: when
+
+    // top+1: f4l_backtrace, lua callback, fd, when
+    int status = lua_pcall( L, 2, 0, top + 1 );
+    // top+1: f4l_backtrace, err msg or nil
+    if( status != 0 ) {
+      lua_remove( L, -2 );
+      f4l_fix_backtrace( L );
+      lua_error( L );
+    }
+
+    lua_settop( L, top );
+  }
+}
+
+static void f4l_fd_cb_read( FL_SOCKET fd, void* ud ) {
+  f4l_fd_cb( fd, ud, FL_READ );
+}
+static void f4l_fd_cb_write( FL_SOCKET fd, void* ud ) {
+  f4l_fd_cb( fd, ud, FL_WRITE );
+}
+static void f4l_fd_cb_except( FL_SOCKET fd, void* ud ) {
+  f4l_fd_cb( fd, ud, FL_EXCEPT );
+}
+
+MOON_LOCAL int f4l_add_fd( lua_State* L ) {
+  static int whens[] = { FL_READ, FL_WRITE, FL_EXCEPT };
+  static Fl_FD_Handler when_cbs[] = { f4l_fd_cb_read, f4l_fd_cb_write, f4l_fd_cb_except };
+
+  if( !lua_isnumber( L, 1 ) || !lua_isfunction( L, 2 ) ) {
+    return luaL_error( L, "add_fd requires an integer fd, a Lua function and a optional event bitfield" );
+  }
+
+  int fd = lua_tointeger( L, 1 );
+  int when = lua_isnone( L, 3 ) ? (int)FL_READ : f4l_check_fd_when( L, 3 );
+
+  F4L_TRY( L ) {
+    get_fd_cache( L );
+    lua_pushinteger( L, fd );
+    lua_rawget( L, -2 );
+    if( lua_isnil( L, -1 ) ) {
+      lua_pop( L, 1 );
+      lua_newtable( L );
+      lua_pushinteger( L, fd );
+      lua_pushvalue( L, -2 );
+      lua_rawset( L, -4 );
+    }
+    // Stack top contains cache for this fd
+    void* fd_cb_user_data = static_cast< void* >( f4l_get_active_thread( L ) );
+    // Discard the userdata produced by f4l_get_active_thread
+    for( int i = 0; i < 3; i++ ) {
+      if ( when & whens[i] ) {
+        lua_pushinteger( L, whens[i] );
+        lua_pushvalue( L, 2 );
+        lua_rawset( L, -4 );
+        Fl::add_fd( fd, whens[i], when_cbs[i], fd_cb_user_data );
+      }
+    }
+  } F4L_CATCH( L );
+  return 0;
+}
+
+MOON_LOCAL int f4l_remove_fd( lua_State* L ) {
+  static int whens[] = { FL_READ, FL_WRITE, FL_EXCEPT };
+
+  if( !lua_isnumber( L, 1 ) ) {
+    return luaL_error( L, "remove_fd requires an integer fd and an optional event bitfield" );
+  }
+
+  int fd = lua_tointeger( L, 1 );
+  int when = lua_isnone( L, 2 ) ? 0 : f4l_check_fd_when( L, 2 );
+
+  F4L_TRY( L ) {
+    get_fd_cache( L );
+    lua_pushinteger( L, fd );
+    if( when == 0 ) {
+      lua_pushnil( L );
+      lua_rawset( L, -3 );
+      Fl::remove_fd( fd );
+    } else {
+      lua_rawget( L, -2 );
+      int empty = true;
+      for( int i = 0; i < 3; i++ ) {
+        lua_pushinteger( L, whens[i] );
+        if ( when & whens[i] ) {
+          lua_pushnil( L );
+          lua_rawset( L, -3 );
+          Fl::remove_fd( fd, whens[i] );
+        } else {
+          lua_rawget( L, -2 );
+          if( lua_isnil( L, -1 ) ) {
+            empty = false;
+          }
+          lua_pop( L, 1 );
+        }
+      }
+      lua_pop( L, 1 );
+      if( empty ) {
+        lua_pushinteger( L, fd );
+        lua_pushnil( L );
+        lua_rawset( L, -3 );
+      }
+    }
+  } F4L_CATCH( L );
+  return 0;
+}
+
 
 /* the following function exploits implementation details in FLTK
  * (that Fl_Window::show( int, char** ) does not modify the arguments)
@@ -337,6 +475,8 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
     { "redraw", f4l_redraw },
     { "option", f4l_option },
     { "open_uri", f4l_open_uri },
+    { "add_fd", f4l_add_fd },
+    { "remove_fd", f4l_remove_fd },
     { NULL, NULL }
   };
   luaL_newlib( L, functions );
