@@ -220,17 +220,15 @@ MOON_LOCAL void f4l_set_active_thread( lua_State* L ) {
 
 static void get_fd_cache( lua_State * L ) {
   static int xyz = 0;
-  moon_getcache( L, LUA_REGISTRYINDEX );
   lua_pushlightuserdata( L, static_cast< void* >( &xyz ) );
-  lua_rawget( L, -2 );
+  lua_rawget( L, LUA_REGISTRYINDEX );
   if( lua_isnil( L, -1 )) {
     lua_pop( L, 1 );
     lua_newtable( L );
     lua_pushlightuserdata( L, static_cast< void* >( &xyz ) );
     lua_pushvalue( L, -2 );
-    lua_rawset( L, -4 );
+    lua_rawset( L, LUA_REGISTRYINDEX );
   }
-  lua_remove( L, -2 );
 }
 
 static void f4l_fd_cb( FL_SOCKET fd, void* ud, int when ) {
