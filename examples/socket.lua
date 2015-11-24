@@ -38,6 +38,7 @@ local function sk_client_cb(fd)
     browser:add(string.format("fd%d closed by peer", fd))
     client:close()
     fl.remove_fd(fd)
+    clients[fd] = nil
   end
 end
 

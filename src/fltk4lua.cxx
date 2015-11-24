@@ -299,11 +299,12 @@ MOON_LOCAL int f4l_add_fd( lua_State* L ) {
     // Stack top contains cache for this fd
     void* fd_cb_user_data = static_cast< void* >( f4l_get_active_thread( L ) );
     // Discard the userdata produced by f4l_get_active_thread
+    lua_pop( L, 1 );
     for( int i = 0; i < 3; i++ ) {
       if ( when & whens[i] ) {
         lua_pushinteger( L, whens[i] );
         lua_pushvalue( L, 2 );
-        lua_rawset( L, -4 );
+        lua_rawset( L, -3 );
         Fl::add_fd( fd, whens[i], when_cbs[i], fd_cb_user_data );
       }
     }
@@ -321,32 +322,46 @@ MOON_LOCAL int f4l_remove_fd( lua_State* L ) {
   int fd = lua_tointeger( L, 1 );
   int when = lua_isnone( L, 2 ) ? 0 : f4l_check_fd_when( L, 2 );
 
+  // The code here is pretty protective since FL::remove_fd() crashes when
+  // removing callbacks of events that were not set. FL::add_fd() doesn’t
+  // seem picky at all, though.
   F4L_TRY( L ) {
     get_fd_cache( L );
     lua_pushinteger( L, fd );
-    if( when == 0 ) {
+    lua_rawget( L, -2 );
+    if( lua_isnil( L, -1 ) ) {
+      // No event set for this FD at all, do nothing.
+    }
+    else if( when == 0 ) {
+      // Remove all events
+      lua_pop( L, 1 );
+      lua_pushinteger( L, fd );
       lua_pushnil( L );
       lua_rawset( L, -3 );
       Fl::remove_fd( fd );
     } else {
-      lua_rawget( L, -2 );
       int empty = true;
       for( int i = 0; i < 3; i++ ) {
         lua_pushinteger( L, whens[i] );
-        if ( when & whens[i] ) {
-          lua_pushnil( L );
-          lua_rawset( L, -3 );
-          Fl::remove_fd( fd, whens[i] );
-        } else {
-          lua_rawget( L, -2 );
-          if( lua_isnil( L, -1 ) ) {
+        lua_rawget( L, -2 );
+        // Is there an cb for this event?
+        if( !lua_isnil( L, -1 ) ) {
+          // Are we removing this cb?
+          if( when & whens[i] ) {
+            lua_pushinteger( L, whens[i] );
+            lua_pushnil( L );
+            lua_rawset( L, -4 );
+            Fl::remove_fd( fd, whens[i] );
+          } else {
+            // This cb stays, so there’s at least one cb left for this fd
             empty = false;
           }
-          lua_pop( L, 1 );
         }
+        lua_pop( L, 1 );
       }
       lua_pop( L, 1 );
       if( empty ) {
+        // No more cb for this fd, remove the table of this fd from cache
         lua_pushinteger( L, fd );
         lua_pushnil( L );
         lua_rawset( L, -3 );
