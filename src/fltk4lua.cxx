@@ -19,10 +19,13 @@ static int f4l_run( lua_State* L ) {
 
 
 static int f4l_wait_( lua_State* L ) {
-  lua_Number timeout = luaL_optnumber( L, 1, 0 );
-  luaL_argcheck( L, timeout >= 0, 1, "timeout must be positive" );
+  lua_Number timeout = -1;
+  if( lua_isnumber( L, 1 ) ) {
+    timeout = lua_tonumber( L, 1 );
+    luaL_argcheck( L, timeout >= 0, 1, "timeout must be positive" );
+  }
   F4L_TRY( L ) {
-    lua_pushboolean( L, Fl::wait( timeout ) );
+    lua_pushboolean( L, timeout == -1 ? Fl::wait() : Fl::wait( timeout ) );
   } F4L_CATCH( L );
   return 1;
 }
