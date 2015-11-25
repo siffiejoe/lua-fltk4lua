@@ -566,6 +566,23 @@ MOON_LOCAL void f4l_push_font( lua_State* L, Fl_Font f ) {
 }
 
 
+#define FD_WHEN_LIST( _ ) \
+  _( "READ", FL_READ ) \
+  _( "WRITE", FL_WRITE ) \
+  _( "EXCEPT", FL_EXCEPT )
+
+#define MOON_FLAG_NAME "fltk4lua.Fd_When"
+#define MOON_FLAG_TYPE int
+#define MOON_FLAG_SUFFIX fd_when
+#define MOON_FLAG_USECACHE
+#define MOON_FLAG_NORELOPS
+#include "moon_flag.h"
+
+MOON_LOCAL int f4l_check_fd_when( lua_State* L, int idx ) {
+  return moon_flag_get_fd_when( L, idx );
+}
+
+
 #define COLOR_LIST( _ ) \
   _( "FOREGROUND_COLOR", FL_FOREGROUND_COLOR ) \
   _( "BACKGROUND2_COLOR", FL_BACKGROUND2_COLOR ) \
@@ -771,6 +788,7 @@ MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
   moon_flag_def_mode( L );
 #endif
   moon_flag_def_when( L );
+  moon_flag_def_fd_when( L );
   moon_flag_def_align( L );
   moon_flag_def_color( L );
 #define GEN_UDATA( _a, _b ) \
@@ -792,6 +810,10 @@ MOON_LOCAL void f4l_enums_setup( lua_State* L ) {
 #define GEN_UDATA( _a, _b ) \
   (moon_flag_new_when( L, _b ), lua_setfield( L, -2, _a ));
   WHEN_LIST( GEN_UDATA )
+#undef GEN_UDATA
+#define GEN_UDATA( _a, _b ) \
+  (moon_flag_new_fd_when( L, _b ), lua_setfield( L, -2, _a ));
+  FD_WHEN_LIST( GEN_UDATA )
 #undef GEN_UDATA
 #define GEN_UDATA( _a, _b ) \
   (moon_flag_new_align( L, _b ), lua_setfield( L, -2, _a ));

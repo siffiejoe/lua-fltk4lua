@@ -3,6 +3,66 @@
 #include <FL/filename.H>
 
 
+namespace {
+
+  void get_fd_cache( lua_State * L ) {
+    static int xyz = 0;
+    lua_rawgetp( L, LUA_REGISTRYINDEX, static_cast< void* >( &xyz ) );
+    if( lua_isnil( L, -1 ) ) {
+      lua_pop( L, 1 );
+      lua_newtable( L );
+      lua_pushvalue( L, -1 );
+      lua_rawsetp( L, LUA_REGISTRYINDEX, static_cast< void* >( &xyz ) );
+    }
+  }
+
+
+  void f4l_fd_cb( FL_SOCKET fd, void* ud, int when ) {
+    f4l_active_L* th = static_cast< f4l_active_L* >( ud );
+    if( th != NULL && th->cb_L != NULL ) {
+      lua_State* L = th->cb_L;
+      luaL_checkstack( L, 4, "f4l_fd_cb" );
+      int top = lua_gettop( L );
+      lua_pushcfunction( L, f4l_backtrace ); // top+1: f4l_backtrace
+      get_fd_cache( L ); // top+2: cache
+      lua_rawgeti( L, -1, static_cast< int >( fd ) ); // top+3: fd callbacks table
+      lua_remove( L, -2 ); // remove cache, top+1: f4l_backtrace, fd callbacks table
+      lua_rawgeti( L, -1, when ); // top+3: lua callback
+      lua_remove( L, -2 ); // remove fd callbacks table, top+1: f4l_backtrace, lua callback
+
+      lua_pushinteger( L, static_cast< int >( fd ) ); // top+3: fd
+      lua_pushinteger( L, when ); // top+4: when XXX not very useful to the Lua function!
+
+      // top+1: f4l_backtrace, lua callback, fd, when
+      int status = lua_pcall( L, 2, 0, top + 1 );
+      // top+1: f4l_backtrace, err msg or nil
+      if( status != 0 ) {
+        lua_remove( L, -2 );
+        f4l_fix_backtrace( L );
+        lua_error( L );
+      }
+
+      lua_settop( L, top );
+    }
+  }
+
+
+  void f4l_fd_cb_read( FL_SOCKET fd, void* ud ) {
+    f4l_fd_cb( fd, ud, FL_READ );
+  }
+
+  void f4l_fd_cb_write( FL_SOCKET fd, void* ud ) {
+    f4l_fd_cb( fd, ud, FL_WRITE );
+  }
+
+  void f4l_fd_cb_except( FL_SOCKET fd, void* ud ) {
+    f4l_fd_cb( fd, ud, FL_EXCEPT );
+  }
+
+} // anonymous namespace
+
+
+
 F4L_LUA_LLINKAGE_BEGIN
 
 static int f4l_run_( lua_State* L ) {
@@ -115,6 +175,87 @@ static int f4l_open_uri( lua_State* L ) {
     lua_pushboolean( L, fl_open_uri( uri, NULL, 0 ) );
   } F4L_CATCH( L );
   return 1;
+}
+
+
+static int f4l_add_fd( lua_State* L ) {
+  static int whens[] = { FL_READ, FL_WRITE, FL_EXCEPT };
+  static Fl_FD_Handler when_cbs[] = {
+    f4l_fd_cb_read, f4l_fd_cb_write, f4l_fd_cb_except
+  };
+  int fd = static_cast< int >( luaL_checkinteger( L, 1 ) );
+  luaL_checktype( L, 2, LUA_TFUNCTION );
+  int when = luaL_opt( L, f4l_check_fd_when, 3, FL_READ );
+
+  get_fd_cache( L );
+  if( lua_rawgeti( L, -1, fd ) == LUA_TNIL ) {
+    lua_pop( L, 1 );
+    lua_newtable( L );
+    lua_pushvalue( L, -1 );
+    lua_rawseti( L, -3, fd );
+  }
+  lua_replace( L, -2 ); // fd cache no longer needed
+  // Stack top contains callbacks table for this fd
+  void* fd_cb_user_data = static_cast< void* >( f4l_get_active_thread( L ) );
+  // Discard the userdata produced by f4l_get_active_thread
+  lua_pop( L, 1 );
+  F4L_TRY( L ) {
+    for( int i = 0; i < 3; i++ ) {
+      if ( when & whens[i] ) {
+        lua_pushvalue( L, 2 );
+        lua_rawseti( L, -2, whens[i] );
+        Fl::add_fd( fd, whens[i], when_cbs[i], fd_cb_user_data );
+      }
+    }
+  } F4L_CATCH( L );
+  return 0;
+}
+
+
+static int f4l_remove_fd( lua_State* L ) {
+  static int whens[] = { FL_READ, FL_WRITE, FL_EXCEPT };
+  int fd = static_cast< int >( luaL_checkinteger( L, 1 ) );
+  int when = luaL_opt( L, f4l_check_fd_when, 2, 0 );
+
+  // The code here is pretty protective since FL::remove_fd() crashes when
+  // removing callbacks of events that were not set. FL::add_fd() doesn’t
+  // seem picky at all, though.
+  F4L_TRY( L ) {
+    get_fd_cache( L );
+    if( lua_rawgeti( L, -1, fd ) == LUA_TNIL ) {
+      // No event set for this FD at all, do nothing.
+    } else if( when == 0 ) {
+      // Remove all events
+      lua_pop( L, 1 );
+      lua_pushnil( L );
+      lua_rawseti( L, -2, fd );
+      Fl::remove_fd( fd );
+    } else {
+      bool empty = true;
+      for( int i = 0; i < 3; i++ ) {
+        // Is there a cb for this event?
+        if( lua_rawgeti( L, -1, whens[i] ) != LUA_TNIL ) {
+          // Are we removing this cb?
+          if( when & whens[i] ) {
+            lua_pushnil( L );
+            lua_rawseti( L, -3, whens[i] );
+            Fl::remove_fd( fd, whens[i] );
+          } else {
+            // This cb stays, so there’s at least one cb left for this fd
+            empty = false;
+          }
+        }
+        lua_pop( L, 1 ); // remove callback (or nil)
+      }
+      lua_pop( L, 1 ); // remove table of callbacks for this fd
+      if( empty ) {
+        // No more cb for this fd, remove the table of this fd from cache
+        lua_pushnil( L );
+        lua_rawseti( L, -2, fd );
+      }
+    }
+  } F4L_CATCH( L );
+  return 0;
 }
 
 
@@ -337,6 +478,8 @@ F4L_API int luaopen_fltk4lua( lua_State* L ) {
     { "redraw", f4l_redraw },
     { "option", f4l_option },
     { "open_uri", f4l_open_uri },
+    { "add_fd", f4l_add_fd },
+    { "remove_fd", f4l_remove_fd },
     { NULL, NULL }
   };
   luaL_newlib( L, functions );
