@@ -565,6 +565,7 @@ MOON_LOCAL void f4l_push_font( lua_State* L, Fl_Font f ) {
   }
 }
 
+
 #define FD_WHEN_LIST( _ ) \
   _( "READ", FL_READ ) \
   _( "WRITE", FL_WRITE ) \
@@ -580,6 +581,7 @@ MOON_LOCAL void f4l_push_font( lua_State* L, Fl_Font f ) {
 MOON_LOCAL int f4l_check_fd_when( lua_State* L, int idx ) {
   return moon_flag_get_fd_when( L, idx );
 }
+
 
 #define COLOR_LIST( _ ) \
   _( "FOREGROUND_COLOR", FL_FOREGROUND_COLOR ) \
