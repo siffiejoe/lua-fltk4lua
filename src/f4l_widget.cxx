@@ -156,7 +156,7 @@ MOON_LOCAL int f4l_widget_inside( lua_State* L ) {
 
 MOON_LOCAL int f4l_widget_measure_label( lua_State* L ) {
   Fl_Widget* widget = check_widget( L, 1 );
-  int x = 0, y = 0;
+  int x = luaL_optinteger( L, 2, 0 ), y = 0;
   F4L_TRY( L ) {
     widget->measure_label( x, y );
   } F4L_CATCH( L );
