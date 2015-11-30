@@ -1,6 +1,7 @@
 #include "fltk4lua.hxx"
 #include "f4l_enums.hxx"
 #include <FL/filename.H>
+#include <climits>
 
 
 namespace {
@@ -183,7 +184,7 @@ static int f4l_add_fd( lua_State* L ) {
   static Fl_FD_Handler when_cbs[] = {
     f4l_fd_cb_read, f4l_fd_cb_write, f4l_fd_cb_except
   };
-  int fd = static_cast< int >( luaL_checkinteger( L, 1 ) );
+  int fd = moon_checkint( L, 1, 0, INT_MAX );
   luaL_checktype( L, 2, LUA_TFUNCTION );
   int when = luaL_opt( L, f4l_check_fd_when, 3, FL_READ );
 
@@ -214,7 +215,7 @@ static int f4l_add_fd( lua_State* L ) {
 
 static int f4l_remove_fd( lua_State* L ) {
   static int whens[] = { FL_READ, FL_WRITE, FL_EXCEPT };
-  int fd = static_cast< int >( luaL_checkinteger( L, 1 ) );
+  int fd = moon_checkint( L, 1, 0, INT_MAX );
   int when = luaL_opt( L, f4l_check_fd_when, 2, 0 );
 
   // The code here is pretty protective since FL::remove_fd() crashes when
