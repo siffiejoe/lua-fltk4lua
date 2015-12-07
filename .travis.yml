@@ -1,0 +1,44 @@
+language: cpp
+
+# select container based VM (no sudo available)
+sudo: required
+dist: trusty
+
+# use gcc as the C compiler
+compiler: gcc
+
+# specify operating systems to test on (linux and/or osx)
+os:
+  - linux
+  - osx
+
+# environment variables for the build
+env:
+  global:
+    - LUAROCKS=2.2.2
+  matrix:
+    - LUA=5.1.5
+    - LUA=5.2.4
+    - LUA=5.3.2
+
+# only test changes to the master branch
+branches:
+  only:
+    - master
+
+# disable email notifications
+notifications:
+  email: false
+
+# install dependencies (lua, luarocks, ...)
+install:
+  - . .travis/install.sh
+  - test `uname -s` = Linux && sudo apt-get update -qq || true
+  - test `uname -s` = Linux && sudo apt-get install -qq libfltk1.3-dev || true
+  - test `uname -s` = Darwin && brew update || true
+  - test `uname -s` = Darwin && brew install fltk || true
+
+# build (and test?) the project
+script:
+  - luarocks make CFLAGS="-Wall -Wextra -O2 -fPIC"
+

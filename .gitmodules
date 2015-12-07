@@ -8,3 +8,6 @@
 	path = doc
 	url = https://github.com/siffiejoe/lua-fltk4lua.wiki
 	branch = doc
+[submodule ".travis"]
+	path = .travis
+	url = https://github.com/siffiejoe/lua-travis
