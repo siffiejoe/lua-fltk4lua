@@ -40,5 +40,5 @@ install:
 
 # build (and test?) the project
 script:
-  - luarocks make CFLAGS="-Wall -Wextra -O2 -fPIC"
+  - luarocks make CFLAGS="-Wall -O2 -fPIC" && lua -e 'print(require"fltk4lua"._VERSION)'
 

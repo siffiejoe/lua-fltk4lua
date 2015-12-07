@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/siffiejoe/lua-fltk4lua.svg?branch=master)](https://travis-ci.org/siffiejoe/lua-fltk4lua)
+
 #          fltk4lua -- Lua Binding to the Fast Light ToolKit         #
 
 ##                           Introduction                           ##
