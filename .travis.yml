@@ -1,6 +1,6 @@
 language: cpp
 
-# select container based VM (no sudo available)
+# select VM with recent Ubuntu version and sudo (for os == linux)
 sudo: required
 dist: trusty
 
