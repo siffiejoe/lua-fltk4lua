@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/siffiejoe/lua-fltk4lua.svg?branch=master)](https://travis-ci.org/siffiejoe/lua-fltk4lua)
 
-#          fltk4lua -- Lua Binding to the Fast Light ToolKit         #
+#         fltk4lua -- Lua Binding to the Fast Light Tool Kit         #
 
 ##                           Introduction                           ##
 
@@ -14,15 +14,17 @@ scripts.
 
 ##                           Documentation                          ##
 
-Unfortunately, there is no real documentation for **fltk4lua**, yet.
-The Lua API is very close to the C++ API, so you can use the [official
-FLTK documentation][2], and look at the examples or the source code.
-In the `doc` subdirectory (and on the [GitHub wiki][3]) there is a
-list of available userdata types, functions and properties, as well as
-some information about building this module.
+There is a small [Getting Started tutorial][2] with some step by step
+instructions to building a GUI with **fltk4lua**, and a list of
+available userdata types, functions, and properties, as well as some
+information about building this module in the `doc` subdirectory (and
+on the [GitHub wiki][3]). Other than that you will have to use the
+[official FLTK documentation][4] (fortunately the Lua API is very
+close to the C++ API), and look at the examples or the source code.
 
-  [2]:  http://www.fltk.org/doc-1.3/index.html
+  [2]:  https://github.com/siffiejoe/lua-fltk4lua/wiki/GettingStarted
   [3]:  https://github.com/siffiejoe/lua-fltk4lua/wiki
+  [4]:  http://www.fltk.org/doc-1.3/index.html
 
 
 ##                              Contact                             ##
