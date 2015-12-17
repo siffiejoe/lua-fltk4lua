@@ -33,10 +33,10 @@ notifications:
 # install dependencies (lua, luarocks, ...)
 install:
   - . .travis/install.sh
-  - test "`uname -s`" = Linux && sudo apt-get update -qq || true
-  - test "`uname -s`" = Linux && sudo apt-get install -qq libfltk1.3-dev || true
-  - test "`uname -s`" = Darwin && brew update || true
-  - test "`uname -s`" = Darwin && brew install fltk || true
+  - if [ "`uname -s`" = Linux ]; then sudo apt-get update -qq; fi
+  - if [ "`uname -s`" = Linux ]; then sudo apt-get install -qq libfltk1.3-dev; fi
+  - if [ "`uname -s`" = Darwin ]; then brew update; fi
+  - if [ "`uname -s`" = Darwin ]; then brew install fltk; fi
 
 # build (and test?) the project
 script:
