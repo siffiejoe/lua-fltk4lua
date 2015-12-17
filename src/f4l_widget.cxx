@@ -279,23 +279,20 @@ MOON_LOCAL void f4l_register_widget( lua_State* L, Fl_Widget* w,
                                      int setud ) {
   luaL_checkstack( L, 3, "f4l_register_widget" );
   moon_getcache( L, LUA_REGISTRYINDEX );
-  lua_pushlightuserdata( L, static_cast< void* >( w ) );
-  lua_pushvalue( L, -3 ); // duplicate widget userdata on stack top
-  lua_rawset( L, -3 );
+  lua_pushvalue( L, -2 ); // duplicate widget userdata on stack top
+  lua_rawsetp( L, -2, static_cast< void* >( w ) );
   /* add the widget to the parent's uservalue table as a convenience,
    * so that you don't have to keep all created widgets in variables
    * to prevent them from being garbage collected */
   Fl_Widget* parent = w->parent();
   if( parent != NULL ) {
-    lua_pushlightuserdata( L, static_cast< void* >( parent ) );
-    lua_rawget( L, -2 );
+    lua_rawgetp( L, -1, static_cast< void* >( parent ) );
     lua_replace( L, -2 );
     if( lua_type( L, -1 ) == LUA_TUSERDATA ) {
       lua_getuservalue( L, -1 );
       lua_replace( L, -2 );
-      lua_pushlightuserdata( L, static_cast< void* >( w ) );
-      lua_pushvalue( L, -3 ); // duplicate widget userdata
-      lua_rawset( L, -3 );
+      lua_pushvalue( L, -2 ); // duplicate widget userdata
+      lua_rawsetp( L, -2, static_cast< void* >( w ) );
     }
   }
   lua_pop( L, 1 ); // pop cache *or* parent *or* uservalue
@@ -314,8 +311,7 @@ MOON_LOCAL void f4l_push_widget( lua_State* L, Fl_Widget* w ) {
   else {
     luaL_checkstack( L, 2, "f4l_push_widget" );
     moon_getcache( L, LUA_REGISTRYINDEX );
-    lua_pushlightuserdata( L, static_cast< void* >( w ) );
-    lua_rawget( L, -2 );
+    lua_rawgetp( L, -1, static_cast< void* >( w ) );
     lua_replace( L, -2 );
     if( lua_type( L, -1 ) != LUA_TUSERDATA ) {
       lua_pop( L, 1 );

@@ -90,17 +90,15 @@ MOON_LOCAL int f4l_group_add( lua_State* L ) {
     lua_replace( L, -2 );
   }
   lua_getuservalue( L, 1 );
-  lua_pushlightuserdata( L, static_cast< void* >( widget ) );
   lua_pushvalue( L, 2 );
-  lua_rawset( L, -3 );
+  lua_rawsetp( L, -2, static_cast< void* >( widget ) );
   lua_pop( L, 1 );
   F4L_TRY( L ) {
     group->add( widget );
   } F4L_CATCH( L );
   if( has_parent ) {
-    lua_pushlightuserdata( L, static_cast< void* >( widget ) );
     lua_pushnil( L );
-    lua_rawset( L, -3 );
+    lua_rawsetp( L, -2, static_cast< void* >( widget ) );
     lua_pop( L, 1 );
   }
   return 0;
@@ -121,17 +119,15 @@ MOON_LOCAL int f4l_group_add_resizable( lua_State* L ) {
     lua_replace( L, -2 );
   }
   lua_getuservalue( L, 1 );
-  lua_pushlightuserdata( L, static_cast< void* >( widget ) );
   lua_pushvalue( L, 2 );
-  lua_rawset( L, -3 );
+  lua_rawsetp( L, -2, static_cast< void*>( widget ) );
   lua_pop( L, 1 );
   F4L_TRY( L ) {
     group->add_resizable( *widget );
   } F4L_CATCH( L );
   if( has_parent ) {
-    lua_pushlightuserdata( L, static_cast< void* >( widget ) );
     lua_pushnil( L );
-    lua_rawset( L, -3 );
+    lua_rawsetp( L, -2, static_cast< void* >( widget ) );
     lua_pop( L, 1 );
   }
   return 0;
@@ -165,9 +161,8 @@ MOON_LOCAL int f4l_group_clear( lua_State* L ) {
     for( int i = n; i > 0; --i ) {
       Fl_Widget* w = group->child( i-1 );
       group->remove( i-1 );
-      lua_pushlightuserdata( L, static_cast< void* >( w ) );
       lua_pushnil( L );
-      lua_rawset( L, -3 );
+      lua_rawsetp( L, -2, static_cast< void* >( w ) );
     }
   } F4L_CATCH( L );
   lua_pop( L, 1 );
@@ -209,17 +204,15 @@ MOON_LOCAL int f4l_group_insert( lua_State* L ) {
     lua_replace( L, -2 );
   }
   lua_getuservalue( L, 1 );
-  lua_pushlightuserdata( L, static_cast< void* >( widget ) );
   lua_pushvalue( L, 2 );
-  lua_rawset( L, -3 );
+  lua_rawsetp( L, -2, static_cast< void* >( widget ) );
   lua_pop( L, 1 );
   F4L_TRY( L ) {
     group->insert( *widget, index );
   } F4L_CATCH( L );
   if( has_parent ) {
-    lua_pushlightuserdata( L, static_cast< void* >( widget ) );
     lua_pushnil( L );
-    lua_rawset( L, -3 );
+    lua_rawsetp( L, -2, static_cast< void* >( widget ) );
     lua_pop( L, 1 );
   }
   return 0;
@@ -237,9 +230,8 @@ MOON_LOCAL int f4l_group_remove( lua_State* L ) {
   } F4L_CATCH( L );
   if( w != NULL ) {
     lua_getuservalue( L, 1 );
-    lua_pushlightuserdata( L, static_cast< void* >( w ) );
     lua_pushnil( L );
-    lua_rawset( L, -3 );
+    lua_rawsetp( L, -2, static_cast< void* >( w ) );
     lua_pop( L, 1 );
   }
   return 0;

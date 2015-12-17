@@ -158,9 +158,8 @@ static int scroll_clear( lua_State* L ) {
     for( int i = n; i > 0; --i ) {
       Fl_Widget* w = s->child( i-1 );
       s->remove( i-1 );
-      lua_pushlightuserdata( L, static_cast< void* >( w ) );
       lua_pushnil( L );
-      lua_rawset( L, -3 );
+      lua_rawsetp( L, -2, static_cast< void* >( w ) );
     }
     s->add( s->hscrollbar );
     s->add( s->scrollbar );
