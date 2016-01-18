@@ -21,7 +21,7 @@ extern "C" {
 
 /* version number of this binding */
 #define F4L_VERSION_MAJOR 0
-#define F4L_VERSION_MINOR 1
+#define F4L_VERSION_MINOR 2
 
 
 /* how to export the luaopen_ function */
