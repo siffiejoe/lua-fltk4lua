@@ -39,7 +39,7 @@ Comments and feedback are always welcome.
 `fltk4lua` is *copyrighted free software* distributed under the MIT
 license (the same license as Lua 5.1). The full license text follows:
 
-    fltk4lua (c) 2015 Philipp Janda
+    fltk4lua (c) 2015, 2016 Philipp Janda
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
