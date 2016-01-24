@@ -41,6 +41,9 @@ build = {
     LIBFLAG = "$(LIBFLAG)",
     LIB_EXTENSION = "$(LIB_EXTENSION)",
   },
+  copy_directories = {
+    "doc", "examples"
+  },
   platforms = {
     windows = {
       type = "cpp",
