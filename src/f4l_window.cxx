@@ -6,6 +6,8 @@
 #include <cstring>
 #include <climits>
 
+#include <Fl/x.H>
+  // for fl_xid
 
 namespace {
 
@@ -201,6 +203,13 @@ MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
                                   char const* key, size_t n ) {
   using namespace std;
   switch( n ) {
+    case 3:
+      if( F4L_MEMCMP( key, "xid", 3 ) == 0 ) {
+        Window x = fl_xid( w );
+        lua_pushlightuserdata( L, x );
+        return 1;
+      }
+      break;
     case 5:
       if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
         char const* label = w->label();
