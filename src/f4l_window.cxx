@@ -6,12 +6,21 @@
 #include <cstring>
 #include <climits>
 
+#include <Fl/x.H>
+  // for fl_xid
 
 namespace {
 
   inline Fl_Window* check_window( lua_State* L, int idx ) {
     void* p = moon_checkobject( L, idx, F4L_WINDOW_NAME );
     return static_cast< Fl_Window* >( p );
+  }
+
+  inline void push_xid( lua_State* L, lua_Integer v ) {
+    lua_pushinteger( L, v );
+  }
+  inline void push_xid( lua_State* L, void* v ) {
+    lua_pushlightuserdata( L, v );
   }
 
 } // anonymous namespace
@@ -201,6 +210,12 @@ MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
                                   char const* key, size_t n ) {
   using namespace std;
   switch( n ) {
+    case 3:
+      if( F4L_MEMCMP( key, "xid", 3 ) == 0 ) {
+        push_xid( L, fl_xid( w ) );
+        return 1;
+      }
+      break;
     case 5:
       if( F4L_MEMCMP( key, "label", 5 ) == 0 ) {
         char const* label = w->label();
