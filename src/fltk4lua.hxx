@@ -51,7 +51,7 @@ extern "C" {
       using namespace std; \
       size_t _sz = sizeof( _f4l_exception_buffer )-1; \
       _f4l_exception_thrown = 1; \
-      strncpy( _f4l_exception_buffer, e.what(), _sz ); \
+      std::strncpy( _f4l_exception_buffer, e.what(), _sz ); \
       _f4l_exception_buffer[ _sz ] = '\0'; \
     } \
     if( _f4l_exception_thrown ) \
@@ -63,7 +63,7 @@ extern "C" {
  * string literal _s (only works if _n is a literal number) */
 #define F4L_MEMCMP( _p, _s, _n ) \
   ((void)sizeof( char[ sizeof( _s )-1 == _n ? 1 : -1 ] ), \
-   memcmp( _p, _s "", _n ))
+   std::memcmp( _p, _s "", _n ))
 
 
 /* Macro that pcalls a lua_CFunction to maintain the thread pointer
