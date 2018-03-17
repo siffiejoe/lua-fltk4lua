@@ -15,7 +15,7 @@ os:
 # environment variables for the build
 env:
   global:
-    - LUAROCKS=2.4.2
+    - LUAROCKS=2.4.4
   matrix:
     - LUA=5.1.5
     - LUA=5.2.4
