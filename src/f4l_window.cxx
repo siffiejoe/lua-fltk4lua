@@ -6,7 +6,7 @@
 #include <cstring>
 #include <climits>
 
-#include <Fl/x.H>
+#include <FL/x.H>
   // for fl_xid
 
 namespace {
