@@ -16,6 +16,13 @@ namespace {
     return static_cast< Fl_Window* >( p );
   }
 
+  inline void push_xid( lua_State* L, lua_Integer v ) {
+    lua_pushinteger( L, v );
+  }
+  inline void push_xid( lua_State* L, void* v ) {
+    lua_pushlightuserdata( L, v );
+  }
+
 } // anonymous namespace
 
 
@@ -205,8 +212,7 @@ MOON_LOCAL int f4l_window_index_( lua_State* L, Fl_Window* w,
   switch( n ) {
     case 3:
       if( F4L_MEMCMP( key, "xid", 3 ) == 0 ) {
-        Window x = fl_xid( w );
-        lua_pushlightuserdata( L, x );
+        push_xid( L, fl_xid( w ) );
         return 1;
       }
       break;
