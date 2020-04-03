@@ -1,4 +1,4 @@
-.PHONY: all clean install depend
+.PHONY: all clean install depend static dynamic
 .SUFFIXES: .cxx
 
 # works for Lua 5.2 on Debian based Linuxes:
@@ -15,6 +15,7 @@ MYCFLAGS = ${CFLAGS} -I${LUA_INCDIR} -Imoon -Icompat-5.3/c-api \
 MYLDFLAGS = `${FLTK_CONFIG} --use-images --ldflags` -lstdc++
 LIBFLAG = -shared
 LIB_EXTENSION = so
+STATICLIB_PREFIX = lib
 STATICLIB_EXTENSION = a
 
 DLLBASENAME = fltk4lua
@@ -59,11 +60,15 @@ SOURCES = \
  src/f4l_value_output.cxx
 OBJECTS = ${SOURCES:%.cxx=%.o} moon/moon.o compat-5.3/c-api/compat-5.3.o
 
-all: ${DLLBASENAME}.${LIB_EXTENSION}
+all: dynamic
 
-static: ${OBJECTS}
-	${AR} rc ${DLLBASENAME}.${STATICLIB_EXTENSION} ${OBJECTS}
-	${RANLIB} ${DLLBASENAME}.${STATICLIB_EXTENSION}
+static: ${STATICLIB_PREFIX}${DLLBASENAME}.${STATICLIB_EXTENSION}
+
+dynamic: ${DLLBASENAME}.${LIB_EXTENSION}
+
+${STATICLIB_PREFIX}${DLLBASENAME}.${STATICLIB_EXTENSION}: ${OBJECTS}
+	${AR} rc ${STATICLIB_PREFIX}${DLLBASENAME}.${STATICLIB_EXTENSION} ${OBJECTS}
+	${RANLIB} ${STATICLIB_PREFIX}${DLLBASENAME}.${STATICLIB_EXTENSION}
 
 ${DLLBASENAME}.${LIB_EXTENSION}: ${OBJECTS}
 	${CC} ${MYCFLAGS} ${LIBFLAG} -o $@ ${OBJECTS} ${MYLDFLAGS}
@@ -86,7 +91,7 @@ depend:
 	done
 
 clean:
-	rm -f ${DLLBASENAME}.${LIB_EXTENSION} ${DLLBASENAME}.${STATICLIB_EXTENSION} ${OBJECTS} dependencies.txt
+	rm -f ${DLLBASENAME}.${LIB_EXTENSION} ${STATICLIB_PREFIX}${DLLBASENAME}.${STATICLIB_EXTENSION} ${OBJECTS} dependencies.txt
 
 
 # dependencies
