@@ -11,7 +11,7 @@ description = {
 }
 supported_platforms = { "unix", "windows" }
 dependencies = {
-  "lua >= 5.1, < 5.4",
+  "lua >= 5.1, < 5.5",
   "luarocks-fetch-gitrec",
   "luarocks-build-cpp",
 }

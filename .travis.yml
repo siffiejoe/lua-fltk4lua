@@ -15,11 +15,11 @@ os:
 # environment variables for the build
 env:
   global:
-    - LUAROCKS=2.4.4
+    - LUAROCKS=3.3.1
   matrix:
     - LUA=5.1.5
     - LUA=5.2.4
-    - LUA=5.3.4
+    - LUA=5.3.5
 
 # only test changes to the master branch
 branches:

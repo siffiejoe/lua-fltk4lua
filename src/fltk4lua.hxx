@@ -59,11 +59,20 @@ extern "C" {
   } while( 0 )
 
 
+#if 0
 /* macro that raises an error if _n doesn't match the length of the
  * string literal _s (only works if _n is a literal number) */
 #define F4L_MEMCMP( _p, _s, _n ) \
   ((void)sizeof( char[ sizeof( _s )-1 == _n ? 1 : -1 ] ), \
    std::memcmp( _p, _s "", _n ))
+
+#else
+template <std::size_t N>
+MOON_LOCAL inline int f4l_memcmp( char const* s, char const (&name)[ N+1 ] ) {
+  return std::memcmp( s, name, N );
+}
+#define F4L_MEMCMP( _p, _s, _n ) (f4l_memcmp< _n >( _p, _s ))
+#endif
 
 
 /* Macro that pcalls a lua_CFunction to maintain the thread pointer
