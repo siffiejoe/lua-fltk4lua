@@ -66,6 +66,20 @@ namespace {
 
 F4L_LUA_LLINKAGE_BEGIN
 
+static int f4l_screen_width( lua_State* L) {
+  F4L_TRY( L ) {
+    lua_pushinteger( L, Fl::w() );
+  } F4L_CATCH( L );
+  return 1;
+}
+
+static int f4l_screen_height( lua_State* L) {
+  F4L_TRY( L ) {
+    lua_pushinteger( L, Fl::h() );
+  } F4L_CATCH( L );
+  return 1;
+}
+
 static int f4l_run_( lua_State* L ) {
   F4L_TRY( L ) {
     lua_pushinteger( L, Fl::run() );
@@ -468,6 +482,8 @@ MOON_LOCAL void f4l_value_output_setup( lua_State* L );
 
 F4L_API int luaopen_fltk4lua( lua_State* L ) {
   luaL_Reg const functions[] = {
+    { "w", f4l_screen_width },
+    { "h", f4l_screen_height },
     { "run", f4l_run },
     { "wait", f4l_wait },
     { "check", f4l_check },
