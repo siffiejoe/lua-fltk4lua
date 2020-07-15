@@ -65,4 +65,5 @@ license (the same license as Lua 5.1). The full license text follows:
  - [Philipp Janda](https://github.com/siffiejoe)
  - [Jérémy Farnaud](https://github.com/remjey)
  - [Chris White](https://github.com/cxw42)
+ - [caoliver](https://github.com/caoliver)
 
