@@ -10,5 +10,6 @@ box.labeltype = "FL_SHADOW_LABEL"
 window:end_group()
 window:show( arg )
 print( window.xid )
+print( fl.w(), fl.h() )
 fl.run()
 
